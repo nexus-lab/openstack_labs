@@ -1,0 +1,198 @@
+\usepackage[margin=1in, top=0.25in, bottom=0.25in, includefoot, includehead, headheight=0.5in]{geometry}
+
+\usepackage{fancyhdr}
+\fancypagestyle{fancy}
+{
+    \fancyhf{}
+    \fancyhead[L]{\footnotesize Lab 01: Launching an Instance}
+    \fancyhead[R]{\includegraphics[height=\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[R]{\footnotesize\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% Sans-serif font
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{enumitem}
+
+% Try to forbid widows and orphans
+\widowpenalty10000
+\clubpenalty10000
+
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{xcolor}
+\colorlet{listingback}{gray!20}
+\definecolor{headingcolor}{RGB}{110,34,54}
+
+\usepackage{sectsty}
+\sectionfont{\color{headingcolor}}
+
+% Table of Contents
+\usepackage{bookmark}
+\usepackage[titles]{tocloft}
+\renewcommand{\cfttoctitlefont}{\Large\bfseries\color{headingcolor}}
+\renewcommand{\cftsecfont}{\normalfont\normalsize}
+\renewcommand{\cftsecpagefont}{\normalfont\normalsize}
+\renewcommand{\cftdotsep}{0} % Make dots small and close together
+\renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Add dots after section titles
+% Make dots go all the way to the page number
+\renewcommand\cftsecfillnum[1]{{\cftsecleader}\nobreak{\cftsecpagefont #1}\cftsecafterpnum\par}
+
+
+\usepackage{listings}
+\lstset{%
+  frame=none,
+  language=,
+  backgroundcolor=\color{listingback},
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+%  columns=flexible,
+  basicstyle={\linespread{1.1}\footnotesize\ttfamily\selectfont},
+  numbers=none,
+  % numberstyle=\tiny\color{gray},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+  columns=fullflexible,
+  keepspaces=true,
+  escapeinside={(*@}{@*)}
+}
+
+% For nice-looking boxes
+\usepackage[most]{tcolorbox}
+
+% Hacky solution for now, would like to have just one environment and make several tcolorboxes by passing different
+% colors as parameters, but that is giving errors
+\makeatletter
+\tcbset{
+  note/.style 2 args={%
+        enhanced, 
+        breakable,
+        colback=white,
+        colback=green!10,
+        colframe=green!70!black,
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
+        title={#2},
+        boxed title size=title,
+        boxed title style={%
+            sharp corners, 
+            rounded corners=northwest, 
+            colback=tcbcolframe, 
+            boxrule=0pt,
+        },
+        underlay boxed title={%
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+                to[out=0, in=180] ([xshift=5mm]title.east)--
+                (title.center-|frame.east)
+                [rounded corners=\kvtcb@arc] |- 
+                (frame.north) -| cycle; 
+        },
+        #1
+    }
+}
+\makeatother
+
+\makeatletter
+\tcbset{
+    stop/.style 2 args={%
+        enhanced, 
+        breakable,
+        colback=white,
+        colback=red!10!white,
+        colframe=red!80!white,
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
+        title={#2},
+        boxed title size=title,
+        boxed title style={%
+            sharp corners, 
+            rounded corners=northwest, 
+            colback=tcbcolframe, 
+            boxrule=0pt,
+        },
+        underlay boxed title={%
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+                to[out=0, in=180] ([xshift=5mm]title.east)--
+                (title.center-|frame.east)
+                [rounded corners=\kvtcb@arc] |- 
+                (frame.north) -| cycle; 
+        },
+        #1
+    }
+}
+\makeatother
+
+\makeatletter
+\tcbset{
+    tip/.style 2 args={%
+        enhanced, 
+        breakable,
+        colback=blue!10!white,
+        colframe=blue!80!white,
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+        fonttitle=\bfseries,
+        title={#2},
+        boxed title size=title,
+        boxed title style={%
+            sharp corners, 
+            rounded corners=northwest, 
+            colback=tcbcolframe, 
+            boxrule=0pt,
+        },
+        underlay boxed title={%
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+                to[out=0, in=180] ([xshift=5mm]title.east)--
+                (title.center-|frame.east)
+                [rounded corners=\kvtcb@arc] |- 
+                (frame.north) -| cycle; 
+        },
+        #1
+    }
+}
+\makeatother
+
+\makeatletter
+\tcbset{
+    definition/.style 2 args={%
+        enhanced, 
+        breakable,
+        colback=white,
+        colframe=yellow!50!black,
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
+        title={#2},
+        boxed title size=title,
+        boxed title style={%
+            sharp corners, 
+            rounded corners=northwest, 
+            colback=tcbcolframe, 
+            boxrule=0pt,
+        },
+        underlay boxed title={%
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+                to[out=0, in=180] ([xshift=5mm]title.east)--
+                (title.center-|frame.east)
+                [rounded corners=\kvtcb@arc] |- 
+                (frame.north) -| cycle; 
+        },
+        #1
+    }
+}
+\makeatother
+
+\newtcolorbox{notebox}[2][]{%
+note={#1}{Note}
+}
+
+\newtcolorbox{stopbox}[2][]{%
+stop={#1}{Stop}
+}
+
+\newtcolorbox{tipbox}[2][]{%
+tip={#1}{Tip}
+}
+
+\newtcolorbox{definition}[2][]{%
+definition={#1}{Definition #2}
+}
