@@ -1,0 +1,437 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\input{../common.tex}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \includegraphics[scale=0.5]{images/nexus_lab_logo.png}
+
+    \vspace*{\baselineskip}
+
+    \textbf{\Large OpenStack Labs}
+
+    \vspace*{\baselineskip}
+
+    \textbf{\Large Lab 01: Launching an Instance}
+    \vspace*{\fill}
+\end{titlepage}
+
+\pagestyle{fancy}
+\tableofcontents
+\clearpage
+
+\section*{Introduction}
+\label{sec:introduction}
+\addcontentsline{toc}{section}{\nameref{sec:introduction}}
+In this lab, you will launch an instance using the \textit{Horizon Dashboard}, launch an instance using the
+\textit{OpenStack Unified CLI}, and use the \textit{OpenStack Unified CLI}.
+
+\section*{Objectives}
+\label{sec:objectives}
+\addcontentsline{toc}{section}{\nameref{sec:objectives}}
+\begin{itemize}[itemsep=0pt]
+    \item Use the \textit{Horizon Dashboard}.
+    \item Launch an instance using the \textit{Horizon Dashboard}.
+    \item Use the \textit{OpenStack Unified CLI}.
+    \item Launch an instance using the \textit{OpenStack Unified CLI}.
+\end{itemize}
+\clearpage
+
+\section{Launching an Instance Using the Horizon Dashboard}
+In this task, you will launch an instance using the \textit{Horizon Dashboard}.
+
+\begin{enumerate}
+    % TODO(lucas): Fill in lab name
+    \item Navigate to \textbf{EZSetup$\rightarrow$Workspaces$\rightarrow$[Lab Name]}.
+    
+    \item Log into the \textbf{workstation} machine.
+    \begin{enumerate}
+        \item Copy the password under \textit{Password}.
+        \item Click \textbf{Open} under \textit{VNC Connection}.
+        \item Paste the password into the \textit{Password} field.
+    \end{enumerate}
+
+    \item A popup window will you to choose the panel setup for the first startup. Choose \textbf{Use default config}.
+    Otherwise, there will be no taskbar or panel with convenient shortcuts for the terminal or web browser.
+
+    \item If the desktop screen is larger than the window, select the options on the left-hand side of the screen,
+    click the gear icon to go to the settings menu, and under \textit{Scaling Mode}, select \textbf{Remote Resizing}.
+
+    \item Open the web browser.
+
+    \begin{center}
+    \includegraphics[scale=0.75]{images/part1/step5.png}
+    \end{center}
+
+    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.20.0}) into the address bar.
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step6.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        The IP address of each machine of the lab can be found by viewing the EZSetup lab page. Simply click the link
+        between the machine and another object on the network (normally the cloud icon) to find the IP address for that
+        interface.
+    \end{tipbox}
+
+    \item Log into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
+    
+    \begin{center}
+        \includegraphics[scale=0.75]{images/part1/step7.png}
+    \end{center}
+
+    \item Click on the \textit{Project} tab in the top right corner of the webpage, then select \textbf{demo} as the
+    project.
+
+    \begin{center}
+        \includegraphics[scale=0.75]{images/part1/step8.png}
+    \end{center}
+
+    \item Navigate to the \textit{Instances} panel and click \textbf{Launch Instance} in the top right corner.
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step9.png}
+    \end{center}
+
+    \item In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their
+    default values. Click \textbf{Next}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
+    \end{center}
+
+    \item In the \textit{Select Boot Source} drop dow, select \textbf{Image}, set \textit{Create New Volume} to
+    \textbf{No} and scroll down (if needed) to click the $\uparrow$ icon beside of \textbf{cirros-0.6.2-x86-64-disk} to
+    use \textbf{cirros-0.6.2-x86-64-disk} as the image. Click \textbf{Next}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step11.png}
+    \end{center}
+
+    \begin{stopbox}{}
+        Before proceeding to the next step, confirm that \textbf{cirros-0.6.2-x86-64-disk} appears underneath the
+        \textit{Allocated} section.
+    \end{stopbox}
+    
+    \item Scroll down (if needed) and click the $\uparrow$ icon beside the \textbf{m1.tiny} flavor. Click \textbf{Next}.
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
+    \end{center}
+
+    \begin{stopbox}{}
+        Before proceeding to the next step, confirm that \textbf{m1.tiny} appears underneath the \textit{Allocated}
+        section.
+    \end{stopbox}
+
+    \item Click the $\uparrow$ icon beside the \textbf{shared} network. If all required fields have been set, the
+    \textbf{Launch Instance} button in the bottom right corner should now be clickable. Click \textbf{Launch Instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step13.png}
+    \end{center}
+
+    \begin{stopbox}{}
+        Before proceeding to the next step, confirm that \textbf{shared} appears underneath the \textit{Allocated}
+        section.
+    \end{stopbox}
+
+    \item To open the conosle of \textbf{prod-instance} in a new tab, right-click on the name \textbf{prod-instance} and
+    select \textbf{Open Link in New Tab}, or middle-click the name \textbf{prod-instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
+    \end{center}
+
+    \begin{stopbox}{}
+        Wait for the \textit{Power State} of \textbf{prod-instance} to display the status of \textit{Running} before
+        continuing to the next step.
+    \end{stopbox}
+
+    \item In the new tab, click the \textit{Console} tab. Optionally, to make the console take up the whole tab, click
+    the \textbf{Click here to show only console} link.
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step16.png}
+    \end{center}
+
+    \item Log into the console as \textbf{cirros} with password \textbf{gocubsgo}.
+
+    \item In the console, ping \textbf{192.168.233.2} (DHCP server) to verify connectivity.
+\begin{lstlisting}
+$ ping -c3 192.168.233.2
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step17.png}
+    \end{center}
+
+    \begin{notebox}{}
+        You should have received three successful ping replies.
+    \end{notebox}
+
+    \item Close the console tab for \textbf{prod-instance}.
+
+    \item Focus back on the tab showing instances and delete \textbf{prod-instance}. Select the checkbox for
+    \textbf{prod-instance} and click the \textbf{Delete Instances} button.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step19.png}
+    \end{center}
+
+    \item Confirm the deletion by clicking the \textbf{Delete Instances} button.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step20.png}
+    \end{center}
+
+    \item Close the web browser.
+\end{enumerate}
+
+\section{Running the OpenStack Unified CLI}
+In this task, you will use the \textit{OpenStack Unified command-line interface (CLI)} to list and check the details of
+existing projects, users, flavors, images, and instances, and to launch an instance.
+
+\begin{enumerate}
+    \item Open a terminal, either by right-clicking the desktop and selecting \textbf{Open Terminal Here}, by clicking
+    the terminal icon in the icon bar at the bottom of the screen, or by selecting \textbf{Applications} at the top
+    left of the screen, then selecting \textbf{Terminal Emulator}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step1.png}
+    \end{center}
+
+    \item Ensure you are in the home directory.
+\begin{lstlisting}
+ubuntu@workstation:/$ cd ~
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step2.png}
+    \end{center}
+
+    \item The \textbf{keystonerc-admin} file in the home directory defines several \texttt{OS\_*} environment variables
+    that allow you to use the OpenStack platform on the \textbf{devstack} server through the OpenStack Unified
+    CLI. The username will be \textbf{admin}, the password will be be \textbf{secret}, the project will be
+    \textbf{demo}, and the IP address for \texttt{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server,
+    \textbf{192.168.1.20}. You can run \textbf{\texttt{cat}} on the file to view its contents.
+\begin{lstlisting}
+ubuntu@workstation:~$ cat keystonerc-admin
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step3.png}
+    \end{center}
+
+    \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to enable all the
+    \texttt{OS\_*} environment variables included in the \textbf{keystonerc-admin} file.
+\begin{lstlisting}
+ubuntu@workstation:~$ source keystonerc-admin
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step4.png}
+    \end{center}
+
+    \item Verify that the \texttt{OS\_*} environment variables have been exported to the shell environment.
+\begin{lstlisting}
+ubuntu@workstation:~$ env | grep OS_
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step5.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        Use the \textbf{\texttt{openstack help project show}} command to determine how to display the details of a
+        particular project.
+    \end{tipbox}
+
+    \item Enter the command below to gather additional information about the \textbf{admin} user's current project,
+    \textbf{demo}.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack project show demo
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step6.png}
+    \end{center}
+
+    \begin{notebox}
+        The ID value for \textbf{demo} may differ from above since it is a unique ID.
+    \end{notebox}
+
+    \begin{tipbox}{}
+        Use the \textbf{\texttt{openstack help user show}} command to determine how to display details of a specific
+        user account.
+    \end{tipbox}
+
+    \item Enter the command below to check the details of \textbf{admin}.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack user show admin
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step7.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        Use the \textbf{\texttt{openstack help flavor list}} command to determine how to display all available flavors.
+    \end{tipbox}
+
+    \item Enter the command below to list all available flavors.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack flavor list
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step8.png}
+    \end{center}
+
+    \item Enter the command below to display the details specifically for the \textbf{m1.tiny} flavor.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack flavor show m1.tiny
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step9.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        Use the \textbf{\texttt{openstack help image}} command to determine how to list all images.
+    \end{tipbox}
+
+    \item Enter the command below to list all available images.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack image list
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step10.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        Use the \textbf{\texttt{openstack help network}} command to determine how to list all networks.
+    \end{tipbox}
+
+    \item Enter the command below to list all available networks.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack network list
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step11.png}
+    \end{center}
+
+    \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
+    \textbf{cirros-0.6.2-x86\_64-disk} as the image, \textbf{m1.tiny} as the flavor, and \textbf{shared} as the network.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack server create --image cirros-0.6.2-x86_64-disk \
+> --flavor m1.tiny --network shared --wait prod-instance
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step12.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        When typing the command, make sure there is a space between \texttt{cirros-0.6.2-x86\_64-disk} and the
+        \texttt{\textbackslash}, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the
+        command.
+    \end{tipbox}
+
+    \item Use the \textbf{openstack server list} command to list all the available instances.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack server list
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step13.png}
+    \end{center}
+
+    \begin{notebox}{}
+        The UUID in the \textit{ID} field and the IP address in the \textit{Networks} field may differ from the
+        screenshot provided.
+    \end{notebox}
+
+    \item Enter the command below to display more details about the instance \textbf{prod-instance}.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack server show prod-instance
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step14.png}
+    \end{center}
+
+    \begin{tipbox}{}
+        The UUID for the instance \textbf{prod-instance} can be used in place of \textbf{prod-instance} in the above
+        command to identify the instance.
+    \end{tipbox}
+
+    \item Enter the command below to verify the log for the instance.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack console log show prod-instance
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step15.png}
+    \end{center}
+
+    \item Enter the command below to display the instance's console URL. Pipe the command to \textbf{\texttt{grep}} so
+    that you will get a link in the terminal you can clikc on. Then right click on the URL and select \textbf{Open
+    Link}.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack console url show prod-instance grep https:
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step16.png}
+    \end{center}
+
+    \item The web browser will open directly to the instance's console through noVNC. Log into \textbf{prod-instance}
+    using \textbf{cirros} as the username and \textbf{gocubsgo} as the password. Then use the \textbf{\texttt{ping}}
+    command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
+\begin{lstlisting}
+$ ping -c3 192.168.233.2
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step17.png}
+    \end{center}
+
+    \item Close the web browser and change focus back to the previous terminal window.
+    
+    \item Enter the command below to stop the instance
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack server stop prod-instance
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step19.png}
+    \end{center}
+
+    \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify this.
+\begin{lstlisting}
+ubuntu@workstation~$: openstack server list
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step20.png}
+    \end{center}
+
+    \item Enter the command below to delete the instance.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack server delete prod-instance
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step21.png}
+    \end{center}
+
+    \item The lab is now complete.
+
+\end{enumerate}
+
+\end{document}
