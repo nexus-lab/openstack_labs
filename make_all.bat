@@ -7,3 +7,7 @@ popd
 pushd lab2
 make
 popd
+
+pushd lab3
+make
+popd
