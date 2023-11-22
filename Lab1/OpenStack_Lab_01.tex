@@ -17,6 +17,15 @@
     \vspace*{\fill}
 \end{titlepage}
 
+\fancypagestyle{fancy}
+{
+    \fancyhf{}
+    \fancyhead[L]{\footnotesize Lab 01: Launching an Instance}
+    \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[R]{\footnotesize\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
 \pagestyle{fancy}
 \tableofcontents
 \clearpage
@@ -61,13 +70,13 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \item Open the web browser.
 
     \begin{center}
-    \includegraphics[scale=0.75]{images/part_1_step_5.png}
+    \includegraphics[scale=0.75]{images/part1/step5.png}
     \end{center}
 
     \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.20.0}) into the address bar.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_6.png}
+        \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -79,27 +88,27 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \item Log into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
     
     \begin{center}
-        \includegraphics[scale=0.75]{images/part_1_step_7.png}
+        \includegraphics[scale=0.75]{images/part1/step7.png}
     \end{center}
 
     \item Click on the \textit{Project} tab in the top right corner of the webpage, then select \textbf{demo} as the
     project.
 
     \begin{center}
-        \includegraphics[scale=0.75]{images/part_1_step_8.png}
+        \includegraphics[scale=0.75]{images/part1/step8.png}
     \end{center}
 
     \item Navigate to the \textit{Instances} panel and click \textbf{Launch Instance} in the top right corner.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_9.png}
+        \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
     \item In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their
     default values. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_10.png}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
     \item In the \textit{Select Boot Source} drop dow, select \textbf{Image}, set \textit{Create New Volume} to
@@ -107,7 +116,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     use \textbf{cirros-0.6.2-x86-64-disk} as the image. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_11.png}
+        \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -118,7 +127,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \item Scroll down (if needed) and click the $\uparrow$ icon beside the \textbf{m1.tiny} flavor. Click \textbf{Next}.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_12.png}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -130,7 +139,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \textbf{Launch Instance} button in the bottom right corner should now be clickable. Click \textbf{Launch Instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_13.png}
+        \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -142,7 +151,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     select \textbf{Open Link in New Tab}, or middle-click the name \textbf{prod-instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_14.png}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -154,7 +163,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     the \textbf{Click here to show only console} link.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_15.png}
+        \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
     \item Log into the console as \textbf{cirros} with password \textbf{gocubsgo}.
@@ -165,7 +174,7 @@ $ ping -c3 192.168.233.2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_17.png}
+        \includegraphics[width=\linewidth]{images/part1/step17.png}
     \end{center}
 
     \begin{notebox}{}
@@ -178,13 +187,13 @@ $ ping -c3 192.168.233.2
     \textbf{prod-instance} and click the \textbf{Delete Instances} button.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_19.png}
+        \includegraphics[width=\linewidth]{images/part1/step19.png}
     \end{center}
 
     \item Confirm the deletion by clicking the \textbf{Delete Instances} button.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_20.png}
+        \includegraphics[width=\linewidth]{images/part1/step20.png}
     \end{center}
 
     \item Close the web browser.
@@ -200,7 +209,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     left of the screen, then selecting \textbf{Terminal Emulator}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_1.png}
+        \includegraphics[width=\linewidth]{images/part2/step1.png}
     \end{center}
 
     \item Ensure you are in the home directory.
@@ -209,7 +218,7 @@ ubuntu@workstation:/$ cd ~
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_2.png}
+        \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
     \item The \textbf{keystonerc-admin} file in the home directory defines several \texttt{OS\_*} environment variables
@@ -222,7 +231,7 @@ ubuntu@workstation:~$ cat keystonerc-admin
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_3.png}
+        \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
     \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to enable all the
@@ -232,7 +241,7 @@ ubuntu@workstation:~$ source keystonerc-admin
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_4.png}
+        \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
     \item Verify that the \texttt{OS\_*} environment variables have been exported to the shell environment.
@@ -241,7 +250,7 @@ ubuntu@workstation:~$ env | grep OS_
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_5.png}
+        \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -256,7 +265,7 @@ ubuntu@workstation:~$ openstack project show demo
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_1_step_6.png}
+        \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
     \begin{notebox}
@@ -274,7 +283,7 @@ ubuntu@workstation:~$ openstack user show admin
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_7.png}
+        \includegraphics[width=\linewidth]{images/part2/step7.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -287,7 +296,7 @@ ubuntu@workstation:~$ openstack flavor list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_8.png}
+        \includegraphics[width=\linewidth]{images/part2/step8.png}
     \end{center}
 
     \item Enter the command below to display the details specifically for the \textbf{m1.tiny} flavor.
@@ -296,7 +305,7 @@ ubuntu@workstation:~$ openstack flavor show m1.tiny
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_9.png}
+        \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -309,7 +318,7 @@ ubuntu@workstation:~$ openstack image list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_10.png}
+        \includegraphics[width=\linewidth]{images/part2/step10.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -322,7 +331,7 @@ ubuntu@workstation:~$ openstack network list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_11.png}
+        \includegraphics[width=\linewidth]{images/part2/step11.png}
     \end{center}
 
     \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
@@ -333,7 +342,7 @@ ubuntu@workstation:~$ openstack server create --image cirros-0.6.2-x86_64-disk \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_12.png}
+        \includegraphics[width=\linewidth]{images/part2/step12.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -348,7 +357,7 @@ ubuntu@workstation:~$ openstack server list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_13.png}
+        \includegraphics[width=\linewidth]{images/part2/step13.png}
     \end{center}
 
     \begin{notebox}{}
@@ -362,7 +371,7 @@ ubuntu@workstation:~$ openstack server show prod-instance
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_14.png}
+        \includegraphics[width=\linewidth]{images/part2/step14.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -376,7 +385,7 @@ ubuntu@workstation:~$ openstack console log show prod-instance
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_15.png}
+        \includegraphics[width=\linewidth]{images/part2/step15.png}
     \end{center}
 
     \item Enter the command below to display the instance's console URL. Pipe the command to \textbf{\texttt{grep}} so
@@ -387,7 +396,7 @@ ubuntu@workstation:~$ openstack console url show prod-instance grep https:
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_16.png}
+        \includegraphics[width=\linewidth]{images/part2/step16.png}
     \end{center}
 
     \item The web browser will open directly to the instance's console through noVNC. Log into \textbf{prod-instance}
@@ -398,7 +407,7 @@ $ ping -c3 192.168.233.2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_17.png}
+        \includegraphics[width=\linewidth]{images/part2/step17.png}
     \end{center}
 
     \item Close the web browser and change focus back to the previous terminal window.
@@ -409,7 +418,7 @@ ubuntu@workstation:~$ openstack server stop prod-instance
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_19.png}
+        \includegraphics[width=\linewidth]{images/part2/step19.png}
     \end{center}
 
     \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify this.
@@ -418,7 +427,7 @@ ubuntu@workstation~$: openstack server list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_20.png}
+        \includegraphics[width=\linewidth]{images/part2/step20.png}
     \end{center}
 
     \item Enter the command below to delete the instance.
@@ -427,7 +436,7 @@ ubuntu@workstation:~$ openstack server delete prod-instance
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part_2_step_21.png}
+        \includegraphics[width=\linewidth]{images/part2/step21.png}
     \end{center}
 
     \item The lab is now complete.

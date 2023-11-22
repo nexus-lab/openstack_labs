@@ -17,6 +17,15 @@
     \vspace*{\fill}
 \end{titlepage}
 
+\fancypagestyle{fancy}
+{
+    \fancyhf{}
+    \fancyhead[L]{\footnotesize Lab 03: Deploying an Internal Instance}
+    \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[R]{\footnotesize\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
 \pagestyle{fancy}
 \tableofcontents
 \clearpage
@@ -29,7 +38,8 @@ flavors, manage private networks, launch an internal instance, and verify the fu
 
 \section*{Objectives}
 \label{sec:objectives}
-\begin{itemize}
+\addcontentsline{toc}{section}{\nameref{sec:objectives}}
+\begin{itemize}[itemsep=0pt]
     \item Manage software profiles (images)
     \item Manage hardware profiles (flavors)
     \item Manage private networks

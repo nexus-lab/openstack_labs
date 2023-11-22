@@ -11,3 +11,7 @@ popd
 pushd lab3
 make
 popd
+
+pushd lab8
+make
+popd
