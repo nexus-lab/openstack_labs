@@ -150,7 +150,7 @@ ubuntu@workstation:~$ openstack network create external \
     \end{tipbox}
 
     \item Create a subnet named \textbf{subext} in the \textbf{external} network. Give the subnet a range of
-    \textbf{172.25.250.60} to \textbf{172.25.250.80}. Disable DHCP services for the subnet and use
+    \textbf{172.25.250.60} to \textbf{172.25.250.80}. Disable DHCP services for the subnet and use the address
     \textbf{172.25.250.254} as the gateway as well as the DNS name server.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack subnet create \
@@ -897,7 +897,7 @@ ubuntu@workstation:~$ ssh 192.168.1.20
     \item Ping the \textbf{external-instance} instance using the floating IP that was assigned to it in the previous
     task.
 \begin{lstlisting}
-ubuntu@workstation:~$ ping -c3 172.25.250.74
+ubuntu@devstack:~$ ping -c3 172.25.250.74
 \end{lstlisting}
 
     \begin{center}
