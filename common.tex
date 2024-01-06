@@ -18,7 +18,7 @@
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \colorlet{listingback}{gray!20}
 \definecolor{headingcolor}{RGB}{110,34,54}
 
@@ -35,6 +35,10 @@
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Add dots after section titles
 % Make dots go all the way to the page number
 \renewcommand\cftsecfillnum[1]{{\cftsecleader}\nobreak{\cftsecpagefont #1}\cftsecafterpnum\par}
+
+\usepackage{multirow}
+\setlength{\tabcolsep}{16pt}
+\renewcommand{\arraystretch}{1.1}
 
 % For nice-looking boxes
 \usepackage[most]{tcolorbox}
@@ -74,9 +78,8 @@
   note/.style 2 args={%
         enhanced, 
         breakable,
-        colback=white,
-        colback=green!10,
-        colframe=green!70!black,
+        colback=blue!10!white,
+        colframe=blue!80!white,
         attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
         title={#2},
         boxed title size=title,
@@ -132,38 +135,11 @@
     tip/.style 2 args={%
         enhanced, 
         breakable,
-        colback=blue!10!white,
-        colframe=blue!80!white,
+        colback=white,
+        colback=green!10,
+        colframe=green!70!black,
         attach boxed title to top left={yshift*=-\tcboxedtitleheight},
         fonttitle=\bfseries,
-        title={#2},
-        boxed title size=title,
-        boxed title style={%
-            sharp corners, 
-            rounded corners=northwest, 
-            colback=tcbcolframe, 
-            boxrule=0pt,
-        },
-        underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
-                to[out=0, in=180] ([xshift=5mm]title.east)--
-                (title.center-|frame.east)
-                [rounded corners=\kvtcb@arc] |- 
-                (frame.north) -| cycle; 
-        },
-        #1
-    }
-}
-\makeatother
-
-\makeatletter
-\tcbset{
-    definition/.style 2 args={%
-        enhanced, 
-        breakable,
-        colback=white,
-        colframe=yellow!50!black,
-        attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
         title={#2},
         boxed title size=title,
         boxed title style={%
