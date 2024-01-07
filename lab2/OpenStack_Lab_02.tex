@@ -17,10 +17,6 @@
     \vspace*{\fill}
 \end{titlepage}
 
-\pagestyle{fancy}
-\tableofcontents
-\clearpage
-
 \fancypagestyle{fancy}
 {
     \fancyhf{}
@@ -29,6 +25,10 @@
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
+
+\pagestyle{fancy}
+\tableofcontents
+\clearpage
 
 \section*{Introduction}
 \label{sec:introduction}
@@ -50,58 +50,31 @@ In this lab, you will manage projects, users, and roles.
 In this task, you will create and delete projects using the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
-    % TODO(lucas): Fill in lab name
-    \item Navigate to \textbf{EZSetup$\rightarrow$Workspaces$\rightarrow$[Lab Name]}.
-    
-    \item Log into the \textbf{workstation} machine.
-    \begin{enumerate}
-        \item Copy the password under \textit{Password}.
-        \item Click \textbf{Open} under \textit{VNC Connection}.
-        \item Paste the password into the \textit{Password} field.
-    \end{enumerate}
-
-    \item A popup window will you to choose the panel setup for the first startup. Choose \textbf{Use default config}.
-    Otherwise, there will be no taskbar or panel with convenient shortcuts for the terminal or web browser.
-
-    \item If the desktop screen is larger than the window, select the options on the left-hand side of the screen,
-    click the gear icon to go to the settings menu, and under \textit{Scaling Mode}, select \textbf{Remote Resizing}.
-
     \item Open the web browser.
 
     \begin{center}
-    \includegraphics[scale=0.75]{images/part1/step5.png}
+    \includegraphics[scale=0.75]{images/part1/step1.png}
     \end{center}
 
-    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.20.0}) into the address bar.
+    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.22}) into the address bar, and log
+    into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
-    \end{center}
-
-    \begin{tipbox}{}
-        The IP address of each machine of the lab can be found by viewing the EZSetup lab page. Simply click the link
-        between the machine and another object on the network (normally the cloud icon) to find the IP address for that
-        interface.
-    \end{tipbox}
-
-    \item Log into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
-    
-    \begin{center}
-        \includegraphics[scale=0.75]{images/part1/step7.png}
+        \includegraphics[scale=0.75]{images/part1/step2.png}
     \end{center}
 
     \item Create a project named \textbf{dev}. First, navigate to \textbf{Identity$\rightarrow$Projects}, then click on
     \textbf{Create Project}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step8.png}
+        \includegraphics[width=\linewidth]{images/part1/step3.png}
     \end{center}
 
     \item Enter \textbf{dev} in the \textit{Name} field and \textbf{Dev Project} in the \textit{Description} field.
     Leave the \textbf{Enabled} check box selected, then click on \textbf{Create Project}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
     \begin{notebox}{}
@@ -111,7 +84,7 @@ In this task, you will create and delete projects using the \textit{Horizon Dash
     \item Log out of the Horizon Dashboard by clicking on admin at the top right and selecting \textbf{Sign Out}.
     
     \begin{center}
-        \includegraphics[scale=0.75]{images/part1/step10.png}
+        \includegraphics[scale=0.75]{images/part1/step5.png}
     \end{center}
 
     \item Close the web browser and continue to the next task.
@@ -130,15 +103,6 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create a projec
         \includegraphics[width=\linewidth]{images/part2/step1.png}
     \end{center}
 
-    \item Ensure you are in the home directory.
-\begin{lstlisting}
-ubuntu@workstation:/$ cd ~
-\end{lstlisting}
-    
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step2.png}
-    \end{center}
-
     \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to access OpenStack
     as the admin.
 \begin{lstlisting}
@@ -146,7 +110,7 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
 \end{lstlisting}
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step3.png}
+        \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
     \item Enter the command below to create a project named \textbf{testing}.
@@ -157,7 +121,7 @@ ubuntu@workstation:~$ openstack project create \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step4.png}
+        \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
     \begin{tipbox}{}
@@ -172,7 +136,7 @@ ubuntu@workstation:~$ openstack project list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step5.png}
+        \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
     \item Delete the \textbf{testing} project by entering the command below.
@@ -181,7 +145,7 @@ ubuntu@workstation:~$ openstack project delete testing
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step6.png}
+        \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
     \item Verify the \textbf{testing} project has been deleted by listing the projects again and noting that
@@ -191,7 +155,7 @@ ubuntu@workstation:~$ openstack project list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step7.png}
+        \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
     \item Leave the terminal window open and continue to the next task.
@@ -202,11 +166,10 @@ ubuntu@workstation:~$ openstack project list
 In this task, you will use the \textit{Horizon Dashboard} to manage users.
 
 \begin{enumerate}
-    \item Open the web browser, navigate to the OpenStack login page at \textbf{http://192.168.1.20}, and log in with
+    \item Open the web browser, navigate to the OpenStack login page at \textbf{http://192.168.1.22}, and log in with
     username \textbf{admin} and password \textbf{secret} as before. In the following steps, you will create users named
     \textbf{cloud-dev}, \textbf{cloud-test1}, and \textbf{cloud-test2}; set all of these account passwords to
     \textbf{secret}; and add these accounts to the \textbf{dev} project. 
-
 
     \item First, navigate to \textbf{Identity$\rightarrow$Users} and click on \textbf{Create User}.
 
@@ -325,9 +288,8 @@ ubuntu@workstation:~$ openstack user create \
     \end{center}
 
     \begin{tipbox}{}
-        When typing the command, make sure there is a space between \textbf{\texttt{create}} and the
-        \textbf{\texttt{\textbackslash}} character, and press \textbf{Enter} to get the \textbf{\texttt{>}} and continue
-        typing the rest of the command.
+        When typing the command, make sure there is a space between \texttt{create} and the \texttt{\textbackslash}
+        character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
     \end{tipbox}
 
     \item Verify the user was created using the command below.
@@ -505,7 +467,7 @@ ubuntu@workstation:~$ openstack user list
 In this task, you will assign user roles privileges using the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
-    \item Open the web browser, navigate to the OpenStack login page at \textbf{192.168.1.20}, and log in with username
+    \item Open the web browser, navigate to the OpenStack login page at \textbf{2}, and log in with username
     \textbf{admin} and password \textbf{secret} as before.
 
     \item Navigate to \textbf{Identity$\rightarrow$Users} and click on the \textbf{Create User} button.
