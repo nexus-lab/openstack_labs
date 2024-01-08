@@ -44,6 +44,27 @@ In this lab, you will use the \textbf{\texttt{cloud-init}} utility to customize 
 \end{itemize}
 \clearpage
 
+\section*{Lab Settings}
+\label{sec:lab_settings}
+\addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
+The information in the table below will be needed in order to complete the lab. The task sections below provide details
+on the use of this information.
+\begin{table*}[htbp]
+\centering
+\begin{tabular}{|c|c|c|c|}
+    \hline
+    \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
+    \hline
+    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.23}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.23}} &                                  &                                  \\
+    \hline
+    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.22}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.22}} &                                  &                                  \\
+    \hline
+\end{tabular}
+\end{table*}
+\clearpage
+
 \section{Creating Customized Instances}
 \label{sec:creating_customized_instances}
 In this task, you will customize two instances using \textbf{\texttt{cloud-init}} capabilities and features. You will

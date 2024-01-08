@@ -19,3 +19,7 @@ popd
 pushd lab9
 make
 popd
+
+pushd lab12
+make
+popd
