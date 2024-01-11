@@ -135,7 +135,34 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
         \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
-    \item Create the \textbf{image2} image using the \textbf{\texttildemid/Downloads/ubuntu.img} file and the QCOW2
+    \item Try to delete the \textbf{image1} image while it is protected. It should return an error.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack image delete image1
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
+    \end{center}
+
+    \item Set the \textbf{image1} image to unprotected.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack image set --unprotected image1
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step11.png}
+    \end{center}
+
+    \item Delete the \textbf{image1} image.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack image delete image1
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
+    \end{center}
+
+    \item Create the \textbf{image1} image using the \textbf{\texttildemid/Downloads/ubuntu.img} file and the QCOW2
     format.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack image create \
@@ -145,7 +172,7 @@ ubuntu@workstation:~$ openstack image create \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
     \item Set the \textbf{image2} image status to \textbf{protected}, and set the minimum disk size to \textbf{10 GB}.
@@ -157,7 +184,7 @@ ubuntu@workstation:~$ openstack image set \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \item Set the \textbf{image2} image to be public. Note that this action requires administrative privileges.
@@ -166,7 +193,7 @@ ubuntu@workstation:~$ openstack image set --public image2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
     \item Verify that the \textbf{image2} image was correctly created by listing the available images.
@@ -175,7 +202,7 @@ ubuntu@workstation:~$ openstack image list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step13.png}
+        \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
     \item Display the details of the \textbf{image2} image and verify that it was correctly updated. Confirm the value
@@ -183,33 +210,6 @@ ubuntu@workstation:~$ openstack image list
     the value for \textit{visibility} is \textbf{public}.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack image show image2
-\end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
-    \end{center}
-
-    \item Try to delete the \textbf{image2} image while it is protected. It should return an error.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image delete image2
-\end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
-    \end{center}
-
-    \item Set the \textbf{image2} image to unprotected.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image set --unprotected image2
-\end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
-    \end{center}
-
-    \item Delete the \textbf{image2} image.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image delete image2
 \end{lstlisting}
 
     \begin{center}
@@ -246,7 +246,7 @@ In this task, you will create, modify, and delete flavors using the \textit{Hori
     \item Log out of the \textit{Horizon Dashboard} and close the web browser.
     
     \item If a terminal is not already open, open one and source the \textbf{\texttildemid/keystonerc-admin} file.
-    
+
     \item Create a flavor named \textbf{m1.exercise}. Configure the flavor with \textbf{1} VCPU, \textbf{1024 MB} of RAM, a
     \textbf{10 GB} root disk, a \textbf{2 GB} ephemeral disk, and a \textbf{1024 MB} swap disk.
 \begin{lstlisting}
@@ -516,11 +516,11 @@ ubuntu@workstation:~$ openstack server list
         \includegraphics[width=\linewidth]{images/part4/step11.png}
     \end{center}
 
-    \item Create a new instance named \textbf{instance2}. Use the previously created \textbf{image1} image,
+    \item Create a new instance named \textbf{instance2}. Use the previously created \textbf{image2} image,
     \textbf{m1.exercise} flavor, and \textbf{exercise} network.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack server create \
-> --image image1 \
+> --image image2 \
 > --flavor m1.exercise \
 > --nic net-id=exercise \
 > --wait instance2
