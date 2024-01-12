@@ -59,11 +59,11 @@ on the use of this information.
     \hline
     \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
     \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.23}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.23}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
     \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.22}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.22}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
     \hline
 \end{tabular}
 \end{table*}
@@ -99,7 +99,7 @@ an external network.
     \end{center}
     
     \item Enter \textbf{net1} in the \textit{Network Name} field. Select \textbf{demo} in the \textit{Project} dropdown.
-    For \textit{Provider Network Type}, select \textbf{Flat}. Enter \textbf{physnet1} into the \textit{Physical Network}
+    For \textit{Provider Network Type}, select \textbf{Flat}. Enter \textbf{public} into the \textit{Physical Network}
     field. Check the \textit{Shared} and \textit{External Network} check boxes, and ensure the \textit{Create Subnet}
     check box is checked. Click \textbf{Next} to go to the \textit{Subnet} tab.
 
@@ -188,50 +188,6 @@ ubuntu@workstation:~$ openstack subnet create \
         \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
-    \item To review the implementation of the networks in the \textbf{devstack} machine, open a new terminal window and
-    use the \textbf{\texttt{ssh}} command to connect to the \textbf{devstack} virtual machine as the \textbf{ubuntu}
-    user.
-\begin{lstlisting}
-ubuntu@workstation:~$ ssh 192.168.1.20
-\end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
-    \end{center}
-
-    \begin{tipbox}{}
-        To find the password for the \textbf{ubuntu} user, navigate back to the EZSetup page for the lab, click on the
-        devstack machine, and click the eye icon under \textit{Password}.
-    \end{tipbox}
-
-    \item Use the \textbf{\texttt{ovs-vsctl}} command to review the network configuration. List all the bridges and
-    ports. The \textbf{br-ex} bridge contains three ports: \textbf{ens4}, which is the physical device set as an Open
-    vSwitch port for the \textbf{br-ex} device, a patch port to the \textbf{br-int} bridge, and \textbf{br-ex}, which is
-    the virtual device.
-\begin{lstlisting}
-ubuntu@devstack:~$ sudo ovs-vsctl show
-\end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
-    \end{center}
-
-    \item Run the \textbf{\texttt{ip}} command to check the allocation of the IP addresses. Locate the \textbf{br-ex}
-    and \textbf{ens4} devices. The \textbf{br-ex} device has the IP address of \textbf{172.25.250.20}.
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
-    \end{center}
-
-    \item Exit from the \textbf{devstack} machine.
-\begin{lstlisting}
-ubuntu@devstack:~$ exit
-\end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step17.png}
-    \end{center}
-
     \item Leave the terminal window open and continue to the next task.
 
 \end{enumerate}
@@ -279,18 +235,6 @@ CLI} and use command line tools to test the connectivity of the router.
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
-    \item Take note of the subnet ID for the \textbf{shared} subnet. To find the subnet ID, in the \textbf{Interfaces}
-    tab of the \textbf{router1} router, click the \textit{Name} value in the same row as the \textbf{192.168.233.1} IP
-    address. On the page this links to, the \textit{Subnet ID} can be found under the \textit{Fixed IPs} section. Copy
-    or take a note of this ID for a future step.
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step7a.png}
-    \end{center}
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step7b.png}
-    \end{center}
-
     \item Log out of the dashboard and close the web browser.
     
     \item Open a terminal window if one is not already open, and source the \textbf{admin} credentials.
@@ -299,14 +243,29 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
 \end{lstlisting}
 
     \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step8.png}
+    \end{center}
+
+    \item Show the details of \textbf{router1}. Copy the \texttt{subnet\_id} from the
+    \texttt{interfaces\_info} row of the output.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack router show router1
+\end{lstlisting}
+
+    \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
+    \begin{tipbox}{}
+        You can copy from the terminal to the clipboard the keyboard shortcut \textbf{Ctrl+Shift+C}.
+    \end{tipbox}
+
     \item Delete the interface in the \textbf{shared} subnet for the \textbf{router1} router using the command below.
-    Substitute the subnet ID with the one you copied previously.
+    Substitute the subnet ID with the one you copied previously. Make sure not to include any characters besides numbers
+    and hyphens.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack router remove subnet router1 \
-> 3bb68218-3879-4f34-8f09-1d182db8227d
+> 85998680-f76d-4cba-887c-f4946a26e071
 \end{lstlisting}
 
     \begin{center}
@@ -375,7 +334,7 @@ ubuntu@workstation:~$ openstack router show exercise-router
         \includegraphics[width=\linewidth]{images/part2/step16.png}
     \end{center}
 
-    \item SSH into the \textbf{devstack} virtual machine.
+    \item SSH into the \textbf{devstack} virtual machine. Log in with the password \textbf{ubuntu}.
 \begin{lstlisting}
 ubuntu@workstation:~$ ssh 192.168.1.20
 \end{lstlisting}
@@ -392,8 +351,12 @@ ubuntu@workstation:~$ ssh 192.168.1.20
     \item Use the \textbf{\texttt{ping}} command on the IP address found from the
     \textbf{\texttt{openstack router show}} command to verify that the router can be reached.
 \begin{lstlisting}
-ubuntu@devstack:~$ ping -c3 172.25.250.74
+ubuntu@devstack:~$ ping -c3 172.25.250.71
 \end{lstlisting}
+
+    \begin{notebox}{}
+        The actual IP address may differ from this example.
+    \end{notebox}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step18.png}
@@ -476,7 +439,7 @@ ubuntu@workstation:~$ openstack server create \
         \includegraphics[width=\linewidth]{images/part3/step8.png}
     \end{center}
 
-    \item Check the \textit{Release Floating IP} box and click \textbf{Disassociate Floating IP}.
+    \item Check the \textit{Release Floating IP} box and click \textbf{Disassociate}.
     
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step9.png}
@@ -528,10 +491,10 @@ ubuntu@workstation:~$ openstack floating ip create external
         \includegraphics[width=\linewidth]{images/part3/step14.png}
     \end{center}
 
-    \item Allocate the third floating IP to \textbf{instance1}.
+    \item Associate the third floating IP with \textbf{instance1}.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack server add \
-> floating ip instance1 172.25.250.64
+> floating ip instance1 172.25.250.74
 \end{lstlisting}
 
     \begin{center}
@@ -739,8 +702,8 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part4/step24.png}
     \end{center}
 
-    \item Navigate to the \textbf{Routers} tab. Click the \textbf{Clear Gateway} associated with \textbf{router1} to
-    remove its interface on the \textbf{external} network.
+    \item Navigate to the \textbf{Routers} tab. Click the \textbf{Clear Gateway} associated with
+    \textbf{exercise-router} to remove its interface on the \textbf{external} network.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step25.png}
@@ -759,7 +722,7 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part4/step27.png}
     \end{center}
 
-    \item In the \textbf{Detach Interface} window, select \textbf{192.268.233.XYZ} and click \textbf{Detach Interface}.
+    \item In the \textbf{Detach Interface} window, select \textbf{192.168.233.XYZ} and click \textbf{Detach Interface}.
     
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step28.png}
@@ -856,7 +819,7 @@ ubuntu@workstation:~$ openstack floating ip create external
     \item Associate the third floating IP address with the \textbf{instance-external} instance.
 \begin{lstlisting}
 ubuntu@workstation;~$ openstack server add floating ip \
-> instance external 172.25.250.74
+> instance-external 172.25.250.74
 \end{lstlisting}
 
     \begin{center}
@@ -929,6 +892,15 @@ ubuntu@devstack:~$ ping -c3 172.25.250.74
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step5.png}
+    \end{center}
+
+    \item Ping the DHCP server.
+\begin{lstlisting}
+ubuntu@instance-external:~$ ping -c3 192.168.233.2
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part6/step6.png}
     \end{center}
 
     \item The lab is now complete.
