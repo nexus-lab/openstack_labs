@@ -56,11 +56,11 @@ on the use of this information.
     \hline
     \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
     \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.23}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.23}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
     \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.22}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.22}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
     \hline
 \end{tabular}
 \end{table*}
@@ -77,14 +77,14 @@ In this task, you will create and delete projects using the \textit{Horizon Dash
     \includegraphics[scale=0.75]{images/part1/step1.png}
     \end{center}
 
-    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.22}) into the address bar, and log
+    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.20}) into the address bar, and log
     into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
     
     \begin{center}
         \includegraphics[scale=0.75]{images/part1/step2.png}
     \end{center}
 
-    \item Create a project named \textbf{dev}. First, navigate to \textbf{Identity$\rightarrow$Projects}, then click on
+    \item Create a project named \textbf{dev}. First, navigate to \textbf{Identity $>$ Projects}, then click on
     \textbf{Create Project}.
 
     \begin{center}
@@ -187,12 +187,12 @@ ubuntu@workstation:~$ openstack project list
 In this task, you will use the \textit{Horizon Dashboard} to manage users.
 
 \begin{enumerate}
-    \item Open the web browser, navigate to the OpenStack login page at \textbf{http://192.168.1.22}, and log in with
+    \item Open the web browser, navigate to the OpenStack login page at \textbf{http://192.168.1.20}, and log in with
     username \textbf{admin} and password \textbf{secret} as before. In the following steps, you will create users named
     \textbf{cloud-dev}, \textbf{cloud-test1}, and \textbf{cloud-test2}; set all of these account passwords to
     \textbf{secret}; and add these accounts to the \textbf{dev} project. 
 
-    \item First, navigate to \textbf{Identity$\rightarrow$Users} and click on \textbf{Create User}.
+    \item First, navigate to \textbf{Identity $>$ Users} and click on \textbf{Create User}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step2.png}
@@ -251,7 +251,7 @@ In this task, you will use the \textit{Horizon Dashboard} to manage users.
     \end{notebox}
 
     \item Log back into the dashboard as \textbf{admin} and re-enable the \textbf{cloud-test2} user. Navigate to
-    \textbf{Identity$\rightarrow$Users}. Click on the drop down in the \textit{Actions} column in the row for
+    \textbf{Identity $>$ Users}. Click on the drop down in the \textit{Actions} column in the row for
     \textbf{cloud-test2} and select \textbf{Enable User}.
 
     \begin{center}
@@ -491,7 +491,7 @@ In this task, you will assign user roles privileges using the \textit{Horizon Da
     \item Open the web browser, navigate to the OpenStack login page at \textbf{2}, and log in with username
     \textbf{admin} and password \textbf{secret} as before.
 
-    \item Navigate to \textbf{Identity$\rightarrow$Users} and click on the \textbf{Create User} button.
+    \item Navigate to \textbf{Identity $>$ Users} and click on the \textbf{Create User} button.
     
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step2.png}
@@ -516,7 +516,7 @@ In this task, you will assign user roles privileges using the \textit{Horizon Da
     \textbf{secret}.
 
     \item Verify that the \textbf{cloud-admin} user has \textbf{admin} privileges by creating a user named
-    \textbf{cloud-user1}. Navigate to \textbf{Identity$\rightarrow$Users} and click on the \textbf{Create User} button
+    \textbf{cloud-user1}. Navigate to \textbf{Identity $>$ Users} and click on the \textbf{Create User} button
     as before. In the dialog box, enter \textbf{cloud-user1} in the \textit{User Name} field and \textbf{secret} in the
     \textit{Password} and \textit{Confirm Password} fields. Select the \textbf{dev} project from the \textit{Primary
     Project} dropdown, leave the \textit{Role} set to \textbf{member}, and leave the \textbf{Enabled} checkbox

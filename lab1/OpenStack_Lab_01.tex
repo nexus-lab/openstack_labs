@@ -58,11 +58,11 @@ on the use of this information.
     \hline
     \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
     \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.23}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.23}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
     \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.22}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.22}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
     \hline
 \end{tabular}
 \end{table*}
@@ -80,31 +80,25 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \includegraphics[scale=0.75]{images/part1/step2.png}
     \end{center}
 
-    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.22}) into the address bar, and log
+    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.20}) into the address bar, and log
     into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
     
     \begin{center}
         \includegraphics[scale=0.75]{images/part1/step3.png}
     \end{center}
 
-    \item Click on the \textit{Project} tab in the top right corner of the webpage, then select \textbf{demo} as the
-    project.
+    \item Click on the dropdown menu in the top left corner of the webpage, then select \textbf{demo} as the project.
+    Navigate to \textbf{Project $>$ Compute $>$ Overview}, then click \textbf{Launch Instance} in the top right corner.
 
     \begin{center}
-        \includegraphics[scale=0.75]{images/part1/step4.png}
-    \end{center}
-
-    \item Navigate to the \textit{Instances} panel and click \textbf{Launch Instance} in the top right corner.
-    
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step5.png}
+        \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
     \item In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their
     default values. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
+        \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
     \item In the \textit{Select Boot Source} drop dow, select \textbf{Image}, set \textit{Create New Volume} to
@@ -112,7 +106,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \textbf{ubuntu} as the image. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step7.png}
+        \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -124,7 +118,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \textbf{Next}.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step8.png}
+        \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -136,7 +130,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \textbf{Launch Instance} button in the bottom right corner should now be clickable. Click \textbf{Launch Instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -148,7 +142,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     select \textbf{Open Link in New Tab}, or middle-click the name \textbf{prod-instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -160,7 +154,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     the \textbf{Click here to show only console} link.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
     \item Log into the console as \textbf{root} with the password \textbf{secret}.
@@ -171,7 +165,7 @@ $ ping -c3 192.168.233.2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step13.png}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
     \begin{notebox}{}
@@ -184,13 +178,13 @@ $ ping -c3 192.168.233.2
     \textbf{prod-instance} and click the \textbf{Delete Instances} button.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \item Confirm the deletion by clicking the \textbf{Delete Instances} button.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
+        \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
     \item Close the web browser.
@@ -213,7 +207,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     that allow you to use the OpenStack platform on the \textbf{devstack} server through the OpenStack Unified
     CLI. The username will be \textbf{admin}, the password will be be \textbf{secret}, the project will be
     \textbf{demo}, and the IP address for \texttt{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server,
-    \textbf{192.168.1.22}. You can run \textbf{\texttt{cat}} on the file to view its contents.
+    \textbf{192.168.1.20}. You can run \textbf{\texttt{cat}} on the file to view its contents.
 \begin{lstlisting}
 ubuntu@workstation:~$ cat ~/keystonerc-admin
 \end{lstlisting}
