@@ -55,11 +55,11 @@ on the use of this information.
     \hline
     \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
     \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.23}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.23}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
     \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.22}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.22}} &                                  &                                  \\
+    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
     \hline
 \end{tabular}
 \end{table*}
@@ -76,8 +76,8 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
     password \textbf{secret}.
 
-    \item Switch to the \textbf{demo} project. Navigate to \textbf{Admin$\rightarrow$Network$\rightarrow$Routers}. Check
-    the box in the same row as \textbf{router1}, then click \textbf{Delete Routers}.
+    \item Switch to the \textbf{demo} project. Navigate to \textbf{Admin $>$ Network $>$ Routers}. Check the box in the
+    same row as \textbf{router1}, then click \textbf{Delete Routers}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step2.png}
@@ -245,7 +245,7 @@ ubuntu@workstation:~$ openstack security group \
     \end{center}
 
     \item Now that the necessary resources have been created, focus back to the web browser. Navigate to
-    \textbf{Project$\rightarrow$Compute$\rightarrow$Instances}, then click \textbf{Launch Instance}.
+    \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step18.png}
@@ -360,7 +360,7 @@ echo 'Hello, world!' > /root/hello.txt
     \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \textbf{\texttt{tail}}
     command to print the last 10 lines of the log.
 \begin{lstlisting}
-root@instance:~# tail /var/log/cloud-init.log
+root@instance1:~# tail /var/log/cloud-init.log
 \end{lstlisting}
 
     \begin{center}
@@ -369,7 +369,7 @@ root@instance:~# tail /var/log/cloud-init.log
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
 \begin{lstlisting}
-root@instance:~# cat /root/hello.txt
+root@instance1:~# cat /root/hello.txt
 \end{lstlisting}
 
     \begin{center}
@@ -389,10 +389,14 @@ ubuntu@workstation:~$ openstack server delete instance1
 
     \item Another instance will be created and customized using the \textit{OpenStack Unified CLI}. First, create a
     \textbf{user-data} script that will be attached to the instance at creation. Create a script called
-    \textbf{\texttildemid/set\_hostname} that matches the content shown below. Press \textbf{CTRL+X}, then \textbf{Y} to
+    \textbf{\texttildemid/hello} that matches the content shown below. Press \textbf{CTRL+X}, then \textbf{Y} to
     accept the file changes. Press \textbf{Enter} to confirm and exit back to the terminal.
 \begin{lstlisting}
-ubuntu@workstation: nano ~/set_hostname
+ubuntu@workstation: nano ~/hello
+\end{lstlisting}
+\begin{lstlisting}
+    #!/bin/bash
+    echo 'Hello, world!' > /root/hello.txt
 \end{lstlisting}
 
     \begin{center}
@@ -409,7 +413,7 @@ ubuntu@workstation: openstack server create \
 > --nic net-id=shared \
 > --security-group dev-secgroup \
 > --key-name dev-keypair \
-> --user-data ~/set_hostname \
+> --user-data ~/hello \
 > --wait instance2
 \end{lstlisting}
 
@@ -461,37 +465,75 @@ previous section.
     \item If a terminal window is not already open, open one and source the admin credentials from the 
     \textbf{\texttildemid/keystonerc-admin} file.
 
-    \item Determine the floating IP address associated with \textbf{instance1}. Remember that the floating IP address is
+    \item Determine the floating IP address associated with \textbf{instance2}. Remember that the floating IP address is
     in the \textbf{172.25.250.0/24} subnet.
-\begin{lstlisting}
-ubuntu@workstation: openstack server show instance1 \
-> | grep address
-\end{lstlisting}
-
-    \begin{notebox}{}
-        The floating IP addresses in your output may differ from these examples.
-    \end{notebox}
-
-    \item Now, use this command again to determine the floating IP address associated with \textbf{instance2}.
 \begin{lstlisting}
 ubuntu@workstation: openstack server show instance2 \
 > | grep address
 \end{lstlisting}
 
-%     \item Use the \textbf{\texttt{scp}} command to copy the \textbf{\texttildemid/Downloads/dev-keypair.pem} file to
-%     the \textbf{devstack} machine. You will be prompted to enter the password for \textbf{ubuntu@192.168.1.20}. The
-%     password can be found on the EZSetup page for the lab by clicking on the \textbf{devstack} machine, then 
-% \begin{lstlisting}
-% ubuntu@workstation:~$ scp ~/Downloads/dev-keypair.pem \
-% > ubuntu@192.168.1.20:~/dev-keypair.pem
-% \end{lstlisting}
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step2.png}
+    \end{center}
 
-%     \item SSH into the \textbf{devstack} machine. The password is the same as the last step.
-% \begin{lstlisting}
-% ubuntu@workstation:~$ ssh 192.168.1.20
-% \end{lstlisting}
+    \begin{notebox}{}
+        The floating IP addresses in your output may differ from these examples.
+    \end{notebox}
+
+    \item Use the \textbf{\texttt{scp}} command to copy the \textbf{\texttildemid/Downloads/dev-keypair.pem} file to
+    the \textbf{devstack} machine. You will be prompted to enter the password for \textbf{ubuntu@192.168.1.20}. The
+    password can be found on the EZSetup page for the lab by clicking on the \textbf{devstack} machine, then 
+\begin{lstlisting}
+ubuntu@workstation:~$ scp ~/Downloads/dev-keypair.pem \
+> ubuntu@192.168.1.20:~/dev-keypair.pem
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step3.png}
+    \end{center}
+
+    \item SSH into the \textbf{devstack} machine. The password is the same as the last step.
+\begin{lstlisting}
+ubuntu@workstation:~$ ssh 192.168.1.20
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step4.png}
+    \end{center}
+
+    \item SSH into \textbf{instance2} using the \textbf{dev-keypair} private key.
+\begin{lstlisting}
+ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.63
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step5.png}
+    \end{center}
+
+    \begin{notebox}{}
+        It may take several minutes for the instance to fully boot and be available for an SSH connection.
+    \end{notebox}
+
+    \item Check \textbf{/var/log/cloud-init.log} to confirm that the \textbf{cloud-init} script ran.
+\begin{lstlisting}
+ubuntu@instance2:~$ sudo tail /var/log/cloud-init.log
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step6.png}
+    \end{center}
+
+    \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
+\begin{lstlisting}
+ubuntu@instance2:~# cat /root/hello.txt
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step7.png}
+    \end{center}
+
+    \item The lab is now complete.
 
 \end{enumerate}
-
 
 \end{document}
