@@ -73,7 +73,7 @@ In this task, you will create, modify, and delete images using the \textit{Horiz
 \textit{OpenStack Unified CLI}.
 
 \begin{enumerate}
-    \item Open the web browser. Navigate to \textbf{192.168.1.20} and log into the dashboard as\textbf{admin} with the
+    \item Open the web browser. Navigate to \textbf{192.168.1.20} and log into the dashboard as \textbf{admin} with the
     password \textbf{secret}.
 
     \item Switch to the \textbf{demo} project. To create a new OpenStack image, first navigate to
@@ -229,7 +229,7 @@ In this task, you will create, modify, and delete flavors using the \textit{Hori
     \item Open the web browser and navigate to \textbf{192.168.1.20}. Log in to the dashboard as the \textbf{admin} user
     with the password \textbf{secret}.
     
-    \item Switch to the \textbf{demo} project. Navigate to \textbf{Admin $>$ Compute$>$Flavors} and click
+    \item Switch to the \textbf{demo} project. Navigate to \textbf{Admin $>$ Compute $>$ Flavors} and click
     \textbf{Create Flavor}.
 
     \begin{center}
@@ -345,7 +345,7 @@ ubuntu@workstation:~$ openstack network create exercise
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step7.png}
+        \includegraphics[width=\linewidth]{images/part3/step8.png}
     \end{center}
 
     \item Create a subnet named \textbf{subexer} for the \textbf{exercise} network. Configure this subnet to use the
@@ -359,7 +359,7 @@ ubuntu@workstation:~$ openstack subnet create \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step8.png}
+        \includegraphics[width=\linewidth]{images/part3/step9.png}
     \end{center}
 
     \item Change the name of the \textbf{net1} network to \textbf{net2}.
@@ -368,7 +368,7 @@ ubuntu@workstation:~$ openstack network set --name net2 net1
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step9.png}
+        \includegraphics[width=\linewidth]{images/part3/step10.png}
     \end{center}
 
     \begin{notebox}{}
@@ -382,7 +382,7 @@ ubuntu@workstation:~$ openstack network list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step10.png}
+        \includegraphics[width=\linewidth]{images/part3/step11.png}
     \end{center}
 
     \item Update the \textbf{subnet1} subnetwork to disable DHCP.
@@ -391,7 +391,7 @@ ubuntu@workstation:~$ openstack subnet set --no-dhcp subnet1
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step11.png}
+        \includegraphics[width=\linewidth]{images/part3/step12.png}
     \end{center}
 
     \item Verify that the \textbf{subnet1} subnetwork has been correctly updated.
@@ -400,7 +400,7 @@ ubuntu@workstation:~$ openstack subnet show subnet1
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step12.png}
+        \includegraphics[width=\linewidth]{images/part3/step13.png}
     \end{center}
 
     \item Delete the \textbf{net2} network.
@@ -409,7 +409,7 @@ ubuntu@workstation:~$ openstack network delete net2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step13.png}
+        \includegraphics[width=\linewidth]{images/part3/step14.png}
     \end{center}
 
     \item Verify that the \textbf{net2} network has been deleted by listing all available networks and noting that
@@ -419,7 +419,7 @@ ubuntu@workstation:~$ openstack network list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part3/step14.png}
+        \includegraphics[width=\linewidth]{images/part3/step15.png}
     \end{center}
 
     \item Leave the terminal window open and continue to the next task.
@@ -450,7 +450,7 @@ instance and launch a new instance by using the \textit{Horizon Unified CLI}.
     \end{center}
 
     \item Make sure \textbf{Image} is selected in the \textit{Select Boot Source} dropdown, and click \textbf{No} under
-    \textit{Create New Volume}. Click the $\uparrow$ button on the same row as the \textbf{image1} image to allocate the
+    \textit{Create New Volume}. Click the $\uparrow$ button on the same row as the \textbf{image2} image to allocate the
     image, and then click \textbf{Next}.
 
     \begin{center}
@@ -458,7 +458,7 @@ instance and launch a new instance by using the \textit{Horizon Unified CLI}.
     \end{center}
 
     \begin{stopbox}{}
-        Verify that \textbf{image1} appears in the \textit{Allocated} section before moving on to the next step.
+        Verify that \textbf{image2} appears in the \textit{Allocated} section before moving on to the next step.
     \end{stopbox}
 
     \item Click the $\uparrow$ button on the same row as the \textbf{m1.exercise} flavor to allocate that flavor, then

@@ -12,14 +12,14 @@ pushd lab3
 make
 popd
 
-pushd lab8
+pushd lab4
 make
 popd
 
-pushd lab9
+pushd lab5
 make
 popd
 
-pushd lab12
+pushd lab6
 make
 popd
