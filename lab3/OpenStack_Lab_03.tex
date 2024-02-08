@@ -77,23 +77,29 @@ In this task, you will create, modify, and delete images using the \textit{Horiz
     password \textbf{secret}.
 
     \item Switch to the \textbf{demo} project. To create a new OpenStack image, first navigate to
-    \textbf{Project $>$ Compute $>$ Images} and click \textbf{Create Image}.
+    \textbf{Project $>$ Compute $>$ Images}. Select the \textbf{ubuntu} image and click \textbf{Delete Image}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step2.png}
     \end{center}
 
+    \item Click \textbf{Create Image} to create a new image.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step3.png}
+    \end{center}
+
     \item Enter \textbf{image1} into the \textit{Image Name} field. Under \textbf{File}, click \textbf{Browse...}.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step3.png}
+        \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
     \item In the file browser, click \textbf{Downloads}, then select the \textbf{ubuntu.img} file. Click the
     \textbf{Open} button.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step4.png}
+        \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
     \item In the format dropdown, select \textbf{QCOW2 - QEMU Emulator}, and under \textit{Image Sharing}, set
@@ -101,7 +107,7 @@ In this task, you will create, modify, and delete images using the \textit{Horiz
     \textbf{Create Image}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step5.png}
+        \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
     \begin{stopbox}{}
@@ -113,14 +119,14 @@ In this task, you will create, modify, and delete images using the \textit{Horiz
     \textbf{Edit Image}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
+        \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
     \item Enter \textbf{10} in the \textit{Minimum Disk (GB)} field, and select \textbf{Yes} for \textit{Protected}.
     Click the \textbf{Update Image} button.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step7.png}
+        \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
     \item Log out of the \textit{Horizon Dashboard} and close the web browser.
@@ -132,7 +138,7 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
     \item Try to delete the \textbf{image1} image while it is protected. It should return an error.
@@ -141,7 +147,7 @@ ubuntu@workstation:~$ openstack image delete image1
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
     \item Set the \textbf{image1} image to unprotected.
@@ -150,7 +156,7 @@ ubuntu@workstation:~$ openstack image set --unprotected image1
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
     \item Delete the \textbf{image1} image.
@@ -159,7 +165,7 @@ ubuntu@workstation:~$ openstack image delete image1
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
     \item Create the \textbf{image1} image using the \textbf{\texttildemid/Downloads/ubuntu.img} file and the QCOW2
@@ -172,7 +178,7 @@ ubuntu@workstation:~$ openstack image create \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step13.png}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \item Set the \textbf{image2} image status to \textbf{protected}, and set the minimum disk size to \textbf{10 GB}.
@@ -184,7 +190,7 @@ ubuntu@workstation:~$ openstack image set \
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
+        \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
     \item Set the \textbf{image2} image to be public. Note that this action requires administrative privileges.
@@ -193,7 +199,7 @@ ubuntu@workstation:~$ openstack image set --public image2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
+        \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
     \item Verify that the \textbf{image2} image was correctly created by listing the available images.
@@ -202,7 +208,7 @@ ubuntu@workstation:~$ openstack image list
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
+        \includegraphics[width=\linewidth]{images/part1/step17.png}
     \end{center}
 
     \item Display the details of the \textbf{image2} image and verify that it was correctly updated. Confirm the value
@@ -213,7 +219,7 @@ ubuntu@workstation:~$ openstack image show image2
 \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step17.png}
+        \includegraphics[width=\linewidth]{images/part1/step18.png}
     \end{center}
 
     \item Leave the terminal window open and continue to the next task.
