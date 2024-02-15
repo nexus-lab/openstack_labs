@@ -325,7 +325,8 @@ ubuntu@workstation:~$ openstack router set \
     \end{center}
 
     \item Show the details of the \textbf{exercise-router} router. Take note of the IP address listed in the
-    \textit{external\_gateway\_info} row.
+    \textit{external\_gateway\_info} row, as you will ping this address in a later step to verify that the router can be
+    reached.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack router show exercise-router
 \end{lstlisting}
@@ -342,11 +343,6 @@ ubuntu@workstation:~$ ssh 192.168.1.20
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step17.png}
     \end{center}
-
-    \begin{tipbox}
-        The password can be found on the EZSetup page showing the network topology for the lab. Click the
-        \textbf{devstack} machine and click the eye icon under \textit{Password}.
-    \end{tipbox}
 
     \item Use the \textbf{\texttt{ping}} command on the IP address found from the
     \textbf{\texttt{openstack router show}} command to verify that the router can be reached.
@@ -650,7 +646,7 @@ ubuntu@workstation:~$ openstack security group \
 
     \item Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
 \begin{lstlisting}
-ubuntu@workstation: openstack security group \
+ubuntu@workstation:~$ openstack security group \
 > rule create \
 > --protocol icmp \
 > dev-secgroup
@@ -694,7 +690,7 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part4/step23.png}
     \end{center}
 
-    \item Click \textbf{Release FLoating IPs} to confirm the release of the all the floating IP addresses.
+    \item Click \textbf{Release Floating IPs} to confirm the release of the all the floating IP addresses.
     
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step24.png}
@@ -887,10 +883,18 @@ ubuntu@devstack:~$ ping -c3 172.25.250.74
     \end{center}
 
     \item SSH into the \textbf{instance-external} instance, using the \textbf{dev-keypair.pem} file to authenticate.
-
+\begin{lstlisting}
+ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem \
+> 172.25.250.74
+\end{lstlisting}
+ 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step5.png}
     \end{center}
+
+    \begin{notebox}{}
+        It may take a few minutes for the instance to be fully booted and ready to accept SSH connections.
+    \end{notebox}
 
     \item Ping the DHCP server.
 \begin{lstlisting}
