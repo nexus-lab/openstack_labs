@@ -127,7 +127,7 @@ ubuntu@workstation:~$ openstack network create external \
     \end{center}
 
     \begin{tipbox}{}
-        WHen typing the command, make sure there is a space between \texttt{external} and the \texttt{\textbackslash}
+        When typing the command, make sure there is a space between \texttt{external} and the \texttt{\textbackslash}
         character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
     \end{tipbox}
 
@@ -221,7 +221,7 @@ ubuntu@workstation:~$ openstack security group \
 
     \item Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
 \begin{lstlisting}
-ubuntu@workstation: openstack security group \
+ubuntu@workstation:~$ openstack security group \
 > rule create \
 > --protocol icmp \
 > dev-secgroup
@@ -392,7 +392,7 @@ ubuntu@workstation:~$ openstack server delete instance1
     \textbf{\texttildemid/hello} that matches the content shown below. Press \textbf{CTRL+X}, then \textbf{Y} to
     accept the file changes. Press \textbf{Enter} to confirm and exit back to the terminal.
 \begin{lstlisting}
-ubuntu@workstation: nano ~/hello
+ubuntu@workstation:~$ nano ~/hello
 \end{lstlisting}
 \begin{lstlisting}
 #!/bin/bash
@@ -407,7 +407,7 @@ echo 'Hello, world!' > /root/hello.txt
     customization. Use the \textbf{ubuntu} image, the \textbf{m1.small} flavor, the \textbf{shared} network, the
     \textbf{dev-secgroup} security group, and the \textbf{dev-keypair} key pair.
 \begin{lstlisting}
-ubuntu@workstation: openstack server create \
+ubuntu@workstation:~$ openstack server create \
 > --image ubuntu \
 > --flavor m1.small \
 > --nic net-id=shared \
@@ -423,7 +423,7 @@ ubuntu@workstation: openstack server create \
 
     \item Verify that the status of the \textbf{instance2} instance is \textbf{ACTIVE}.
 \begin{lstlisting}
-ubuntu@workstation: openstack server list
+ubuntu@workstation:~$ openstack server list
 \end{lstlisting}
 
     \begin{center}
@@ -431,7 +431,7 @@ ubuntu@workstation: openstack server list
     \end{center}
 
     \item Generate another floating IP address to assign to this instance. Take note of the IP address generated, which
-    is listed in the \textit{name} row in the output from the below command.
+    is listed in the \textit{floating\_ip\_address} and \textit{name} rows in the output from the below command.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack floating ip create external
 \end{lstlisting}
@@ -468,7 +468,7 @@ previous section.
     \item Determine the floating IP address associated with \textbf{instance2}. Remember that the floating IP address is
     in the \textbf{172.25.250.0/24} subnet.
 \begin{lstlisting}
-ubuntu@workstation: openstack server show instance2 \
+ubuntu@workstation:~$ openstack server show instance2 \
 > | grep address
 \end{lstlisting}
 
@@ -525,7 +525,7 @@ ubuntu@instance2:~$ sudo tail /var/log/cloud-init.log
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
 \begin{lstlisting}
-ubuntu@instance2:~# cat /root/hello.txt
+ubuntu@instance2:~$ sudo cat /root/hello.txt
 \end{lstlisting}
 
     \begin{center}
