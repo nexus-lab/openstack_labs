@@ -1,4 +1,4 @@
-PAPER=OpenStack_Lab_6.tex
+PAPER=OpenStack_Lab_06.tex
 AUX_DIR=.aux
 
 all: # Compile paper
