@@ -13,15 +13,16 @@
 
     \vspace*{\baselineskip}
 
-    \textbf{\Large Lab 6: Deploying an FTP Server}
+    \textbf{\Large Lab 06: Deploying an FTP Server}
     \vspace*{\fill}
 \end{titlepage}
 
 \fancypagestyle{fancy}
 {
     \fancyhf{}
-    \fancyhead[L]{\footnotesize Lab 6: Deploying an FTP Server}
+    \fancyhead[L]{\footnotesize Lab 06: Deploying an FTP Server}
     \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
@@ -103,7 +104,7 @@ ubuntu@workstation:~$ openstack project create prod \
         \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
-\begin{tipbox}{}
+\begin{tipbox}
     When typing the command, make sure there is a space between \texttt{prod} and the \texttt{\textbackslash}
     character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
 \end{tipbox}
@@ -238,11 +239,11 @@ ubuntu@workstation:~$ openstack router remove port \
         \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The actual IDs may differ from this example.
     \end{notebox}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         You can copy a string from the terminal by selecting it with the mouse and pressing \textbf{Ctrl+Shift+C}, and
         you can paste to the terminal by pressing \textbf{Ctrl+Shift+V}.
     \end{tipbox}
@@ -455,7 +456,7 @@ runcmd:
         \includegraphics[width=\linewidth]{images/part1/step34.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         This \texttt{cloud-init} script writes to the ``message of the day'' file, and its contents will be displayed
         upon a successful login.
     \end{notebox}
@@ -505,7 +506,7 @@ ubuntu@workstation:~$ openstack server add \
         \includegraphics[width=\linewidth]{images/part1/step38.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         When associating the floating IP, make sure to use the IP address that appears for you in the previous step as
         it may differ from this example.
     \end{notebox}
@@ -541,11 +542,11 @@ ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.30
         \includegraphics[width=\linewidth]{images/part1/step41.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The IP address may differ slightly from this example. Make sure to use the floating IP address that you created.
     \end{notebox}
 
-    \begin{notebox}{}
+    \begin{notebox}
         It may take several minutes for the instance to fully boot and be available for an SSH connection.
     \end{notebox}
 
@@ -559,10 +560,11 @@ ubuntu@ftp-server:~$ apt list --installed | grep vsftpd
     \end{center}
 
     \item Use \texttt{nano} to edit the \textbf{/etc/vsftpd.conf} configuration file and uncomment the following
-    variables by deleting the ``\texttt{\#}'' character that comes before them: \texttt{anonymous\_enable},
-    \texttt{write\_enable}, \texttt{anon\_upload\_enable}, and \texttt{anon\_mkdir\_write\_enable}. Then, append the
-    following lines: \texttt{allow\_writeable\_chroot=YES} and \texttt{anon\_root=/var/ftp}. The content of the file
-    should resemble the output given below.
+    variables by deleting the ``\texttt{\#}'' character that comes before them:\texttt{write\_enable},
+    \texttt{anon\_upload\_enable}, and \texttt{anon\_mkdir\_write\_enable}. For the variable \texttt{anonymous\_enable},
+    change the \texttt{NO} to \texttt{YES}. Then, append the following lines:
+    \texttt{allow\_writeable\_chroot=YES} and \texttt{anon\_root=/var/ftp}. The content of the file should resemble the
+    output given below.
 \begin{lstlisting}
 ubuntu@ftp-server:~$ sudo nano /etc/vsftpd.conf
 \end{lstlisting}
@@ -652,13 +654,13 @@ ftp> bye
         \includegraphics[width=\linewidth]{images/part1/step50.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The IP address may differ slightly from this example. Make sure to use the floating IP address that you created.
     \end{notebox}
 
     \item SSH into the \textbf{ftp\_server} instance.
 \begin{lstlisting}
-ubuntu@devstack:~$ ssh -i ~/Downloads/key1.pem cloud-user@172.25.250.30
+ubuntu@devstack:~$ ssh -i ~/key1.pem cloud-user@172.25.250.30
 \end{lstlisting}
 
     \begin{center}

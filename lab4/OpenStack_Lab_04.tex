@@ -22,6 +22,7 @@
     \fancyhf{}
     \fancyhead[L]{\footnotesize Lab 04: Deploying an External Instance}
     \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
@@ -165,8 +166,8 @@ ubuntu@workstation:~$ openstack network create external \
         \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
-    \begin{tipbox}{}
-        WHen typing the command, make sure there is a space between \texttt{external} and the \texttt{\textbackslash}
+    \begin{tipbox}
+        When typing the command, make sure there is a space between \texttt{external} and the \texttt{\textbackslash}
         character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
     \end{tipbox}
 
@@ -256,7 +257,7 @@ ubuntu@workstation:~$ openstack router show router1
         \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         You can copy from the terminal to the clipboard the keyboard shortcut \textbf{Ctrl+Shift+C}.
     \end{tipbox}
 
@@ -272,7 +273,7 @@ ubuntu@workstation:~$ openstack router remove subnet router1 \
         \includegraphics[width=\linewidth]{images/part2/step10.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         You can paste from the clipboard into the terminal with the keyboard shortcut \textbf{Ctrl+Shift+V}.
     \end{tipbox}
 
@@ -350,7 +351,7 @@ ubuntu@workstation:~$ ssh 192.168.1.20
 ubuntu@devstack:~$ ping -c3 172.25.250.71
 \end{lstlisting}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The actual IP address may differ from this example.
     \end{notebox}
 
@@ -423,7 +424,7 @@ ubuntu@workstation:~$ openstack server create \
         \includegraphics[width=\linewidth]{images/part3/step7.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The actual value of the floating IP address may differ.
     \end{notebox}
 
@@ -453,7 +454,7 @@ ubuntu@workstation:~$ openstack floating ip create \
         \includegraphics[width=\linewidth]{images/part3/step11.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         If an \textit{HttpException: Conflict} error appears, this indicates that a floating IP from a previous step in
         this section was not released. If this is the case, either go back to the \textit{Horizon Dashboard} and release
         the floating IP address or use the next available floating IP address.
@@ -496,7 +497,7 @@ ubuntu@workstation:~$ openstack server add \
         \includegraphics[width=\linewidth]{images/part3/step15.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The actual floating IP may differ. Use the floating IP address generated from your output from the previous
         step.
     \end{notebox}
@@ -599,7 +600,7 @@ ubuntu@workstation:~$ openstack security group rule \
         \includegraphics[width=\linewidth]{images/part4/step13.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The actual ID value may differ.
     \end{notebox}
 
@@ -820,7 +821,7 @@ ubuntu@workstation;~$ openstack server add floating ip \
         \includegraphics[width=\linewidth]{images/part5/step8.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         Be sure to use the floating IP address that matches your output as they may differ slightly from this example.
     \end{notebox}
 
@@ -835,7 +836,7 @@ ubuntu@workstation:~$ openstack server list \
         \includegraphics[width=\linewidth]{images/part5/step9.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         For commands that output tables, you can pull out only the columns you want by using the \textbf{\texttt{-c}}
         option followed by the column name. This option can be chained as in the command above to list multiple columns.
     \end{tipbox}
@@ -892,7 +893,7 @@ ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem \
         \includegraphics[width=\linewidth]{images/part6/step5.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         It may take a few minutes for the instance to be fully booted and ready to accept SSH connections.
     \end{notebox}
 

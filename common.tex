@@ -4,12 +4,14 @@
 \AddToHook{cmd/section/before}{\clearpage}
 
 \usepackage{fancyhdr}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{#1}}
 
 % Sans-serif font
 \renewcommand{\familydefault}{\sfdefault}
 \newcommand{\texttildemid}{{\raisebox{0.5ex}{\texttildelow}}}
 
 \usepackage{enumitem}
+\renewcommand{\theenumi}{\thesection.\arabic{enumi}}
 
 % Try to forbid widows and orphans
 \widowpenalty10000
@@ -75,13 +77,13 @@
 % colors as parameters, but that is giving errors
 \makeatletter
 \tcbset{
-  note/.style 2 args={%
+  note/.style={%
         enhanced, 
         breakable,
         colback=blue!10!white,
         colframe=blue!80!white,
         attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
-        title={#2},
+        title={#1},
         boxed title size=title,
         boxed title style={%
             sharp corners, 
@@ -96,21 +98,20 @@
                 [rounded corners=\kvtcb@arc] |- 
                 (frame.north) -| cycle; 
         },
-        #1
     }
 }
 \makeatother
 
 \makeatletter
 \tcbset{
-    stop/.style 2 args={%
+    stop/.style={%
         enhanced, 
         breakable,
         colback=white,
         colback=red!10!white,
         colframe=red!80!white,
         attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
-        title={#2},
+        title={#1},
         boxed title size=title,
         boxed title style={%
             sharp corners, 
@@ -125,14 +126,13 @@
                 [rounded corners=\kvtcb@arc] |- 
                 (frame.north) -| cycle; 
         },
-        #1
     }
 }
 \makeatother
 
 \makeatletter
 \tcbset{
-    tip/.style 2 args={%
+    tip/.style={%
         enhanced, 
         breakable,
         colback=white,
@@ -140,7 +140,7 @@
         colframe=green!70!black,
         attach boxed title to top left={yshift*=-\tcboxedtitleheight},
         fonttitle=\bfseries,
-        title={#2},
+        title={#1},
         boxed title size=title,
         boxed title style={%
             sharp corners, 
@@ -155,23 +155,12 @@
                 [rounded corners=\kvtcb@arc] |- 
                 (frame.north) -| cycle; 
         },
-        #1
     }
 }
 \makeatother
 
-\newtcolorbox{notebox}[2][]{%
-note={#1}{Note}
-}
+\newtcolorbox{notebox}{note={Note}}
 
-\newtcolorbox{stopbox}[2][]{%
-stop={#1}{Stop}
-}
+\newtcolorbox{stopbox}{stop={Stop}}
 
-\newtcolorbox{tipbox}[2][]{%
-tip={#1}{Tip}
-}
-
-\newtcolorbox{definition}[2][]{%
-definition={#1}{Definition #2}
-}
+\newtcolorbox{tipbox}{tip={Tip}}

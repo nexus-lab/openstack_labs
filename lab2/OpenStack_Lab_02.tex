@@ -22,6 +22,7 @@
     \fancyhf{}
     \fancyhead[L]{\footnotesize Lab 02: Organizing People and Resources}
     \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
@@ -98,7 +99,7 @@ In this task, you will create and delete projects using the \textit{Horizon Dash
         \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         Notice the \textbf{dev} project now appears in the \textit{Horizon Dashboard}.
     \end{notebox}
 
@@ -145,10 +146,10 @@ ubuntu@workstation:~$ openstack project create \
         \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         When typing the command make sure there is a space between \textbf{\texttt{create}} and the
-        \textbf{texttt{\textbackslash}}, and press \textbf{Enter} to get the \textbf{\texttt{>}} and continue typing the
-        rest of the command.
+        \textbf{\texttt{\textbackslash}}, and press \textbf{Enter} to get the \textbf{\texttt{>}} and continue typing
+        therest of the command.
     \end{tipbox}
 
     \item Enter the command below to verify the project has been created.
@@ -205,7 +206,7 @@ In this task, you will use the \textit{Horizon Dashboard} to manage users.
         \includegraphics[width=\linewidth]{images/part3/step3.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         You will need to use the scroll bar on the right side of the dialog box to scroll down for more fields.
     \end{tipbox}
 
@@ -246,7 +247,7 @@ In this task, you will use the \textit{Horizon Dashboard} to manage users.
         \includegraphics[scale=0.75]{images/part3/step9.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         Notice the user account is disabled as intended.
     \end{notebox}
 
@@ -308,7 +309,7 @@ ubuntu@workstation:~$ openstack user create \
         \includegraphics[width=\linewidth]{images/part4/step3.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         When typing the command, make sure there is a space between \texttt{create} and the \texttt{\textbackslash}
         character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
     \end{tipbox}
@@ -359,7 +360,7 @@ ubuntu@workstation:~$ nano ~/keystonerc-cloud-dev
         \includegraphics[width=\linewidth]{images/part4/step7.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         To avoid any confusion about which user's credentials you are currently using, you can set the \texttt{PS1}
         environment variable in the keystone file so that the terminal prompt shows the active user. For example, the
         line \texttt{export PS1='[\textbackslash u@\textbackslash h \textbackslash W(keystone-cloud-dev)]\$ '} will
@@ -507,7 +508,7 @@ In this task, you will assign user roles privileges using the \textit{Horizon Da
         \includegraphics[width=\linewidth]{images/part5/step3.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         You may need to use the scroll bar on the right of the dialog to scroll down to see the projects and roles.
     \end{tipbox}
 
@@ -526,7 +527,7 @@ In this task, you will assign user roles privileges using the \textit{Horizon Da
         \includegraphics[width=\linewidth]{images/part5/step5.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         You may need to use the scroll bar on the right of the dialog to scroll down to see the projects and roles.
     \end{tipbox}
 

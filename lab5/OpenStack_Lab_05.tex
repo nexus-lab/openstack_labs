@@ -22,6 +22,7 @@
     \fancyhf{}
     \fancyhead[L]{\footnotesize Lab 05: Customizing Instances}
     \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
@@ -126,7 +127,7 @@ ubuntu@workstation:~$ openstack network create external \
         \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         When typing the command, make sure there is a space between \texttt{external} and the \texttt{\textbackslash}
         character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
     \end{tipbox}
@@ -266,7 +267,7 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part1/step20.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{ubuntu} appears underneath the \textit{Allocated}
         section.
     \end{stopbox}
@@ -277,7 +278,7 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part1/step21.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{m1.small} appears underneath the \textit{Allocated}
         section.
     \end{stopbox}
@@ -289,7 +290,7 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part1/step22.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{shared} appears underneath the \textit{Allocated}
         section.
     \end{stopbox}
@@ -307,7 +308,7 @@ ubuntu@workstation:~$ openstack security group \
         \includegraphics[width=\linewidth]{images/part1/step24.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that only \textbf{dev-secgroup} appears underneath the
         \textit{Allocated} section.
     \end{stopbox}
@@ -330,7 +331,7 @@ echo 'Hello, world!' > /root/hello.txt
         \includegraphics[width=\linewidth]{images/part1/step26.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         A customization script can be used to perform many commands automatically upon instance creation, such as
         installing packages, configuring a host name, etc. The simple script above is just an example.
     \end{tipbox}
@@ -351,7 +352,13 @@ echo 'Hello, world!' > /root/hello.txt
 
     \item To verify that the customization script worked, first click on \textbf{instance1} under the
     \textit{Instance Name} column, then navigate to the \textit{Console} tab if you are not directed there
-    automatically. Log into the instance as \textbf{root} with the password \textbf{secret}.
+    automatically. Click on \textbf{Click here to show only the console}. Log into the instance as \textbf{root} with
+    the password \textbf{secret}.
+
+    \begin{notebox}
+        Be patient for the login prompt. Even if OpenStack reports the instance to be active, it may still take several
+        minutes to fully launch and present the login prompt.
+    \end{notebox}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step29.png}
@@ -450,7 +457,7 @@ instance2 172.25.250.63
         \includegraphics[width=\linewidth]{images/part1/step38.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The actual value of your floating IP address may be different.
     \end{notebox}
 
@@ -476,7 +483,7 @@ ubuntu@workstation:~$ openstack server show instance2 \
         \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The floating IP addresses in your output may differ from these examples.
     \end{notebox}
 
@@ -510,7 +517,7 @@ ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.63
         \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         It may take several minutes for the instance to fully boot and be available for an SSH connection.
     \end{notebox}
 

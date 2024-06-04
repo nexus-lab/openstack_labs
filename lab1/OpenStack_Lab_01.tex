@@ -22,6 +22,7 @@
     \fancyhf{}
     \fancyhead[L]{\footnotesize Lab 01: Launching an Instance}
     \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
@@ -109,7 +110,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{ubuntu} appears underneath the \textit{Allocated}
         section.
     \end{stopbox}
@@ -121,7 +122,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{m1.small} appears underneath the \textit{Allocated}
         section.
     \end{stopbox}
@@ -133,19 +134,19 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{shared} appears underneath the \textit{Allocated}
         section.
     \end{stopbox}
 
-    \item To open the conosle of \textbf{prod-instance} in a new tab, right-click on the name \textbf{prod-instance} and
-    select \textbf{Open Link in New Tab}, or middle-click the name \textbf{prod-instance}.
+    \item To open the console of \textbf{prod-instance} in a new tab, right-click on the name \textbf{prod-instance} and
+    select \textbf{Open Link in New Tab}, or middle-click (press in the mouse wheel) the name \textbf{prod-instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Wait for the \textit{Power State} of \textbf{prod-instance} to display the status of \textit{Running} before
         continuing to the next step.
     \end{stopbox}
@@ -168,7 +169,7 @@ $ ping -c3 192.168.233.2
         \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         You should have received three successful ping replies.
     \end{notebox}
 
@@ -235,7 +236,7 @@ ubuntu@workstation:~$ env | grep OS_
         \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         Use the \textbf{\texttt{openstack help project show}} command to determine how to display the details of a
         particular project.
     \end{tipbox}
@@ -250,11 +251,11 @@ ubuntu@workstation:~$ openstack project show demo
         \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The ID value for \textbf{demo} may differ from above since it is a unique ID.
     \end{notebox}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         Use the \textbf{\texttt{openstack help user show}} command to determine how to display details of a specific
         user account.
     \end{tipbox}
@@ -268,7 +269,7 @@ ubuntu@workstation:~$ openstack user show admin
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         Use the \textbf{\texttt{openstack help flavor list}} command to determine how to display all available flavors.
     \end{tipbox}
 
@@ -290,7 +291,7 @@ ubuntu@workstation:~$ openstack flavor show m1.small
         \includegraphics[width=\linewidth]{images/part2/step8.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         Use the \textbf{\texttt{openstack help image}} command to determine how to list all images.
     \end{tipbox}
 
@@ -303,7 +304,7 @@ ubuntu@workstation:~$ openstack image list
         \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         Use the \textbf{\texttt{openstack help network}} command to determine how to list all networks.
     \end{tipbox}
 
@@ -330,7 +331,7 @@ ubuntu@workstation:~$ openstack server create \
         \includegraphics[width=\linewidth]{images/part2/step11.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         When typing the command, make sure there is a space between \texttt{ubuntu} and the \texttt{\textbackslash}, and
         press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
     \end{tipbox}
@@ -344,7 +345,7 @@ ubuntu@workstation:~$ openstack server list
         \includegraphics[width=\linewidth]{images/part2/step12.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The UUID in the \textit{ID} field and the IP address in the \textit{Networks} field may differ from the
         screenshot provided.
     \end{notebox}
@@ -358,7 +359,7 @@ ubuntu@workstation:~$ openstack server show prod-instance
         \includegraphics[width=\linewidth]{images/part2/step13.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         The UUID for the instance \textbf{prod-instance} can be used in place of \textbf{prod-instance} in the above
         command to identify the instance.
     \end{tipbox}
@@ -373,10 +374,10 @@ ubuntu@workstation:~$ openstack console log show prod-instance
     \end{center}
 
     \item Enter the command below to display the instance's console URL. Pipe the command to \textbf{\texttt{grep}} so
-    that you will get a link in the terminal you can clikc on. Then right click on the URL and select \textbf{Open
+    that you will get a link in the terminal you can click on. Then right click on the URL and select \textbf{Open
     Link}.
 \begin{lstlisting}
-ubuntu@workstation:~$ openstack console url show prod-instance grep https:
+ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
 \end{lstlisting}
 
     \begin{center}

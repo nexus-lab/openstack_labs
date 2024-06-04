@@ -22,6 +22,7 @@
     \fancyhf{}
     \fancyhead[L]{\footnotesize Lab 03: Deploying an Internal Instance}
     \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
     \fancyfoot[R]{\footnotesize\thepage}
     \renewcommand{\headrulewidth}{0pt}
 }
@@ -110,7 +111,7 @@ In this task, you will create, modify, and delete images using the \textit{Horiz
         \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Wait for the \textbf{image1} status to be \textit{Active}. You may need to refresh the browser until you see the
         status of \textit{Active}.
     \end{stopbox}
@@ -297,7 +298,7 @@ ubuntu@workstation:~$ openstack flavor list
         \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
-    \begin{tipbox}{}
+    \begin{tipbox}
         An alternative method is appending \textbf{\texttt{| grep flavor1}} to this command and noting that there is no
         output.
     \end{tipbox}
@@ -377,7 +378,7 @@ ubuntu@workstation:~$ openstack network set --name net2 net1
         \includegraphics[width=\linewidth]{images/part3/step10.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The desired name for the network follows the \textbf{\texttt{--name}} option, while the current network name is
         the final argument of the command.
     \end{notebox}
@@ -463,7 +464,7 @@ instance and launch a new instance by using the \textit{Horizon Unified CLI}.
         \includegraphics[width=\linewidth]{images/part4/step4.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Verify that \textbf{image2} appears in the \textit{Allocated} section before moving on to the next step.
     \end{stopbox}
 
@@ -473,7 +474,7 @@ instance and launch a new instance by using the \textit{Horizon Unified CLI}.
         \includegraphics[width=\linewidth]{images/part4/step5.png}
     \end{center}
 
-    \begin{notebox}{}
+    \begin{notebox}
         The warning signs in the \textit{Root Disk} column indicate that the flavor in that row has a disk size less
         than the minimum size specified for the selected image.
     \end{notebox}
@@ -485,7 +486,7 @@ instance and launch a new instance by using the \textit{Horizon Unified CLI}.
         \includegraphics[width=\linewidth]{images/part4/step6.png}
     \end{center}
 
-    \begin{stopbox}{}
+    \begin{stopbox}
         Verify that \textbf{exercise} appears under the \textit{Allocated} section. Wait for the instance to have a
         power state of \textbf{Running} before proceeding further.
     \end{stopbox}
@@ -649,7 +650,7 @@ ubuntu@workstation:~$ openstack server pause instance2
 
     \item Switch back to the console of \textbf{instance2} and observe the behavior of the instance.
 
-    \begin{notebox}{}
+    \begin{notebox}
         Notice that the instance is paused and that the \textbf{\texttt{ping}} command are no longer going through.
     \end{notebox}
 
@@ -664,7 +665,7 @@ ubuntu@workstation:~$ openstack server unpause instance2
 
     \item Switch back to the console of \textbf{instance2} and observe the behavior of the instance.
     
-    \begin{notebox}{}
+    \begin{notebox}
         Notice that the instance is unpaused and that the \textbf{\texttt{ping}} commands are continuing.
     \end{notebox}
 
@@ -679,7 +680,7 @@ ubuntu@workstation:~$ openstack server stop instance2
 
     \item Switch back to the console of \textbf{instance2} and observe the behavior of the instance.
     
-    \begin{notebox}{}
+    \begin{notebox}
         Notice that the console to the instance is no longer available.        
     \end{notebox}
 
