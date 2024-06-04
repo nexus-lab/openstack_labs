@@ -127,20 +127,20 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create a projec
 
     \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to access OpenStack
     as the admin.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
     
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
     \item Enter the command below to create a project named \textbf{testing}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack project create \
-> --description testing \
-> --enable testing
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack project create \
+    > --description testing \
+    > --enable testing
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step3.png}
@@ -153,18 +153,18 @@ ubuntu@workstation:~$ openstack project create \
     \end{tipbox}
 
     \item Enter the command below to verify the project has been created.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack project list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack project list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
     \item Delete the \textbf{testing} project by entering the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack project delete testing
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack project delete testing
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step5.png}
@@ -172,9 +172,9 @@ ubuntu@workstation:~$ openstack project delete testing
 
     \item Verify the \textbf{testing} project has been deleted by listing the projects again and noting that
     \textbf{testing} no longer appears.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack project list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack project list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step6.png}
@@ -287,9 +287,9 @@ In this task, you will manage users using the \textit{OpenStack Unified CLI}.
     
     \item Source the credential for \textbf{admin} using the \textbf{keystonerc-admin} file by entering the command
     below.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step2.png}
@@ -297,13 +297,13 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
 
     \item Create the \textbf{cloud-test3} user as a member of \textbf{dev} with a password of \textbf{secret} and an
     email address of \textbf{ubuntu@workstation.lab.example.com} using the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user create \
-> --project dev \
-> --password secret \
-> --email ubuntu@workstation.lab.example.com \
-> cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user create \
+    > --project dev \
+    > --password secret \
+    > --email ubuntu@workstation.lab.example.com \
+    > cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step3.png}
@@ -315,9 +315,9 @@ ubuntu@workstation:~$ openstack user create \
     \end{tipbox}
 
     \item Verify the user was created using the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step4.png}
@@ -325,12 +325,12 @@ ubuntu@workstation:~$ openstack user list
 
     \item The \textbf{cloud-test3} user will also need to be assigned a role to a project before being able to perform
     any actions. Assign a role with the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack role add \
-> --project dev \
-> --user cloud-test3 \
-> member
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack role add \
+    > --project dev \
+    > --user cloud-test3 \
+    > member
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step5.png}
@@ -339,9 +339,9 @@ ubuntu@workstation:~$ openstack role add \
     \item Copy the existing \textbf{\texttildemid/keystonerc-admin} file to \textbf{\texttildemid/keystonerc-cloud-dev}
     by entering the command below.
     \label{it:copy_keystone}
-\begin{lstlisting}
-ubuntu@workstation:~$ cp ~/keystonerc-admin ~/keystonerc-cloud-dev
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ cp ~/keystonerc-admin ~/keystonerc-cloud-dev
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step6.png}
@@ -352,9 +352,9 @@ ubuntu@workstation:~$ cp ~/keystonerc-admin ~/keystonerc-cloud-dev
     When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes. Press \textbf{Enter} to
     save and exit \textbf{\texttt{nano}}.
     \label{it:edit_keystone}
-\begin{lstlisting}
-ubuntu@workstation:~$ nano ~/keystonerc-cloud-dev
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ nano ~/keystonerc-cloud-dev
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step7.png}
@@ -370,10 +370,10 @@ ubuntu@workstation:~$ nano ~/keystonerc-cloud-dev
     \item Repeat steps \ref{it:copy_keystone} and \ref{it:edit_keystone}, this time for user \textbf{cloud-test3}.
     
     \item Disable the \textbf{cloud-test3} account by entering the command below
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user set \
-> --disable cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user set \
+    > --disable cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step9.png}
@@ -382,18 +382,18 @@ ubuntu@workstation:~$ openstack user set \
     \item To verify that the \textbf{cloud-test3} account is disabled, first source the
     \textbf{\texttildemid/keystonerc-cloud-test3} keystone credentials file for the \textbf{cloud-test3} user by
     entering the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step10.png}
     \end{center}
 
     \item Now try listing a flavor by running the command below and take note of the response.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step11.png}
@@ -401,9 +401,9 @@ ubuntu@workstation:~$ openstack flavor list
 
     \item Source the keystone credentials using the \textbf{admin} user keystone file so that further changes can be
     made to the accounts.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step12.png}
@@ -411,12 +411,12 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
 
     \item Enable the \textbf{cloud-test3} user account, change the password to \textbf{password}, and change the email
     address to \textbf{ubuntu@devstack.lab.example.com}.    
-\begin{lstlisting}
-openstack user set \
-> --password password \
-> --email ubuntu@devstack.lab.example.com \
-> --enable cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    openstack user set \
+    > --password password \
+    > --email ubuntu@devstack.lab.example.com \
+    > --enable cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step13.png}
@@ -425,9 +425,9 @@ openstack user set \
     \item Set the password, \textbf{password} in the keystone credential file for \textbf{cloud-test3}. Modify the file
     so the content matches below. When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file
     changes. Press \textbf{Enter} to save and exit \textbf{\texttt{nano}}.
-\begin{lstlisting}
-ubuntu@workstation:~$ nano ~/keystonerc-cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ nano ~/keystonerc-cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step14.png}
@@ -435,9 +435,9 @@ ubuntu@workstation:~$ nano ~/keystonerc-cloud-test3
 
     \item Source the \textbf{\texttildemid/keystonerc-cloud-test3} keystone credentials file for the
     \textbf{cloud-test3} user.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step15.png}
@@ -445,37 +445,37 @@ ubuntu@workstation:~$ source ~/keystonerc-cloud-test3
 
     \item Now that the \textbf{cloud-test3} user has been enabled, verify that the \textbf{\texttt{openstack flavor
     list}} command returns a list of available flavors.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step16.png}
     \end{center}
 
     \item Source the keystone credentials file for the \textbf{admin} user.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step17.png}
     \end{center}
 
     \item Delete the \textbf{cloud-test2} and \textbf{cloud-test3} user accounts.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user delete cloud-test2
-ubuntu@workstation:~$ openstack user delete cloud-test3
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user delete cloud-test2
+    ubuntu@workstation:~$ openstack user delete cloud-test3
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step18.png}
     \end{center}
 
     \item Verify that the users have been deleted.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step19.png}
@@ -549,9 +549,9 @@ In this task, you will assign user roles and privileges using the \textit{OpenSt
     
     \item Source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file for the
     \textbf{admin} user by entering the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step2.png}
@@ -559,12 +559,12 @@ ubuntu@workstation:~$ source ~/keystonerc-admin
 
     \item Create the user \textbf{cloud-user2} with the password \textbf{secret}, and make it a member of the
     \textbf{dev} project.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user create \
-> --password secret \
-> --project dev \
-> cloud-user2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user create \
+    > --password secret \
+    > --project dev \
+    > cloud-user2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step3.png}
@@ -572,24 +572,24 @@ ubuntu@workstation:~$ openstack user create \
 
     \item The user \textbf{cloud-user2} is not assigned a role by default and must be assigned one. Assign the
     \textbf{admin} user role to the \textbf{cloud-user2} user.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack role add \
-> --user cloud-user2 \
-> --project dev \
-> admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack role add \
+    > --user cloud-user2 \
+    > --project dev \
+    > admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step4.png}
     \end{center}
 
     \item Verify that the \textbf{cloud-user2} is in the \textbf{admin} user role for the \textbf{dev} project.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack role assignment list \
-> --user cloud-user2 \
-> --project dev \
-> --names
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack role assignment list \
+    > --user cloud-user2 \
+    > --project dev \
+    > --names
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step5.png}
@@ -602,27 +602,27 @@ ubuntu@workstation:~$ openstack role assignment list \
 
     \item Source the \textbf{\texttildemid/keystonerc-cloud-user2} keystone credentials file for the
     \textbf{cloud-user2} user.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-cloud-user2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-cloud-user2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step7.png}
     \end{center}
 
     \item Delete the \textbf{cloud-user1} user.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user delete cloud-user1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user delete cloud-user1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step8.png}
     \end{center}
 
     \item Delete the \textbf{cloud-user2} user.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user delete cloud-user2
-\end{lstlisting}    
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user delete cloud-user2
+    \end{lstlisting}    
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step9.png}
@@ -630,9 +630,9 @@ ubuntu@workstation:~$ openstack user delete cloud-user2
 
     \item Since the \textbf{cloud-user2} user has been deleted, the keystone credentials no longer authenticate the
     user. You can verify this by attempting to list OpenStack users.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step10.png}
@@ -640,18 +640,18 @@ ubuntu@workstation:~$ openstack user list
 
     \item Source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file for the \textbf{cloud-admin}
     user.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step11.png}
     \end{center}
 
     \item Verify that the \textbf{cloud-user1} and \textbf{cloud-user2} users have been deleted.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step12.png}
@@ -660,9 +660,9 @@ ubuntu@workstation:~$ openstack user list
     \item Source the \textbf{\texttildemid/keystonerc-cloud-dev} keystone credentials for the \textbf{cloud-dev} user and
     attempt to list the users. Notice the error displayed when a non-privileged user runs a command that requires
     administrator privileges.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part6/step13.png}

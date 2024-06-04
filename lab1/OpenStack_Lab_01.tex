@@ -161,9 +161,9 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \item Log into the console as \textbf{root} with the password \textbf{secret}.
 
     \item In the console, ping \textbf{192.168.233.2} (DHCP server) to verify connectivity.
-\begin{lstlisting}
-$ ping -c3 192.168.233.2
-\end{lstlisting}
+    \begin{lstlisting}
+    $ ping -c3 192.168.233.2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step12.png}
@@ -209,9 +209,9 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     CLI. The username will be \textbf{admin}, the password will be be \textbf{secret}, the project will be
     \textbf{demo}, and the IP address for \texttt{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server,
     \textbf{192.168.1.20}. You can run \textbf{\texttt{cat}} on the file to view its contents.
-\begin{lstlisting}
-ubuntu@workstation:~$ cat ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ cat ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step2.png}
@@ -219,18 +219,18 @@ ubuntu@workstation:~$ cat ~/keystonerc-admin
 
     \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to enable all the
     \texttt{OS\_*} environment variables included in the \textbf{keystonerc-admin} file.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
     \item Verify that the \texttt{OS\_*} environment variables have been exported to the shell environment.
-\begin{lstlisting}
-ubuntu@workstation:~$ env | grep OS_
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ env | grep OS_
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step4.png}
@@ -243,9 +243,9 @@ ubuntu@workstation:~$ env | grep OS_
 
     \item Enter the command below to gather additional information about the \textbf{admin} user's current project,
     \textbf{demo}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack project show demo
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack project show demo
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step5.png}
@@ -261,9 +261,9 @@ ubuntu@workstation:~$ openstack project show demo
     \end{tipbox}
 
     \item Enter the command below to check the details of \textbf{admin}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack user show admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack user show admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step6.png}
@@ -274,18 +274,18 @@ ubuntu@workstation:~$ openstack user show admin
     \end{tipbox}
 
     \item Enter the command below to list all available flavors.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step7.png}
     \end{center}
 
     \item Enter the command below to display the details specifically for the \textbf{m1.small} flavor.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor show m1.small
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor show m1.small
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step8.png}
@@ -296,9 +296,9 @@ ubuntu@workstation:~$ openstack flavor show m1.small
     \end{tipbox}
 
     \item Enter the command below to list all available images.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step9.png}
@@ -309,9 +309,9 @@ ubuntu@workstation:~$ openstack image list
     \end{tipbox}
 
     \item Enter the command below to list all available networks.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack network list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack network list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step10.png}
@@ -319,13 +319,13 @@ ubuntu@workstation:~$ openstack network list
 
     \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
     \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server create \
-> --image ubuntu \
-> --flavor m1.small \
-> --network shared \
-> --wait prod-instance
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server create \
+    > --image ubuntu \
+    > --flavor m1.small \
+    > --network shared \
+    > --wait prod-instance
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step11.png}
@@ -337,9 +337,9 @@ ubuntu@workstation:~$ openstack server create \
     \end{tipbox}
 
     \item Use the \textbf{openstack server list} command to list all the available instances.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step12.png}
@@ -351,9 +351,9 @@ ubuntu@workstation:~$ openstack server list
     \end{notebox}
 
     \item Enter the command below to display more details about the instance \textbf{prod-instance}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server show prod-instance
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server show prod-instance
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step13.png}
@@ -365,9 +365,9 @@ ubuntu@workstation:~$ openstack server show prod-instance
     \end{tipbox}
 
     \item Enter the command below to verify the log for the instance.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack console log show prod-instance
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack console log show prod-instance
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step14.png}
@@ -376,9 +376,9 @@ ubuntu@workstation:~$ openstack console log show prod-instance
     \item Enter the command below to display the instance's console URL. Pipe the command to \textbf{\texttt{grep}} so
     that you will get a link in the terminal you can click on. Then right click on the URL and select \textbf{Open
     Link}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step15.png}
@@ -387,9 +387,9 @@ ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
     \item The web browser will open directly to the instance's console through noVNC. Log into \textbf{prod-instance}
     using \textbf{root} as the username and \textbf{secret} as the password. Then use the \textbf{\texttt{ping}}
     command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
-\begin{lstlisting}
-$ ping -c3 192.168.233.2
-\end{lstlisting}
+    \begin{lstlisting}
+    $ ping -c3 192.168.233.2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step16.png}
@@ -398,9 +398,9 @@ $ ping -c3 192.168.233.2
     \item Close the web browser and change focus back to the previous terminal window.
     
     \item Enter the command below to stop the instance.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server stop prod-instance
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server stop prod-instance
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step18.png}
@@ -408,27 +408,27 @@ ubuntu@workstation:~$ openstack server stop prod-instance
 
     \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify
     this.
-\begin{lstlisting}
-ubuntu@workstation~$: openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation~$: openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step19.png}
     \end{center}
 
     \item Enter the command below to delete the instance.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server delete prod-instance
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server delete prod-instance
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step20.png}
     \end{center}
 
     \item Ensure that the instance was deleted by seeing that the server list is empty.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step21.png}
@@ -437,5 +437,4 @@ ubuntu@workstation:~$ openstack server list
     \item The lab is now complete.
 
 \end{enumerate}
-
 \end{document}

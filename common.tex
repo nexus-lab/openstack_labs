@@ -45,6 +45,7 @@
 % For nice-looking boxes
 \usepackage[most]{tcolorbox}
 \usepackage{listings}
+\usepackage{lstautogobble}
 \lstset{
   frame=none,
   language=Bash,
@@ -58,7 +59,8 @@
   keepspaces=true,
   escapeinside={(*@}{@*)},
   literate={~}{{\texttildemid}}{1}
-           {\#}{\#}{1}
+           {\#}{\#}{1},
+  autogobble=true
 }
 
 \tcolorboxenvironment{lstlisting}

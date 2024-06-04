@@ -134,36 +134,36 @@ In this task, you will create, modify, and delete images using the \textit{Horiz
 
     \item Open a terminal if one is not already open, and source the \textbf{keystonerc-admin} file to load the
     \textbf{admin} user credentials.
-\begin{lstlisting}
-ubuntu@workstation:~$ source ~/keystonerc-admin
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
     \item Try to delete the \textbf{image1} image while it is protected. It should return an error.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image delete image1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image delete image1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
     \item Set the \textbf{image1} image to unprotected.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image set --unprotected image1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image set --unprotected image1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
     \item Delete the \textbf{image1} image.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image delete image1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image delete image1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step13.png}
@@ -171,42 +171,42 @@ ubuntu@workstation:~$ openstack image delete image1
 
     \item Create the \textbf{image1} image using the \textbf{\texttildemid/Downloads/ubuntu.img} file and the QCOW2
     format.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image create \
-> --disk-format qcow2 \
-> --file ~/Downloads/ubuntu.img \
-> image2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image create \
+    > --disk-format qcow2 \
+    > --file ~/Downloads/ubuntu.img \
+    > image2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \item Set the \textbf{image2} image status to \textbf{protected}, and set the minimum disk size to \textbf{10 GB}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image set \
-> --protected \
-> --min-disk 10 \
-> image2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image set \
+    > --protected \
+    > --min-disk 10 \
+    > image2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
     \item Set the \textbf{image2} image to be public. Note that this action requires administrative privileges.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image set --public image2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image set --public image2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
     \item Verify that the \textbf{image2} image was correctly created by listing the available images.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step17.png}
@@ -215,9 +215,9 @@ ubuntu@workstation:~$ openstack image list
     \item Display the details of the \textbf{image2} image and verify that it was correctly updated. Confirm the value
     for the \textit{min\_disk} field is \textbf{10}, the value for the \textit{protected} field is \textbf{True}, and
     the value for \textit{visibility} is \textbf{public}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack image show image2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack image show image2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step18.png}
@@ -256,33 +256,33 @@ In this task, you will create, modify, and delete flavors using the \textit{Hori
 
     \item Create a flavor named \textbf{m1.exercise}. Configure the flavor with \textbf{1} VCPU, \textbf{1024 MB} of RAM, a
     \textbf{10 GB} root disk, a \textbf{2 GB} ephemeral disk, and a \textbf{1024 MB} swap disk.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor create \
-> --vcpus 1 \
-> --ram 1024 \
-> --disk 10 \
-> --ephemeral 2 \
-> --swap 1024 \
-> m1.exercise
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor create \
+    > --vcpus 1 \
+    > --ram 1024 \
+    > --disk 10 \
+    > --ephemeral 2 \
+    > --swap 1024 \
+    > m1.exercise
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
     \item Verify that the \textbf{m1.exercise} flavor has been created with the correct settings.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor show m1.exercise
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor show m1.exercise
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step7.png}
     \end{center}
 
     \item Delete the \textbf{flavor1} flavor.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor delete flavor1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor delete flavor1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step8.png}
@@ -290,9 +290,9 @@ ubuntu@workstation:~$ openstack flavor delete flavor1
 
     \item Verify that the \textbf{flavor1} has been deleted by listing all the available flavors and noting that
     \textbf{flavor1} does not appear in the list.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor list    
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor list    
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step9.png}
@@ -347,9 +347,9 @@ Unified CLI}. You will create and delete networks and subnetworks, update their 
     to load the \textbf{admin} user credentials.
     
     \item Create a network named \textbf{exercise} using the command below.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack network create exercise
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack network create exercise
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step8.png}
@@ -357,22 +357,22 @@ ubuntu@workstation:~$ openstack network create exercise
 
     \item Create a subnet named \textbf{subexer} for the \textbf{exercise} network. Configure this subnet to use the
     \textbf{192.168.1.0./24} range and \textbf{172.25.250.254} as the DNS name server.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack subnet create \
-> --subnet-range 192.168.1.0/24 \
-> --dns-nameserver 172.25.250.254 \
-> --network exercise \
-> subexer
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack subnet create \
+    > --subnet-range 192.168.1.0/24 \
+    > --dns-nameserver 172.25.250.254 \
+    > --network exercise \
+    > subexer
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step9.png}
     \end{center}
 
     \item Change the name of the \textbf{net1} network to \textbf{net2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack network set --name net2 net1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack network set --name net2 net1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step10.png}
@@ -384,36 +384,36 @@ ubuntu@workstation:~$ openstack network set --name net2 net1
     \end{notebox}
 
     \item Verify that the \textbf{net1} network has been successfully changed to \textbf{net2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack network list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack network list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step11.png}
     \end{center}
 
     \item Update the \textbf{subnet1} subnetwork to disable DHCP.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack subnet set --no-dhcp subnet1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack subnet set --no-dhcp subnet1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step12.png}
     \end{center}
 
     \item Verify that the \textbf{subnet1} subnetwork has been correctly updated.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack subnet show subnet1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack subnet show subnet1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step13.png}
     \end{center}
 
     \item Delete the \textbf{net2} network.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack network delete net2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack network delete net2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step14.png}
@@ -421,9 +421,9 @@ ubuntu@workstation:~$ openstack network delete net2
 
     \item Verify that the \textbf{net2} network has been deleted by listing all available networks and noting that
     \textbf{net2} is not present in the list.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack network list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack network list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step15.png}
@@ -497,27 +497,27 @@ instance and launch a new instance by using the \textit{Horizon Unified CLI}.
     to load the \textbf{admin} user credentials.
 
     \item List the available instances and see that the instance created from the \textit{Horizon Dashboard} appears.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step9.png}
     \end{center}
 
     \item Delete the \textbf{instance1} instance.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server delete instance1
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server delete instance1
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step10.png}
     \end{center}
 
     \item List the instances again to verify that \textbf{instance1} was deleted successfully.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step11.png}
@@ -525,22 +525,22 @@ ubuntu@workstation:~$ openstack server list
 
     \item Create a new instance named \textbf{instance2}. Use the previously created \textbf{image2} image,
     \textbf{m1.exercise} flavor, and \textbf{exercise} network.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server create \
-> --image image2 \
-> --flavor m1.exercise \
-> --nic net-id=exercise \
-> --wait instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server create \
+    > --image image2 \
+    > --flavor m1.exercise \
+    > --nic net-id=exercise \
+    > --wait instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step12.png}
     \end{center}
 
     \item List all the available instance to verify that the \textbf{instance2} instance is running.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step13.png}
@@ -560,37 +560,37 @@ using the \textit{OpenStack Unified CLI}.
     to load the \textbf{admin} user credentials.
 
     \item List all the available instances to find the name of the running instance.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step2.png}
     \end{center}
 
     \item Access the instance's details to retrieve its flavor.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server show instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server show instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step3.png}
     \end{center}
 
     \item Review the specifications of the \textbf{m1.exercise} flavor.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack flavor show m1.exercise
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack flavor show m1.exercise
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step4.png}
     \end{center}
 
     \item Retrieve the URL for the noVNC console connection. Right click the link and select \textbf{Open Link}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack console url show \
-> instance2 | grep http
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack console url show \
+    > instance2 | grep http
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step5.png}
@@ -600,9 +600,9 @@ ubuntu@workstation:~$ openstack console url show \
     
     \item Use the \textbf{\texttt{free}} command to ensure that the RAM and swap amount matches the one defined by the
     flavor, which is \textbf{1024 MB}.
-\begin{lstlisting}
-root@instance2:~# free
-\end{lstlisting}
+    \begin{lstlisting}
+    root@instance2:~# free
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step7.png}
@@ -610,9 +610,9 @@ root@instance2:~# free
 
     \item Use the \textbf{\texttt{df}} command to ensure that the instance has a disk size of \textbf{10 GB}, as defined
     by the flavor.
-\begin{lstlisting}
-root@instance2:~# df -h
-\end{lstlisting}
+    \begin{lstlisting}
+    root@instance2:~# df -h
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step8.png}
@@ -620,9 +620,9 @@ root@instance2:~# df -h
 
     \item Determine the number of CPUs that the instance is using. Ensure the number matches the number of VCPUs defined
     by the flavor, which is \textbf{1}.
-\begin{lstlisting}
-root@instance2:~# lscpu
-\end{lstlisting}
+    \begin{lstlisting}
+    root@instance2:~# lscpu
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step9.png}
@@ -630,9 +630,9 @@ root@instance2:~# lscpu
 
     \item Use the \textbf{\texttt{ping}} command from the instance to reach the DHCP server defined for the network.
     Leave the \textbf{\texttt{ping}} command running, as it will be used in the following steps.
-\begin{lstlisting}
-root@instance2:~$ ping 192.168.1.2
-\end{lstlisting}
+    \begin{lstlisting}
+    root@instance2:~$ ping 192.168.1.2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step10.png}
@@ -640,9 +640,9 @@ root@instance2:~$ ping 192.168.1.2
 
     \item While the \textbf{\texttt{ping}} command is active, switch back to the terminal on \textbf{workstation}. Use
     the command below to pause \textbf{instance2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server pause instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server pause instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step11.png}
@@ -655,9 +655,9 @@ ubuntu@workstation:~$ openstack server pause instance2
     \end{notebox}
 
     \item Switch back to the terminal on \textbf{workstation}. Use the command below to unpause \textbf{instance2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server unpause instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server unpause instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step13.png}
@@ -670,9 +670,9 @@ ubuntu@workstation:~$ openstack server unpause instance2
     \end{notebox}
 
     \item Switch back to the terminal on \textbf{workstation}. Use the command below to stop \textbf{instance2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server stop instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server stop instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step15.png}
@@ -685,36 +685,36 @@ ubuntu@workstation:~$ openstack server stop instance2
     \end{notebox}
 
     \item Switch back to the terminal on \textbf{workstation}. Start \textbf{instance2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server start instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server start instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step17.png}
     \end{center}
 
     \item List all instances and check the status of \textbf{instance2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step18.png}
     \end{center}
 
     \item Delete \textbf{instance2}.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server delete instance2
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server delete instance2
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step19.png}
     \end{center}
 
     \item List all available instances to verify the \textbf{instance2} instance has been deleted.
-\begin{lstlisting}
-ubuntu@workstation:~$ openstack server list
-\end{lstlisting}
+    \begin{lstlisting}
+    ubuntu@workstation:~$ openstack server list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step20.png}
@@ -725,5 +725,4 @@ ubuntu@workstation:~$ openstack server list
     \item The lab is now complete.
 
 \end{enumerate}
-
 \end{document}
