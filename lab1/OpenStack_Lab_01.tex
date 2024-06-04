@@ -397,7 +397,7 @@ $ ping -c3 192.168.233.2
 
     \item Close the web browser and change focus back to the previous terminal window.
     
-    \item Enter the command below to stop the instance
+    \item Enter the command below to stop the instance.
 \begin{lstlisting}
 ubuntu@workstation:~$ openstack server stop prod-instance
 \end{lstlisting}
@@ -406,7 +406,8 @@ ubuntu@workstation:~$ openstack server stop prod-instance
         \includegraphics[width=\linewidth]{images/part2/step18.png}
     \end{center}
 
-    \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify this.
+    \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify
+    this.
 \begin{lstlisting}
 ubuntu@workstation~$: openstack server list
 \end{lstlisting}
@@ -422,6 +423,15 @@ ubuntu@workstation:~$ openstack server delete prod-instance
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step20.png}
+    \end{center}
+
+    \item Ensure that the instance was deleted by seeing that the server list is empty.
+\begin{lstlisting}
+ubuntu@workstation:~$ openstack server list
+\end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step21.png}
     \end{center}
 
     \item The lab is now complete.
