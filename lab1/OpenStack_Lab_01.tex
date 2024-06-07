@@ -1,35 +1,7 @@
 \documentclass[letterpaper, 12pt]{article}
-
 \input{../common.tex}
-
 \begin{document}
-\begin{titlepage}
-    \centering
-    \includegraphics[scale=0.5]{images/nexus_lab_logo.png}
-
-    \vspace*{\baselineskip}
-
-    \textbf{\Large OpenStack Labs}
-
-    \vspace*{\baselineskip}
-
-    \textbf{\Large Lab 01: Launching an Instance}
-    \vspace*{\fill}
-\end{titlepage}
-
-\fancypagestyle{fancy}
-{
-    \fancyhf{}
-    \fancyhead[L]{\footnotesize Lab 01: Launching an Instance}
-    \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
-    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
-    \fancyfoot[R]{\footnotesize\thepage}
-    \renewcommand{\headrulewidth}{0pt}
-}
-
-\pagestyle{fancy}
-\tableofcontents
-\clearpage
+\preamble{Lab 01: Launching an Instance}
 
 \section*{Introduction}
 \label{sec:introduction}
@@ -48,27 +20,11 @@ In this lab, you will launch an instance using the \textit{Horizon Dashboard}, l
 \end{itemize}
 \clearpage
 
-\section*{Lab Settings}
-\label{sec:lab_settings}
-\addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
-The information in the table below will be needed in order to complete the lab. The task sections below provide details
-on the use of this information.
-\begin{table*}[htbp]
-\centering
-\begin{tabular}{|c|c|c|c|}
-    \hline
-    \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
-    \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
-    \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
-    \hline
-\end{tabular}
-\end{table*}
-\clearpage
+\labsettings
 
+%%%%%%%%%%%
+% Section 1
+%%%%%%%%%%%
 \section{Launching an Instance Using the Horizon Dashboard}
 In this task, you will launch an instance using the \textit{Horizon Dashboard}.
 
@@ -162,7 +118,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
 
     \item In the console, ping \textbf{192.168.233.2} (DHCP server) to verify connectivity.
     \begin{lstlisting}
-    $ ping -c3 192.168.233.2
+        $ ping -c3 192.168.233.2
     \end{lstlisting}
 
     \begin{center}
@@ -191,6 +147,9 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \item Close the web browser.
 \end{enumerate}
 
+%%%%%%%%%%%
+% Section 2
+%%%%%%%%%%%
 \section{Running the OpenStack Unified CLI}
 In this task, you will use the \textit{OpenStack Unified command-line interface (CLI)} to list and check the details of
 existing projects, users, flavors, images, and instances, and to launch an instance.
@@ -210,7 +169,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \textbf{demo}, and the IP address for \texttt{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server,
     \textbf{192.168.1.20}. You can run \textbf{\texttt{cat}} on the file to view its contents.
     \begin{lstlisting}
-    ubuntu@workstation:~$ cat ~/keystonerc-admin
+        ubuntu@workstation:~$ cat ~/keystonerc-admin
     \end{lstlisting}
 
     \begin{center}
@@ -220,7 +179,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to enable all the
     \texttt{OS\_*} environment variables included in the \textbf{keystonerc-admin} file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ source ~/keystonerc-admin
+        ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
 
     \begin{center}
@@ -229,7 +188,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Verify that the \texttt{OS\_*} environment variables have been exported to the shell environment.
     \begin{lstlisting}
-    ubuntu@workstation:~$ env | grep OS_
+        ubuntu@workstation:~$ env | grep OS_
     \end{lstlisting}
 
     \begin{center}
@@ -244,7 +203,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \item Enter the command below to gather additional information about the \textbf{admin} user's current project,
     \textbf{demo}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack project show demo
+        ubuntu@workstation:~$ openstack project show demo
     \end{lstlisting}
 
     \begin{center}
@@ -262,7 +221,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to check the details of \textbf{admin}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack user show admin
+        ubuntu@workstation:~$ openstack user show admin
     \end{lstlisting}
 
     \begin{center}
@@ -275,7 +234,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to list all available flavors.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack flavor list
+        ubuntu@workstation:~$ openstack flavor list
     \end{lstlisting}
 
     \begin{center}
@@ -284,7 +243,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to display the details specifically for the \textbf{m1.small} flavor.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack flavor show m1.small
+        ubuntu@workstation:~$ openstack flavor show m1.small
     \end{lstlisting}
 
     \begin{center}
@@ -297,7 +256,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to list all available images.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack image list
+        ubuntu@workstation:~$ openstack image list
     \end{lstlisting}
 
     \begin{center}
@@ -310,7 +269,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to list all available networks.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack network list
+        ubuntu@workstation:~$ openstack network list
     \end{lstlisting}
 
     \begin{center}
@@ -320,11 +279,11 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
     \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server create \
-    > --image ubuntu \
-    > --flavor m1.small \
-    > --network shared \
-    > --wait prod-instance
+        ubuntu@workstation:~$ openstack server create \
+        > --image ubuntu \
+        > --flavor m1.small \
+        > --network shared \
+        > --wait prod-instance
     \end{lstlisting}
 
     \begin{center}
@@ -338,7 +297,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Use the \textbf{openstack server list} command to list all the available instances.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server list
+        ubuntu@workstation:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
@@ -352,7 +311,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to display more details about the instance \textbf{prod-instance}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server show prod-instance
+        ubuntu@workstation:~$ openstack server show prod-instance
     \end{lstlisting}
 
     \begin{center}
@@ -366,7 +325,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to verify the log for the instance.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack console log show prod-instance
+        ubuntu@workstation:~$ openstack console log show prod-instance
     \end{lstlisting}
 
     \begin{center}
@@ -377,7 +336,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     that you will get a link in the terminal you can click on. Then right click on the URL and select \textbf{Open
     Link}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
+        ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
     \end{lstlisting}
 
     \begin{center}
@@ -388,7 +347,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     using \textbf{root} as the username and \textbf{secret} as the password. Then use the \textbf{\texttt{ping}}
     command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
     \begin{lstlisting}
-    $ ping -c3 192.168.233.2
+        $ ping -c3 192.168.233.2
     \end{lstlisting}
 
     \begin{center}
@@ -399,7 +358,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     
     \item Enter the command below to stop the instance.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server stop prod-instance
+        ubuntu@workstation:~$ openstack server stop prod-instance
     \end{lstlisting}
 
     \begin{center}
@@ -409,7 +368,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify
     this.
     \begin{lstlisting}
-    ubuntu@workstation~$: openstack server list
+        ubuntu@workstation~$: openstack server list
     \end{lstlisting}
 
     \begin{center}
@@ -418,7 +377,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to delete the instance.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server delete prod-instance
+        ubuntu@workstation:~$ openstack server delete prod-instance
     \end{lstlisting}
 
     \begin{center}
@@ -427,7 +386,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Ensure that the instance was deleted by seeing that the server list is empty.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server list
+        ubuntu@workstation:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}

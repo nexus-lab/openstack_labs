@@ -3,15 +3,101 @@
 
 \AddToHook{cmd/section/before}{\clearpage}
 
+\usepackage[table]{xcolor}
+\colorlet{listingback}{gray!20}
+\definecolor{headingcolor}{RGB}{110,34,54}
+
 \usepackage{fancyhdr}
 \renewcommand{\sectionmark}[1]{\markboth{#1}{#1}}
+
+% Save standard definitions for head and foot rules (lines separating header and footer from text)
+\let\HeadRule\headrule
+\let\FootRule\footrule
+% Add color to the standard definitions
+\renewcommand{\headrule}{\color{headingcolor}\HeadRule}
+\renewcommand{\footrule}{\textcolor{headingcolor}{\FootRule}}
+
+% IMPORTANT: This command should not be called directly. Use \preamble.
+% Macro to insert the title page for each lab.
+% The argument is the title of the lab.
+\newcommand{\inserttitlepage}[1]
+{
+    \begin{titlepage}
+    \centering
+    \includegraphics[scale=0.5]{images/nexus_lab_logo.png}
+
+    \vspace*{\baselineskip}
+
+    \textbf{\Large OpenStack Labs}
+
+    \vspace*{\baselineskip}
+
+    \textbf{\Large #1}
+    \vspace*{\fill}
+\end{titlepage}
+}
+
+% IMPORTANT: This command should not be called directly. Use \preamble.
+% Macro to define header and footer for each lab.
+% The argument is the title of the lab.
+\newcommand{\headfoot}[1]
+{
+    \fancypagestyle{fancy}
+    {
+        \fancyhf{}
+        \fancyhead[L]{\footnotesize #1}
+        \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
+        \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
+        \fancyfoot[R]{\footnotesize\thepage}
+        \renewcommand{\headrulewidth}{1.5pt}
+        \renewcommand{\footrulewidth}{1.5pt}
+    }
+}
+
+% Macro to insert title page, define header and footer, and insert table of contents for each lab.
+% The argument is the title of the lab.
+\newcommand{\preamble}[1]
+{
+    \inserttitlepage{#1}
+    \headfoot{#1}
+
+    % Insert table of contents
+    \pagestyle{fancy}
+    \tableofcontents
+    \clearpage
+}
+
+% Macro to insert the Lab Settings page for each lab. Call after the Introduction and Objectives sections.
+\newcommand{\labsettings}
+{
+    \section*{Lab Settings}
+    \label{sec:lab_settings}
+    \addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
+    The information in the table below will be needed in order to complete the lab. The task sections below provide
+    details on the use of this information.
+    \begin{table*}[htbp]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
+            \hline
+            \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                                  & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
+            \hline
+            \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.20}}    & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
+                                                  & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
+            \hline
+        \end{tabular}
+    \end{table*}
+    \clearpage
+}
 
 % Sans-serif font
 \renewcommand{\familydefault}{\sfdefault}
 \newcommand{\texttildemid}{{\raisebox{0.5ex}{\texttildelow}}}
 
 \usepackage{enumitem}
-\renewcommand{\theenumi}{\thesection.\arabic{enumi}}
+\renewcommand{\labelenumi}{\textbf{\thesection.\arabic{enumi}.}}
 
 % Try to forbid widows and orphans
 \widowpenalty10000
@@ -19,10 +105,6 @@
 
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
-
-\usepackage[table]{xcolor}
-\colorlet{listingback}{gray!20}
-\definecolor{headingcolor}{RGB}{110,34,54}
 
 \usepackage{sectsty}
 \sectionfont{\color{headingcolor}}
@@ -34,9 +116,9 @@
 \renewcommand{\cftsecfont}{\normalfont\normalsize}
 \renewcommand{\cftsecpagefont}{\normalfont\normalsize}
 \renewcommand{\cftdotsep}{0} % Make dots small and close together
-\renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Add dots after section titles
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Add dots after section titles
 % Make dots go all the way to the page number
-\renewcommand\cftsecfillnum[1]{{\cftsecleader}\nobreak{\cftsecpagefont #1}\cftsecafterpnum\par}
+\renewcommand{\cftsecfillnum}[1]{{\cftsecleader}\nobreak{\cftsecpagefont #1}\cftsecafterpnum\par}
 
 \usepackage{multirow}
 \setlength{\tabcolsep}{16pt}
@@ -161,8 +243,10 @@
 }
 \makeatother
 
+% The commands below define environments for colored boxes. They are used like
+% \begin{notebox}
+% ...
+% \end{notebox}
 \newtcolorbox{notebox}{note={Note}}
-
 \newtcolorbox{stopbox}{stop={Stop}}
-
 \newtcolorbox{tipbox}{tip={Tip}}

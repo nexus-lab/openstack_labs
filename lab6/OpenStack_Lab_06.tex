@@ -1,35 +1,7 @@
 \documentclass[letterpaper, 12pt]{article}
-
 \input{../common.tex}
-
 \begin{document}
-\begin{titlepage}
-    \centering
-    \includegraphics[scale=0.5]{images/nexus_lab_logo.png}
-
-    \vspace*{\baselineskip}
-
-    \textbf{\Large OpenStack Labs}
-
-    \vspace*{\baselineskip}
-
-    \textbf{\Large Lab 06: Deploying an FTP Server}
-    \vspace*{\fill}
-\end{titlepage}
-
-\fancypagestyle{fancy}
-{
-    \fancyhf{}
-    \fancyhead[L]{\footnotesize Lab 06: Deploying an FTP Server}
-    \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
-    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
-    \fancyfoot[R]{\footnotesize\thepage}
-    \renewcommand{\headrulewidth}{0pt}
-}
-
-\pagestyle{fancy}
-\tableofcontents
-\clearpage
+\preamble{Lab 06: Deploying an FTP Server}
 
 \section*{Introduction}
 \label{sec:introduction}
@@ -46,27 +18,11 @@ an FTP server through OpenStack.
 \end{itemize}
 \clearpage
 
-\section*{Lab Settings}
-\label{sec:lab_settings}
-\addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
-The information in the table below will be needed in order to complete the lab. The task sections below provide details
-on the use of this information.
-\begin{table*}[htbp]
-\centering
-\begin{tabular}{|c|c|c|c|}
-    \hline
-    \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
-    \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
-    \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
-    \hline
-\end{tabular}
-\end{table*}
-\clearpage
+\labsettings
 
+%%%%%%%%%%%
+% Section 1
+%%%%%%%%%%%
 \section{Launch an FTP Server Instance}
 \label{sec:launch_an_ftp_server_instance}
 In this task, you will deploy an FTP server in your environment. The architecture will be comprised of an external
@@ -78,7 +34,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Open a terminal window and source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ source ~/kesytonerc-admin
+        ubuntu@workstation:~$ source ~/kesytonerc-admin
     \end{lstlisting}
 
     \begin{center}
@@ -87,7 +43,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Delete the \textbf{ubuntu} image.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack image delete ubuntu
+        ubuntu@workstation:~$ openstack image delete ubuntu
     \end{lstlisting}
 
     \begin{center}
@@ -96,8 +52,8 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create the \textbf{prod} project.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack project create prod \
-    > --domain default
+        ubuntu@workstation:~$ openstack project create prod \
+        > --domain default
     \end{lstlisting}
 
     \begin{center}
@@ -111,11 +67,11 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create a user named \textbf{superuser} with the password \textbf{secret} to the \textbf{prod} project.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack user create \
-    > --project prod \
-    > --password secret \
-    > --email ubuntu@workstation.lab.example.com \
-    > superuser
+        ubuntu@workstation:~$ openstack user create \
+        > --project prod \
+        > --password secret \
+        > --email ubuntu@workstation.lab.example.com \
+        > superuser
     \end{lstlisting}
 
     \begin{center}
@@ -124,10 +80,10 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Assign the \textbf{admin} role to the user \textbf{superuser}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack role add \
-    > --project prod \
-    > --user superuser \
-    > admin
+        ubuntu@workstation:~$ openstack role add \
+        > --project prod \
+        > --user superuser \
+        > admin
     \end{lstlisting}
 
     \begin{center}
@@ -137,7 +93,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-admin} to
     \textbf{\texttildemid/keystonerc-superuser}.
     \begin{lstlisting}
-    ubuntu@workstation~$ cp ~/keystonerc-admin ~/keystonerc-superuser
+        ubuntu@workstation~$ cp ~/keystonerc-admin ~/keystonerc-superuser
     \end{lstlisting}
 
     \begin{center}
@@ -149,7 +105,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     should match the the contents shown below. Press \textbf{CTRL+X} to exit the file, then press \textbf{Y} and then
     \textbf{ENTER} to save the changes to the file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ nano ~/keystonerc-superuser
+        ubuntu@workstation:~$ nano ~/keystonerc-superuser
     \end{lstlisting}    
 
     \begin{center}
@@ -158,11 +114,11 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Now, create a non-privileged user called \textbf{cloud-lab} with the password \textbf{secret}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack user create \
-    > --project prod \
-    > --password secret \
-    > --email ubuntu@workstation.lab.example.com \
-    > cloud-lab
+        ubuntu@workstation:~$ openstack user create \
+        > --project prod \
+        > --password secret \
+        > --email ubuntu@workstation.lab.example.com \
+        > cloud-lab
     \end{lstlisting}
 
     \begin{center}
@@ -172,10 +128,10 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Assign \textbf{cloud-lab} the \textbf{member} role in the \textbf{prod} project so that it can perform actions
     in that project.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack role add \
-    > --project prod \
-    > --user cloud-lab \
-    > member
+        ubuntu@workstation:~$ openstack role add \
+        > --project prod \
+        > --user cloud-lab \
+        > member
     \end{lstlisting}
 
     \begin{center}
@@ -185,7 +141,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-superuser} to
     \textbf{\texttildemid/keystonerc-cloud-lab}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ cp ~/keystonerc-superuser ~/keystonerc-cloud-lab
+        ubuntu@workstation:~$ cp ~/keystonerc-superuser ~/keystonerc-cloud-lab
     \end{lstlisting}
 
     \begin{center}
@@ -196,7 +152,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \texttt{OS\_USERNAME} to \textbf{cloud-lab}. The file should match the contents shown below. Press \textbf{CTRL+X}
     to exit the file, then press \textbf{Y} and then \textbf{ENTER} to save the changes to the file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ nano ~/keystonerc-cloud-lab
+        ubuntu@workstation:~$ nano ~/keystonerc-cloud-lab
     \end{lstlisting}
 
     \begin{center}
@@ -206,7 +162,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Now, source the \textbf{keystonerc-superuser} keystone file to begin working with admin privileges in the
     \textbf{prod} project.
     \begin{lstlisting}
-    ubuntu@workstation:~$ source ~/keystonerc-superuser
+        ubuntu@workstation:~$ source ~/keystonerc-superuser
     \end{lstlisting}
 
     \begin{center}
@@ -217,7 +173,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     external network can be deleted, the router needs to be deleted, which requires first deleting its interfaces.
     First, show the details of the router \textbf{router1} to find the interfaces to delete.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router show router1
+        ubuntu@workstation:~$ openstack router show router1
     \end{lstlisting}
 
     \begin{center}
@@ -227,12 +183,12 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Next, delete the two interfaces on the router using the \texttt{port\_id} values from the output of the
     previous step.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router remove port \
-    > router1 \
-    > 5290b8a9-4f26-415f-b134-459cb139a906
-    ubuntu@workstation:~$ openstack router remove port \
-    > router1 \
-    > 5c97ebfb-d998-413e-998b-f375171b363f
+        ubuntu@workstation:~$ openstack router remove port \
+        > router1 \
+        > 5290b8a9-4f26-415f-b134-459cb139a906
+        ubuntu@workstation:~$ openstack router remove port \
+        > router1 \
+        > 5c97ebfb-d998-413e-998b-f375171b363f
     \end{lstlisting}
 
     \begin{center}
@@ -250,7 +206,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Now, \textbf{router1} can be deleted.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router delete router1
+        ubuntu@workstation:~$ openstack router delete router1
     \end{lstlisting}
 
     \begin{center}
@@ -259,7 +215,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Finally, delete the existing external network named \textbf{public}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack network delete public
+        ubuntu@workstation:~$ openstack network delete public
     \end{lstlisting}
 
     \begin{center}
@@ -268,10 +224,10 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create an external, shared network called \textbf{external}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack network create external \
-    > --external --share \
-    > --provider-network-type flat \
-    > --provider-physical-network public
+        ubuntu@workstation:~$ openstack network create external \
+        > --external --share \
+        > --provider-network-type flat \
+        > --provider-physical-network public
     \end{lstlisting}
 
     \begin{center}
@@ -282,12 +238,12 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     allocation pool range from \textbf{172.25.250.25} to \textbf{172.250.250.30}, and allow DHCP. Set both the gateway
     and DNS nameserver addresses to \textbf{172.25.250.254}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack subnet create \
-    > --subnet-range 172.25.250.0/24 \
-    > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
-    > --dhcp --network external \
-    > --gateway 172.25.250.254 \
-    > --dns-nameserver 172.25.250.254 external_subnet
+        ubuntu@workstation:~$ openstack subnet create \
+        > --subnet-range 172.25.250.0/24 \
+        > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
+        > --dhcp --network external \
+        > --gateway 172.25.250.254 \
+        > --dns-nameserver 172.25.250.254 external_subnet
     \end{lstlisting}
 
     \begin{center}
@@ -296,7 +252,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Source the \textbf{~/keystonerc-cloud-lab} keystone credentials file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ source ~/keystonerc-cloud-lab
+        ubuntu@workstation:~$ source ~/keystonerc-cloud-lab
     \end{lstlisting}
 
     \begin{center}
@@ -305,7 +261,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create an internal network called \textbf{net1}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack network create net1
+        ubuntu@workstation:~$ openstack network create net1
     \end{lstlisting}
 
     \begin{center}
@@ -315,9 +271,9 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Create a subnet for \textbf{net1} called \textbf{subnet1} in the \textbf{192.168.0.0/24} range. Allow DHCP on
     the subnet.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack subnet create \
-    > --subnet-range 192.168.0.0/24 \
-    > --network net1 subnet1
+        ubuntu@workstation:~$ openstack subnet create \
+        > --subnet-range 192.168.0.0/24 \
+        > --network net1 subnet1
     \end{lstlisting}
 
     \begin{center}
@@ -326,7 +282,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create a router named \textbf{router1} so that the internal and external networks can be connected.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router create router1
+        ubuntu@workstation:~$ openstack router create router1
     \end{lstlisting}
 
     \begin{center}
@@ -335,7 +291,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Add a port to the router for the internal network.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router add subnet router1 subnet1
+        ubuntu@workstation:~$ openstack router add subnet router1 subnet1
     \end{lstlisting}
 
     \begin{center}
@@ -344,9 +300,9 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Set the external network as the gateway for the router.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router set \
-    > --external-gateway external \
-    > router1
+        ubuntu@workstation:~$ openstack router set \
+        > --external-gateway external \
+        > router1
     \end{lstlisting}
 
     \begin{center}
@@ -355,7 +311,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Allocate a floating IP address from the \textbf{external} network for hte \textbf{prod} project.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack floating ip create external
+        ubuntu@workstation:~$ openstack floating ip create external
     \end{lstlisting}
 
     \begin{center}
@@ -364,8 +320,8 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Generate a key pair for the \textbf{cloud-lab} user named \textbf{key1}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack keypair create \
-    > key1 > ~/Downloads/key1.pem
+        ubuntu@workstation:~$ openstack keypair create \
+        > key1 > ~/Downloads/key1.pem
     \end{lstlisting}
 
     \begin{center}
@@ -375,7 +331,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write
     permissions.
     \begin{lstlisting}
-    ubuntu@workstation:~$ chmod 600 ~/Downloads/key1.pem
+        ubuntu@workstation:~$ chmod 600 ~/Downloads/key1.pem
     \end{lstlisting}
 
     \begin{center}
@@ -384,8 +340,8 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create a security group named \textbf{sg1} for the \textbf{prod} project.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group create \
-    > --description "SSH, ICMP, and FTP" sg1
+        ubuntu@workstation:~$ openstack security group create \
+        > --description "SSH, ICMP, and FTP" sg1
     \end{lstlisting}    
 
     \begin{center}
@@ -395,9 +351,9 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Create a security group rule to allow \textbf{SSH} traffic from any IP address. SSH uses the TCP protocol on
     port 22 by default.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group \
-    > rule create \
-    > --proto tcp --remote-ip 0.0.0.0/0 --dst-port 22:22 sg1
+        ubuntu@workstation:~$ openstack security group \
+        > rule create \
+        > --proto tcp --remote-ip 0.0.0.0/0 --dst-port 22:22 sg1
     \end{lstlisting}
 
     \begin{center}
@@ -406,9 +362,9 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create a security group rule to allow \textbf{ICMP} traffic from any IP address.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group \
-    > rule create \
-    > --proto icmp --remote-ip 0.0.0.0/0 sg1
+        ubuntu@workstation:~$ openstack security group \
+        > rule create \
+        > --proto icmp --remote-ip 0.0.0.0/0 sg1
     \end{lstlisting}
 
     \begin{center}
@@ -418,9 +374,9 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Create a security group rule to allow \textbf{FTP} traffic from any IP address. FTP uses the TCP protocol on
     port 20 (data channel) and port 21 (control channel).
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group \
-    > rule create \
-    > --proto tcp --remote-ip 0.0.0.0/0 --dst-port 20:21 sg1
+        ubuntu@workstation:~$ openstack security group \
+        > rule create \
+        > --proto tcp --remote-ip 0.0.0.0/0 --dst-port 20:21 sg1
     \end{lstlisting}
 
     \begin{center}
@@ -429,10 +385,10 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create an image named \textbf{ftp} with the file \textbf{~/Downloads/ftp.img}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack image create \
-    > --disk-format qcow2 \
-    > --file ~/Downloads/ftp.img \
-    > ftp
+        ubuntu@workstation:~$ openstack image create \
+        > --disk-format qcow2 \
+        > --file ~/Downloads/ftp.img \
+        > ftp
     \end{lstlisting}
 
     \begin{center}
@@ -444,12 +400,12 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     Press \textbf{CTRL+X} to exit the file, then press \textbf{Y} and then \textbf{ENTER} to save the changes to the
     file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ nano ~/script
+        ubuntu@workstation:~$ nano ~/script
     \end{lstlisting}
     \begin{lstlisting}
-    #cloud-config
-    runcmd:
-    - echo "This instance has been customized by cloud-init" > /etc/motd
+        #cloud-config
+        runcmd:
+        - echo "This instance has been customized by cloud-init" > /etc/motd
     \end{lstlisting}
 
     \begin{center}
@@ -464,14 +420,14 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Create an instance named \textbf{ftp\_server} using \textbf{net1} for the internal network, \textbf{m1.small}
     as the flavor, and \textbf{ubuntu} as the image.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server create \
-    > --image ftp \
-    > --flavor m1.small \
-    > --security-group sg1 \
-    > --user-data ~/script \
-    > --key-name key1 \
-    > --nic net-id=net1 \
-    > --wait ftp_server
+        ubuntu@workstation:~$ openstack server create \
+        > --image ftp \
+        > --flavor m1.small \
+        > --security-group sg1 \
+        > --user-data ~/script \
+        > --key-name key1 \
+        > --nic net-id=net1 \
+        > --wait ftp_server
     \end{lstlisting}
 
     \begin{center}
@@ -480,7 +436,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Ensure that the instance state is \textbf{ACTIVE}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server list
+        ubuntu@workstation:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
@@ -489,7 +445,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item When the instance state is \textbf{ACTIVE}, list the floating IP addresses available.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack floating ip list
+        ubuntu@workstation:~$ openstack floating ip list
     \end{lstlisting}
 
     \begin{center}
@@ -498,8 +454,8 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Associate an open floating IP address to the instance.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server add \
-    > floating ip ftp_server 172.25.250.30
+        ubuntu@workstation:~$ openstack server add \
+        > floating ip ftp_server 172.25.250.30
     \end{lstlisting}
 
     \begin{center}
@@ -515,8 +471,8 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \textbf{devstack} machine. When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
     \textbf{ubuntu}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ scp ~/Downloads/key1.pem \
-    > ubuntu@192.168.1.20:~/key1.pem
+        ubuntu@workstation:~$ scp ~/Downloads/key1.pem \
+        > ubuntu@192.168.1.20:~/key1.pem
     \end{lstlisting}
 
     \begin{center}
@@ -525,7 +481,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item SSH into the \textbf{devstack} machine. The password is the same as the last step.
     \begin{lstlisting}
-    ubuntu@workstation:~$ ssh 192.168.1.20
+        ubuntu@workstation:~$ ssh 192.168.1.20
     \end{lstlisting}
 
     \begin{center}
@@ -535,7 +491,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item SSH into the \textbf{ftp\_server} instance using the \textbf{key1} private key. Notice that the message of the
     of the day uploaded with the \texttt{cloud-init} script appears near the bottom of the output.
     \begin{lstlisting}
-    ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.30
+        ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.30
     \end{lstlisting}
 
     \begin{center}
@@ -552,7 +508,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Verify that the \texttt{vsftpd} package is installed.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ apt list --installed | grep vsftpd
+        ubuntu@ftp-server:~$ apt list --installed | grep vsftpd
     \end{lstlisting}
 
     \begin{center}
@@ -566,15 +522,15 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \texttt{allow\_writeable\_chroot=YES} and \texttt{anon\_root=/var/ftp}. The content of the file should resemble the
     output given below.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ sudo nano /etc/vsftpd.conf
+        ubuntu@ftp-server:~$ sudo nano /etc/vsftpd.conf
     \end{lstlisting}
     \begin{lstlisting}
-    anonymous_enable=YES
-    write_enable=YES
-    anon_upload_enable=YES
-    anon_mkdir_write_enable=YES
-    allow_writeable_chroot=YES
-    anon_root=/var/ftp
+        anonymous_enable=YES
+        write_enable=YES
+        anon_upload_enable=YES
+        anon_mkdir_write_enable=YES
+        allow_writeable_chroot=YES
+        anon_root=/var/ftp
     \end{lstlisting}
 
     \begin{center}
@@ -583,7 +539,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Create a folder for anonymous FTP users.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ sudo mkdir -p /var/ftp/pub
+        ubuntu@ftp-server:~$ sudo mkdir -p /var/ftp/pub
     \end{lstlisting}
 
     \begin{center}
@@ -592,8 +548,8 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Remove all ownership from the root FTP folder and remove write permissions from this folder.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ sudo chown nobody:nogroup /var/ftp
-    ubuntu@ftp-server:~$ sudo chmod a-w /var/ftp
+        ubuntu@ftp-server:~$ sudo chown nobody:nogroup /var/ftp
+        ubuntu@ftp-server:~$ sudo chmod a-w /var/ftp
     \end{lstlisting}
 
     \begin{center}
@@ -603,7 +559,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item Change the ownership of the \textbf{/var/ftp/pub} directory so that the \textbf{ftp} user and group owns
     everything within this directory.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ sudo chown -R ftp. /var/ftp/pub
+        ubuntu@ftp-server:~$ sudo chown -R ftp. /var/ftp/pub
     \end{lstlisting}
 
     \begin{center}
@@ -612,7 +568,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Restart the \texttt{vsftpd} service so the changes will take effect.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ sudo systemctl restart vsftpd
+        ubuntu@ftp-server:~$ sudo systemctl restart vsftpd
     \end{lstlisting}
 
     \begin{center}
@@ -621,7 +577,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Exit from the \textbf{ftp\_server} instance.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ exit
+        ubuntu@ftp-server:~$ exit
     \end{lstlisting}
 
     \begin{center}
@@ -631,7 +587,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \item From \textbf{workstation}, create a text file named \textbf{test\_file.txt} containing the string ``This is my
     file''.
     \begin{lstlisting}
-    ubuntu@devstack:~$ echo "This is my file" > test_file.txt
+        ubuntu@devstack:~$ echo "This is my file" > test_file.txt
     \end{lstlisting}
 
     \begin{center}
@@ -642,12 +598,12 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \textbf{anonymous} as the user and when prompted for the password, press the \textbf{Enter} key for no password
     input. Follow the instructions from the example and summary below.
     \begin{lstlisting}
-    ubuntu@devstack:~$ ftp 172.25.250.30
-    ftp> passive
-    ftp> dir
-    ftp> cd pub
-    ftp> put test_file.txt test_file.txt
-    ftp> bye
+        ubuntu@devstack:~$ ftp 172.25.250.30
+        ftp> passive
+        ftp> dir
+        ftp> cd pub
+        ftp> put test_file.txt test_file.txt
+        ftp> bye
     \end{lstlisting}
 
     \begin{center}
@@ -660,7 +616,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item SSH into the \textbf{ftp\_server} instance.
     \begin{lstlisting}
-    ubuntu@devstack:~$ ssh -i ~/key1.pem cloud-user@172.25.250.30
+        ubuntu@devstack:~$ ssh -i ~/key1.pem cloud-user@172.25.250.30
     \end{lstlisting}
 
     \begin{center}
@@ -669,7 +625,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Verify the file uploaded successfully.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ sudo cat /var/ftp/pub/test_file.txt
+        ubuntu@ftp-server:~$ sudo cat /var/ftp/pub/test_file.txt
     \end{lstlisting}
 
     \begin{center}
@@ -678,7 +634,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 
     \item Exit from the \textbf{ftp\_server} instance.
     \begin{lstlisting}
-    ubuntu@ftp-server:~$ exit
+        ubuntu@ftp-server:~$ exit
     \end{lstlisting}
 
     \begin{center}

@@ -1,35 +1,7 @@
 \documentclass[letterpaper, 12pt]{article}
-
 \input{../common.tex}
-
 \begin{document}
-\begin{titlepage}
-    \centering
-    \includegraphics[scale=0.5]{images/nexus_lab_logo.png}
-
-    \vspace*{\baselineskip}
-
-    \textbf{\Large OpenStack Labs}
-
-    \vspace*{\baselineskip}
-
-    \textbf{\Large Lab 05: Customizing Instances}
-    \vspace*{\fill}
-\end{titlepage}
-
-\fancypagestyle{fancy}
-{
-    \fancyhf{}
-    \fancyhead[L]{\footnotesize Lab 05: Customizing Instances}
-    \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
-    \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
-    \fancyfoot[R]{\footnotesize\thepage}
-    \renewcommand{\headrulewidth}{0pt}
-}
-
-\pagestyle{fancy}
-\tableofcontents
-\clearpage
+\preamble{Lab 05: Customizing Instances}
 
 \section*{Introduction}
 \label{sec:introduction}
@@ -45,34 +17,18 @@ In this lab, you will use the \textbf{\texttt{cloud-init}} utility to customize 
 \end{itemize}
 \clearpage
 
-\section*{Lab Settings}
-\label{sec:lab_settings}
-\addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
-The information in the table below will be needed in order to complete the lab. The task sections below provide details
-on the use of this information.
-\begin{table*}[htbp]
-\centering
-\begin{tabular}{|c|c|c|c|}
-    \hline
-    \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
-    \hline
-    \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
-    \hline
-    \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.20}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
-                                          & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
-    \hline
-\end{tabular}
-\end{table*}
-\clearpage
+\labsettings
 
+%%%%%%%%%%%
+% Section 1
+%%%%%%%%%%%
 \section{Creating Customized Instances}
 \label{sec:creating_customized_instances}
 In this task, you will customize two instances using \textbf{\texttt{cloud-init}} capabilities and features. You will
 log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and running.
 
 \begin{enumerate}
-    % TODO(lucas): Viewing the default Apache web page will require being able to access the instance
+    % TODO: Viewing the default Apache web page will require being able to access the instance
     % from the workstation, which is currently not working
     \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
     password \textbf{secret}.
@@ -106,7 +62,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item Leave the web browser open and open a terminal window. Source the keystone credentials for the \textbf{admin}
     user.
     \begin{lstlisting}
-    ubuntu@workstation:~$ source ~/keystonerc-admin
+        ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
 
     \begin{center}
@@ -117,10 +73,10 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     named \textbf{external}. Set the network type to \textbf{flat} and the physical network to \textbf{public}. Set the
     network as shared and external.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack network create external \
-    > --external --share \
-    > --provider-network-type flat \
-    > --provider-physical-network public
+        ubuntu@workstation:~$ openstack network create external \
+        > --external --share \
+        > --provider-network-type flat \
+        > --provider-physical-network public
     \end{lstlisting}
 
     \begin{center}
@@ -136,14 +92,14 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \textbf{172.25.250.60} to \textbf{172.25.250.80}. Disable DHCP services for the subnet and use the address
     \textbf{172.25.250.254} as the gateway as well as the DNS name server.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack subnet create \
-    > --subnet-range 172.25.250.0/24 \
-    > --no-dhcp \
-    > --gateway 172.25.250.254 \
-    > --dns-nameserver 172.25.250.254 \
-    > --allocation-pool start=172.25.250.60,end=172.25.250.80 \
-    > --network external \
-    > subext
+        ubuntu@workstation:~$ openstack subnet create \
+        > --subnet-range 172.25.250.0/24 \
+        > --no-dhcp \
+        > --gateway 172.25.250.254 \
+        > --dns-nameserver 172.25.250.254 \
+        > --allocation-pool start=172.25.250.60,end=172.25.250.80 \
+        > --network external \
+        > subext
     \end{lstlisting}
 
     \begin{center}
@@ -152,7 +108,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item From the floating IP pool in the \textbf{external} network, create a floating IP.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack floating ip create external
+        ubuntu@workstation:~$ openstack floating ip create external
     \end{lstlisting}
 
     \begin{center}
@@ -161,7 +117,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Create a router named \textbf{exercise-router}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router create exercise-router
+        ubuntu@workstation:~$ openstack router create exercise-router
     \end{lstlisting}
 
     \begin{center}
@@ -170,8 +126,8 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Connect the router to the \textbf{shared-subnet} subnet.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router add subnet \
-    > exercise-router shared-subnet
+        ubuntu@workstation:~$ openstack router add subnet \
+        > exercise-router shared-subnet
     \end{lstlisting}
 
     \begin{center}
@@ -180,9 +136,9 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Set the \textbf{external} network as the gateway for the router.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack router set \
-    > --external-gateway external \
-    > exercise-router
+        ubuntu@workstation:~$ openstack router set \
+        > --external-gateway external \
+        > exercise-router
     \end{lstlisting}
 
     \begin{center}
@@ -192,8 +148,8 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item Create the key pair \textbf{dev-keypair} and save the private key to the file
     \textbf{\texttildemid/Downloads/dev-keypair.pem}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack keypair create \
-    > dev-keypair > ~/Downloads/dev-keypair.pem
+        ubuntu@workstation:~$ openstack keypair create \
+        > dev-keypair > ~/Downloads/dev-keypair.pem
     \end{lstlisting}
 
     \begin{center}
@@ -203,7 +159,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item the \textbf{\texttt{chmod}} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu} user
     has read/write permissions on the file, and groups and other users have no permissions to the file.
     \begin{lstlisting}
-    ubuntu@workstation:~$ chmod 600 ~/Downloads/dev-keypair.pem
+        ubuntu@workstation:~$ chmod 600 ~/Downloads/dev-keypair.pem
     \end{lstlisting}
 
     \begin{center}
@@ -212,8 +168,8 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Create the \textbf{dev-secgroup} security group.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group \
-    > create dev-secgroup
+        ubuntu@workstation:~$ openstack security group \
+        > create dev-secgroup
     \end{lstlisting}
 
     \begin{center}
@@ -222,10 +178,10 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group \
-    > rule create \
-    > --protocol icmp \
-    > dev-secgroup
+        ubuntu@workstation:~$ openstack security group \
+        > rule create \
+        > --protocol icmp \
+        > dev-secgroup
     \end{lstlisting}
 
     \begin{center}
@@ -234,11 +190,11 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Add another security rule to allow remote connection using SSH on the default port 22.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack security group \
-    > rule create \
-    > --protocol tcp \
-    > --dst-port 22 \
-    > dev-secgroup
+        ubuntu@workstation:~$ openstack security group \
+        > rule create \
+        > --protocol tcp \
+        > --dst-port 22 \
+        > dev-secgroup
     \end{lstlisting}
 
     \begin{center}
@@ -323,8 +279,8 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item In the \textit{Configuration} tab, populate the \textbf{Customization Script} field with the content below.
     Once finished, click \textbf{Launch Instance}.
     \begin{lstlisting}
-    #!/bin/bash
-    echo 'Hello, world!' > /root/hello.txt
+        #!/bin/bash
+        echo 'Hello, world!' > /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
@@ -367,7 +323,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \textbf{\texttt{tail}}
     command to print the last 10 lines of the log.
     \begin{lstlisting}
-    root@instance1:~# tail /var/log/cloud-init.log
+        root@instance1:~# tail /var/log/cloud-init.log
     \end{lstlisting}
 
     \begin{center}
@@ -376,7 +332,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
     \begin{lstlisting}
-    root@instance1:~# cat /root/hello.txt
+        root@instance1:~# cat /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
@@ -387,7 +343,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Focus back on the terminal and delete \textbf{instance1}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server delete instance1
+        ubuntu@workstation:~$ openstack server delete instance1
     \end{lstlisting}
 
     \begin{center}
@@ -399,11 +355,11 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \textbf{\texttildemid/hello} that matches the content shown below. Press \textbf{CTRL+X}, then \textbf{Y} to
     accept the file changes. Press \textbf{Enter} to confirm and exit back to the terminal.
     \begin{lstlisting}
-    ubuntu@workstation:~$ nano ~/hello
+        ubuntu@workstation:~$ nano ~/hello
     \end{lstlisting}
     \begin{lstlisting}
-    #!/bin/bash
-    echo 'Hello, world!' > /root/hello.txt
+        #!/bin/bash
+        echo 'Hello, world!' > /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
@@ -414,14 +370,14 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     customization. Use the \textbf{ubuntu} image, the \textbf{m1.small} flavor, the \textbf{shared} network, the
     \textbf{dev-secgroup} security group, and the \textbf{dev-keypair} key pair.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server create \
-    > --image ubuntu \
-    > --flavor m1.small \
-    > --nic net-id=shared \
-    > --security-group dev-secgroup \
-    > --key-name dev-keypair \
-    > --user-data ~/hello \
-    > --wait instance2
+        ubuntu@workstation:~$ openstack server create \
+        > --image ubuntu \
+        > --flavor m1.small \
+        > --nic net-id=shared \
+        > --security-group dev-secgroup \
+        > --key-name dev-keypair \
+        > --user-data ~/hello \
+        > --wait instance2
     \end{lstlisting}
 
     \begin{center}
@@ -430,7 +386,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Verify that the status of the \textbf{instance2} instance is \textbf{ACTIVE}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server list
+        ubuntu@workstation:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
@@ -440,7 +396,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item Generate another floating IP address to assign to this instance. Take note of the IP address generated, which
     is listed in the \textit{floating\_ip\_address} and \textit{name} rows in the output from the below command.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack floating ip create external
+        ubuntu@workstation:~$ openstack floating ip create external
     \end{lstlisting}
 
     \begin{center}
@@ -449,8 +405,8 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
     \item Assign the floating IP generated from the last step to \textbf{instance2}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server add floating ip \
-    instance2 172.25.250.63
+        ubuntu@workstation:~$ openstack server add floating ip \
+        instance2 172.25.250.63
     \end{lstlisting}
 
     \begin{center}
@@ -463,6 +419,9 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 
 \end{enumerate}
 
+%%%%%%%%%%%
+% Section 2
+%%%%%%%%%%%
 \section{Verify Customized Instances}
 \label{sec:verify_customized_instances}
 In this task, you will verify that \textbf{\texttt{cloud-init}} has correctly customized the two instances created in the
@@ -475,8 +434,8 @@ previous section.
     \item Determine the floating IP address associated with \textbf{instance2}. Remember that the floating IP address is
     in the \textbf{172.25.250.0/24} subnet.
     \begin{lstlisting}
-    ubuntu@workstation:~$ openstack server show instance2 \
-    > | grep address
+        ubuntu@workstation:~$ openstack server show instance2 \
+        > | grep address
     \end{lstlisting}
 
     \begin{center}
@@ -491,8 +450,8 @@ previous section.
     the \textbf{devstack} machine. When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
     \textbf{ubuntu}.
     \begin{lstlisting}
-    ubuntu@workstation:~$ scp ~/Downloads/dev-keypair.pem \
-    > ubuntu@192.168.1.20:~/dev-keypair.pem
+        ubuntu@workstation:~$ scp ~/Downloads/dev-keypair.pem \
+        > ubuntu@192.168.1.20:~/dev-keypair.pem
     \end{lstlisting}
 
     \begin{center}
@@ -501,7 +460,7 @@ previous section.
 
     \item SSH into the \textbf{devstack} machine. The password is the same as the last step.
     \begin{lstlisting}
-    ubuntu@workstation:~$ ssh 192.168.1.20
+        ubuntu@workstation:~$ ssh 192.168.1.20
     \end{lstlisting}
 
     \begin{center}
@@ -510,7 +469,7 @@ previous section.
 
     \item SSH into \textbf{instance2} using the \textbf{dev-keypair} private key.
     \begin{lstlisting}
-    ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.63
+        ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.63
     \end{lstlisting}
 
     \begin{center}
@@ -523,7 +482,7 @@ previous section.
 
     \item Check \textbf{/var/log/cloud-init.log} to confirm that the \textbf{cloud-init} script ran.
     \begin{lstlisting}
-    ubuntu@instance2:~$ sudo tail /var/log/cloud-init.log
+        ubuntu@instance2:~$ sudo tail /var/log/cloud-init.log
     \end{lstlisting}
 
     \begin{center}
@@ -532,7 +491,7 @@ previous section.
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
     \begin{lstlisting}
-    ubuntu@instance2:~$ sudo cat /root/hello.txt
+        ubuntu@instance2:~$ sudo cat /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
