@@ -30,6 +30,21 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
 \begin{enumerate}
     % TODO: Viewing the default Apache web page will require being able to access the instance
     % from the workstation, which is currently not working
+    \item Log into the \textbf{workstation} machine as the \textbf{ubuntu} user with password \textbf{ubuntu}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step1.png}
+    \end{center}
+
+    \item Launch the graphical user interface.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ startx
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step2.png}
+    \end{center}
+
     \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
     password \textbf{secret}.
 
@@ -37,26 +52,26 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     same row as \textbf{router1}, then click \textbf{Delete Routers}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step2.png}
+        \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
     \item In the \textit{Confirm Delete Routers} dialog box that pops up, click \textbf{Delete Routers}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step3.png}
+        \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
     \item Now, navigate to \textbf{Networks}. Check the box in the same row as \textbf{public}, then click
     \textbf{Delete Networks}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step4.png}
+        \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
     \item In the \textit{Confirm Delete Networks} dialog box that pops up, click \textbf{Delete Networks}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step5.png}
+        \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
     \item Leave the web browser open and open a terminal window. Source the keystone credentials for the \textbf{admin}
@@ -66,7 +81,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
+        \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
     \item A few resources need to be created to help with customizing the instances. First, create an external network
@@ -80,7 +95,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step7.png}
+        \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
     \begin{tipbox}
@@ -103,7 +118,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step8.png}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
     \item From the floating IP pool in the \textbf{external} network, create a floating IP.
@@ -112,7 +127,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
     \item Create a router named \textbf{exercise-router}.
@@ -121,7 +136,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
     \item Connect the router to the \textbf{shared-subnet} subnet.
@@ -131,7 +146,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
     \item Set the \textbf{external} network as the gateway for the router.
@@ -142,7 +157,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \item Create the key pair \textbf{dev-keypair} and save the private key to the file
@@ -153,17 +168,17 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step13.png}
+        \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
-    \item the \textbf{\texttt{chmod}} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu} user
-    has read/write permissions on the file, and groups and other users have no permissions to the file.
+    \item Use the \textbf{\texttt{chmod}} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu}
+    user has read/write permissions on the file, and groups and other users have no permissions to the file.
     \begin{lstlisting}
         ubuntu@workstation:~$ chmod 600 ~/Downloads/dev-keypair.pem
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
+        \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
     \item Create the \textbf{dev-secgroup} security group.
@@ -173,7 +188,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
+        \includegraphics[width=\linewidth]{images/part1/step17.png}
     \end{center}
 
     \item Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
@@ -185,7 +200,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
+        \includegraphics[width=\linewidth]{images/part1/step18.png}
     \end{center}
 
     \item Add another security rule to allow remote connection using SSH on the default port 22.
@@ -198,21 +213,21 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step17.png}
+        \includegraphics[width=\linewidth]{images/part1/step19.png}
     \end{center}
 
     \item Now that the necessary resources have been created, focus back to the web browser. Navigate to
     \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step18.png}
+        \includegraphics[width=\linewidth]{images/part1/step20.png}
     \end{center}
 
     \item In the \textit{Details} tab, enter \textbf{instance1} in the \textit{Instance Name} field and click
     \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step19.png}
+        \includegraphics[width=\linewidth]{images/part1/step21.png}
     \end{center}
 
     \item In the \textit{Source} tab, make sure \textbf{Image} is selected in the \textit{Select Boot Source} dropdown
@@ -220,7 +235,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     symbol in the same row. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step20.png}
+        \includegraphics[width=\linewidth]{images/part1/step22.png}
     \end{center}
 
     \begin{stopbox}
@@ -231,7 +246,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item In the \textit{Flavor} tab, click the $\uparrow$ symbol in the same row as \textbf{m1.small}. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step21.png}
+        \includegraphics[width=\linewidth]{images/part1/step23.png}
     \end{center}
 
     \begin{stopbox}
@@ -243,7 +258,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step22.png}
+        \includegraphics[width=\linewidth]{images/part1/step24.png}
     \end{center}
 
     \begin{stopbox}
@@ -254,14 +269,14 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item In the \textit{Network Ports} tab, click \textbf{Next}.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step23.png}
+        \includegraphics[width=\linewidth]{images/part1/step25.png}
     \end{center}
 
     \item In the \textit{Security Groups} tab, click the $\downarrow$ symbol in the same row as \textbf{default}, and
     click the $\uparrow$ symbol in the same row as \textbf{dev-secgroup}. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step24.png}
+        \includegraphics[width=\linewidth]{images/part1/step26.png}
     \end{center}
 
     \begin{stopbox}
@@ -273,7 +288,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     underneath the \textit{Allocated} section. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step25.png}
+        \includegraphics[width=\linewidth]{images/part1/step27.png}
     \end{center}
 
     \item In the \textit{Configuration} tab, populate the \textbf{Customization Script} field with the content below.
@@ -284,7 +299,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step26.png}
+        \includegraphics[width=\linewidth]{images/part1/step28.png}
     \end{center}
 
     \begin{tipbox}
@@ -296,14 +311,14 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \textbf{Associate Floating IP} from the dropdown menu next to \textbf{Create Snapshot} in the row for the instance.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step27.png}
+        \includegraphics[width=\linewidth]{images/part1/step29.png}
     \end{center}
 
     \item Select any one of the IP addresses from the \textit{IP Address} dropdown and select
     \textbf{instance1: 192.168.233.XYZ} as the \textit{Port to be associated}. Click \textbf{Associate}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step28.png}
+        \includegraphics[width=\linewidth]{images/part1/step30.png}
     \end{center}
 
     \item To verify that the customization script worked, first click on \textbf{instance1} under the
@@ -317,7 +332,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{notebox}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step29.png}
+        \includegraphics[width=\linewidth]{images/part1/step31.png}
     \end{center}
 
     \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \textbf{\texttt{tail}}
@@ -327,7 +342,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step30.png}
+        \includegraphics[width=\linewidth]{images/part1/step32.png}
     \end{center}
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
@@ -336,7 +351,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step31.png}
+        \includegraphics[width=\linewidth]{images/part1/step33.png}
     \end{center}
 
     \item Log out of the \textit{Horizon Dashboard} and close the web browser.
@@ -347,7 +362,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step33.png}
+        \includegraphics[width=\linewidth]{images/part1/step35.png}
     \end{center}
 
     \item Another instance will be created and customized using the \textit{OpenStack Unified CLI}. First, create a
@@ -363,7 +378,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step34.png}
+        \includegraphics[width=\linewidth]{images/part1/step36.png}
     \end{center}
 
     \item Launch an instance using the \textbf{user-data} option with the previously created script to perform the
@@ -381,7 +396,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step35.png}
+        \includegraphics[width=\linewidth]{images/part1/step37.png}
     \end{center}
 
     \item Verify that the status of the \textbf{instance2} instance is \textbf{ACTIVE}.
@@ -390,7 +405,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step36.png}
+        \includegraphics[width=\linewidth]{images/part1/step38.png}
     \end{center}
 
     \item Generate another floating IP address to assign to this instance. Take note of the IP address generated, which
@@ -400,7 +415,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step37.png}
+        \includegraphics[width=\linewidth]{images/part1/step39.png}
     \end{center}
 
     \item Assign the floating IP generated from the last step to \textbf{instance2}.
@@ -410,7 +425,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step38.png}
+        \includegraphics[width=\linewidth]{images/part1/step40.png}
     \end{center}
 
     \begin{notebox}

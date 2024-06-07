@@ -32,13 +32,26 @@ allow FTP access to the instance. A floating IP will be associated with the inst
 \begin{enumerate}
     \item Log into the \textbf{workstation} machine as \textbf{ubuntu} with the password \textbf{ubuntu}.
 
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step1.png}
+    \end{center}
+
+    \item Launch the graphical user interface.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ startx
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step2.png}
+    \end{center}
+
     \item Open a terminal window and source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file.
     \begin{lstlisting}
         ubuntu@workstation:~$ source ~/kesytonerc-admin
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step2.png}
+        \includegraphics[width=\linewidth]{images/part1/step3.png}
     \end{center}
 
     \item Delete the \textbf{ubuntu} image.
@@ -47,7 +60,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step3.png}
+        \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
     \item Create the \textbf{prod} project.
@@ -57,7 +70,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step4.png}
+        \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
     \begin{tipbox}
@@ -75,7 +88,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step5.png}
+        \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
     \item Assign the \textbf{admin} role to the user \textbf{superuser}.
@@ -87,7 +100,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
+        \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
     \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-admin} to
@@ -97,7 +110,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step7.png}
+        \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
     \item Use \texttt{nano} to edit the \textbf{\texttildemid/keystonerc-superuser} file. Change the
@@ -109,7 +122,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}    
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step8.png}
+        \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
     \item Now, create a non-privileged user called \textbf{cloud-lab} with the password \textbf{secret}.
@@ -122,7 +135,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
     \item Assign \textbf{cloud-lab} the \textbf{member} role in the \textbf{prod} project so that it can perform actions
@@ -135,7 +148,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
     \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-superuser} to
@@ -145,7 +158,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
     \item Use \texttt{nano} to edit the \textbf{\texttildemid/keystonerc-cloud-lab} file. Change the
@@ -156,7 +169,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
     \item Now, source the \textbf{keystonerc-superuser} keystone file to begin working with admin privileges in the
@@ -166,7 +179,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step13.png}
+        \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
     \item Before making an external network for the project, the existing one must be deleted. Before the existing
@@ -177,7 +190,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
+        \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
     \item Next, delete the two interfaces on the router using the \texttt{port\_id} values from the output of the
@@ -192,7 +205,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
+        \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
     \begin{notebox}
@@ -210,7 +223,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
+        \includegraphics[width=\linewidth]{images/part1/step17.png}
     \end{center}
 
     \item Finally, delete the existing external network named \textbf{public}.
@@ -219,7 +232,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step17.png}
+        \includegraphics[width=\linewidth]{images/part1/step18.png}
     \end{center}
 
     \item Create an external, shared network called \textbf{external}.
@@ -231,7 +244,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step18.png}
+        \includegraphics[width=\linewidth]{images/part1/step19.png}
     \end{center}
 
     \item Create the \textbf{external\_subnet} subnet in the \textbf{172.25.250.0/24} range. Make the floating IP
@@ -247,7 +260,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step19.png}
+        \includegraphics[width=\linewidth]{images/part1/step20.png}
     \end{center}
 
     \item Source the \textbf{~/keystonerc-cloud-lab} keystone credentials file.
@@ -256,7 +269,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step20.png}
+        \includegraphics[width=\linewidth]{images/part1/step21.png}
     \end{center}
 
     \item Create an internal network called \textbf{net1}.
@@ -265,7 +278,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step21.png}
+        \includegraphics[width=\linewidth]{images/part1/step22.png}
     \end{center}
 
     \item Create a subnet for \textbf{net1} called \textbf{subnet1} in the \textbf{192.168.0.0/24} range. Allow DHCP on
@@ -277,7 +290,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step22.png}
+        \includegraphics[width=\linewidth]{images/part1/step23.png}
     \end{center}
 
     \item Create a router named \textbf{router1} so that the internal and external networks can be connected.
@@ -286,7 +299,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step23.png}
+        \includegraphics[width=\linewidth]{images/part1/step24.png}
     \end{center}
 
     \item Add a port to the router for the internal network.
@@ -295,7 +308,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step24.png}
+        \includegraphics[width=\linewidth]{images/part1/step25.png}
     \end{center}
 
     \item Set the external network as the gateway for the router.
@@ -306,7 +319,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step25.png}
+        \includegraphics[width=\linewidth]{images/part1/step26.png}
     \end{center}
 
     \item Allocate a floating IP address from the \textbf{external} network for hte \textbf{prod} project.
@@ -315,7 +328,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step26.png}
+        \includegraphics[width=\linewidth]{images/part1/step27.png}
     \end{center}
 
     \item Generate a key pair for the \textbf{cloud-lab} user named \textbf{key1}.
@@ -325,7 +338,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step27.png}
+        \includegraphics[width=\linewidth]{images/part1/step28.png}
     \end{center}
 
     \item Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write
@@ -335,7 +348,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step28.png}
+        \includegraphics[width=\linewidth]{images/part1/step29.png}
     \end{center}
 
     \item Create a security group named \textbf{sg1} for the \textbf{prod} project.
@@ -345,7 +358,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}    
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step29.png}
+        \includegraphics[width=\linewidth]{images/part1/step30.png}
     \end{center}
 
     \item Create a security group rule to allow \textbf{SSH} traffic from any IP address. SSH uses the TCP protocol on
@@ -357,7 +370,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step30.png}
+        \includegraphics[width=\linewidth]{images/part1/step31.png}
     \end{center}
 
     \item Create a security group rule to allow \textbf{ICMP} traffic from any IP address.
@@ -368,7 +381,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step31.png}
+        \includegraphics[width=\linewidth]{images/part1/step32.png}
     \end{center}
 
     \item Create a security group rule to allow \textbf{FTP} traffic from any IP address. FTP uses the TCP protocol on
@@ -380,7 +393,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step32.png}
+        \includegraphics[width=\linewidth]{images/part1/step33.png}
     \end{center}
 
     \item Create an image named \textbf{ftp} with the file \textbf{~/Downloads/ftp.img}.
@@ -392,7 +405,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step33.png}
+        \includegraphics[width=\linewidth]{images/part1/step34.png}
     \end{center}
 
     \item The FTP server instance is almost ready to be launched. First, use \texttt{nano} to create a file named
@@ -409,7 +422,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step34.png}
+        \includegraphics[width=\linewidth]{images/part1/step35.png}
     \end{center}
 
     \begin{notebox}
@@ -431,7 +444,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step35.png}
+        \includegraphics[width=\linewidth]{images/part1/step36.png}
     \end{center}
 
     \item Ensure that the instance state is \textbf{ACTIVE}.
@@ -440,7 +453,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step36.png}
+        \includegraphics[width=\linewidth]{images/part1/step37.png}
     \end{center}
 
     \item When the instance state is \textbf{ACTIVE}, list the floating IP addresses available.
@@ -449,7 +462,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step37.png}
+        \includegraphics[width=\linewidth]{images/part1/step38.png}
     \end{center}
 
     \item Associate an open floating IP address to the instance.
@@ -459,7 +472,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step38.png}
+        \includegraphics[width=\linewidth]{images/part1/step39.png}
     \end{center}
 
     \begin{notebox}
@@ -476,7 +489,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step39.png}
+        \includegraphics[width=\linewidth]{images/part1/step40.png}
     \end{center}
 
     \item SSH into the \textbf{devstack} machine. The password is the same as the last step.
@@ -485,7 +498,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step40.png}
+        \includegraphics[width=\linewidth]{images/part1/step41.png}
     \end{center}
 
     \item SSH into the \textbf{ftp\_server} instance using the \textbf{key1} private key. Notice that the message of the
@@ -495,7 +508,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step41.png}
+        \includegraphics[width=\linewidth]{images/part1/step42.png}
     \end{center}
 
     \begin{notebox}
@@ -512,7 +525,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step42.png}
+        \includegraphics[width=\linewidth]{images/part1/step43.png}
     \end{center}
 
     \item Use \texttt{nano} to edit the \textbf{/etc/vsftpd.conf} configuration file and uncomment the following
@@ -534,7 +547,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step43.png}
+        \includegraphics[width=\linewidth]{images/part1/step44.png}
     \end{center}
 
     \item Create a folder for anonymous FTP users.
@@ -543,7 +556,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step44.png}
+        \includegraphics[width=\linewidth]{images/part1/step45.png}
     \end{center}
 
     \item Remove all ownership from the root FTP folder and remove write permissions from this folder.
@@ -553,7 +566,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step45.png}
+        \includegraphics[width=\linewidth]{images/part1/step46.png}
     \end{center}
 
     \item Change the ownership of the \textbf{/var/ftp/pub} directory so that the \textbf{ftp} user and group owns
@@ -563,7 +576,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step46.png}
+        \includegraphics[width=\linewidth]{images/part1/step47.png}
     \end{center}
 
     \item Restart the \texttt{vsftpd} service so the changes will take effect.
@@ -572,7 +585,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step47.png}
+        \includegraphics[width=\linewidth]{images/part1/step48.png}
     \end{center}
 
     \item Exit from the \textbf{ftp\_server} instance.
@@ -581,7 +594,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step48.png}
+        \includegraphics[width=\linewidth]{images/part1/step49.png}
     \end{center}
 
     \item From \textbf{workstation}, create a text file named \textbf{test\_file.txt} containing the string ``This is my
@@ -591,7 +604,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step49.png}
+        \includegraphics[width=\linewidth]{images/part1/step50.png}
     \end{center}
 
     \item Open an FTP session to the FTP server and upload the \textbf{test\_file.txt} file. Log out when done. Use
@@ -607,7 +620,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step50.png}
+        \includegraphics[width=\linewidth]{images/part1/step51.png}
     \end{center}
 
     \begin{notebox}
@@ -620,7 +633,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step51.png}
+        \includegraphics[width=\linewidth]{images/part1/step52.png}
     \end{center}
 
     \item Verify the file uploaded successfully.
@@ -629,7 +642,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step52.png}
+        \includegraphics[width=\linewidth]{images/part1/step53.png}
     \end{center}
 
     \item Exit from the \textbf{ftp\_server} instance.
@@ -638,7 +651,7 @@ allow FTP access to the instance. A floating IP will be associated with the inst
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step53.png}
+        \includegraphics[width=\linewidth]{images/part1/step54.png}
     \end{center}
 
     \item The lab is now complete.
