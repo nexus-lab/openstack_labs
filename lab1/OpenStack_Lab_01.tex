@@ -54,11 +54,11 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     into the OpenStack Horizon Dashboard. The username is \textbf{admin} and the password is \textbf{secret}.
     
     \begin{center}
-        \includegraphics[scale=0.75]{images/part1/step4.png}
+        \includegraphics[scale=0.65]{images/part1/step4.png}
     \end{center}
 
     \item Click on the dropdown menu in the top left corner of the webpage, then select \textbf{demo} as the project.
-    Navigate to \textbf{Project $>$ Compute $>$ Overview}, then click \textbf{Launch Instance} in the top right corner.
+    Navigate to \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance} in the top right corner.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step5.png}
@@ -128,6 +128,10 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \end{center}
 
     \item Log into the console as \textbf{root} with the password \textbf{secret}.
+    
+    \begin{notebox}
+        It may take several minutes for the instance to fully boot up and present a login prompt.
+    \end{notebox}
 
     \item In the console, ping \textbf{192.168.233.2} (DHCP server) to verify connectivity.
     \begin{lstlisting}
@@ -139,7 +143,7 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
     \end{center}
 
     \begin{notebox}
-        You should have received three successful ping replies.
+        You should receive three successful ping replies.
     \end{notebox}
 
     \item Close the console tab for \textbf{prod-instance}.
@@ -189,7 +193,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
         \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
-    \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to enable all the
+    \item Use the \texttt{source} command with the \textbf{keystonerc-admin} argument to enable all the
     \texttt{OS\_*} environment variables included in the \textbf{keystonerc-admin} file.
     \begin{lstlisting}
         ubuntu@workstation:~$ source ~/keystonerc-admin
@@ -198,65 +202,72 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
+        
+    % export PS1='[\[\033[01;32m\]\u@\h \[\033[01;36m\](keystone-admin)\[\033[00m\]]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    \begin{notebox}
+        The \texttt{export PS1=...} line at the end of the keystone credentials file modifies the shell prompt to show
+        the OpenStack user whose credentials are keyed in. So, after running this command, you will notice that your
+        shell prompt has changed to show you are keyed in as the \textbf{admin} user.
+    \end{notebox}
+
+    \begin{notebox}
+        The same prompt without color can be achieved with the line
+        \texttt{export PS1='[\textbackslash u@\textbackslash h (keystone-admin)]:\textbackslash w\$ '}. Here,
+        \texttt{\textbackslash u} stands for the current username, \texttt{\textbackslash h} is the hostname, and
+        \texttt{\textbackslash w} is the current working directory. The other escape sequences specify the colors of the
+        prompt. For example, \texttt{\textbackslash[\textbackslash 033[01;32m\textbackslash]} sets the color to a light
+        green, and \texttt{\textbackslash[\textbackslash 033[00m\textbackslash]} resets the color to the default
+        (white in this case).
+    \end{notebox}
 
     \item Verify that the \texttt{OS\_*} environment variables have been exported to the shell environment.
     \begin{lstlisting}
-        ubuntu@workstation:~$ env | grep OS_
+        [ubuntu@workstation (keystone-admin)]:~$ env | grep OS_
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
-    \begin{tipbox}
-        Use the \textbf{\texttt{openstack help project show}} command to determine how to display the details of a
-        particular project.
-    \end{tipbox}
-
-    \item Enter the command below to gather additional information about the \textbf{admin} user's current project,
-    \textbf{demo}.
+    \item Next, we will gather additional information about the users and projects. First, list the available projects.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack project show demo
+        [ubuntu@workstation (keystone-admin)]:~$ openstack project list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
-    \begin{notebox}
-        The ID value for \textbf{demo} may differ from above since it is a unique ID.
-    \end{notebox}
-
-    \begin{tipbox}
-        Use the \textbf{\texttt{openstack help user show}} command to determine how to display details of a specific
-        user account.
-    \end{tipbox}
-
-    \item Enter the command below to check the details of \textbf{admin}.
+    \item Enter the command below to show more details about the \textbf{demo} project.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack user show admin
+        [ubuntu@workstation (keystone-admin)]:~$ openstack project show demo
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
+    \begin{notebox}
+        Any ID values shown in these examples may differ from what you see since they are unique.
+    \end{notebox}
+
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help flavor list}} command to determine how to display all available flavors.
+        Use the \textbf{\texttt{openstack help project show}} command to determine how to display the details of a
+        particular project.
     \end{tipbox}
 
-    \item Enter the command below to list all available flavors.
+    \item List the available users.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack flavor list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack project user list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step7.png}
     \end{center}
 
-    \item Enter the command below to display the details specifically for the \textbf{m1.small} flavor.
+    \item Enter the command below to check the details of \textbf{admin}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack flavor show m1.small
+        [ubuntu@workstation (keystone-admin)]:~$ openstack user show admin
     \end{lstlisting}
 
     \begin{center}
@@ -264,12 +275,13 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help image}} command to determine how to list all images.
+        Use the \textbf{\texttt{openstack help user show}} command to determine how to display details of a specific
+        user account.
     \end{tipbox}
 
-    \item Enter the command below to list all available images.
+    \item Enter the command below to list all available flavors.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack image list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack flavor list
     \end{lstlisting}
 
     \begin{center}
@@ -277,26 +289,21 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help network}} command to determine how to list all networks.
+        Use the \textbf{\texttt{openstack help flavor list}} command to determine how to display all available flavors.
     \end{tipbox}
 
-    \item Enter the command below to list all available networks.
+    \item Enter the command below to display the details specifically for the \textbf{m1.small} flavor.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack network list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack flavor show m1.small
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step10.png}
     \end{center}
 
-    \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
-    \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
+    \item Enter the command below to list all available images.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server create \
-        > --image ubuntu \
-        > --flavor m1.small \
-        > --network shared \
-        > --wait prod-instance
+        [ubuntu@workstation (keystone-admin)]:~$ openstack image list
     \end{lstlisting}
 
     \begin{center}
@@ -304,17 +311,49 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        When typing the command, make sure there is a space between \texttt{ubuntu} and the \texttt{\textbackslash}, and
-        press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
+        Use the \textbf{\texttt{openstack help image}} command to determine how to list all images.
     \end{tipbox}
 
-    \item Use the \textbf{openstack server list} command to list all the available instances.
+    \item Enter the command below to list all available networks.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack network list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step12.png}
+    \end{center}
+
+    \begin{tipbox}
+        Use the \textbf{\texttt{openstack help network}} command to determine how to list all networks.
+    \end{tipbox}
+
+    \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
+    \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
+        > --image ubuntu \
+        > --flavor m1.small \
+        > --network shared \
+        > prod-instance
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step13.png}
+    \end{center}
+
+    \begin{tipbox}
+        When typing the command, make sure there is a space between the last word of the line and the
+        \texttt{\textbackslash}, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the
+        command.
+    \end{tipbox}
+
+    \item Use the \textbf{openstack server list} command to list all the available instances.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step14.png}
     \end{center}
 
     \begin{notebox}
@@ -324,11 +363,11 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to display more details about the instance \textbf{prod-instance}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server show prod-instance
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server show prod-instance
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step13.png}
+        \includegraphics[width=\linewidth]{images/part2/step15.png}
     \end{center}
 
     \begin{tipbox}
@@ -336,24 +375,14 @@ existing projects, users, flavors, images, and instances, and to launch an insta
         command to identify the instance.
     \end{tipbox}
 
-    \item Enter the command below to verify the log for the instance.
+    \item Enter the command below to display the instance's console URL. Then right click on the URL and select
+    \textbf{Open Link}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack console log show prod-instance
+        [ubuntu@workstation (keystone-admin)]:~$ openstack console url show prod-instance
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step14.png}
-    \end{center}
-
-    \item Enter the command below to display the instance's console URL. Pipe the command to \textbf{\texttt{grep}} so
-    that you will get a link in the terminal you can click on. Then right click on the URL and select \textbf{Open
-    Link}.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ openstack console url show prod-instance | grep http:
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step15.png}
+        \includegraphics[width=\linewidth]{images/part2/step16.png}
     \end{center}
 
     \item The web browser will open directly to the instance's console through noVNC. Log into \textbf{prod-instance}
@@ -364,24 +393,19 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step16.png}
+        \includegraphics[width=\linewidth]{images/part2/step17.png}
     \end{center}
+
+    \begin{notebox}
+        You should receive three successful ping replies.
+    \end{notebox}
 
     \item Close the web browser and change focus back to the previous terminal window.
-    
-    \item Enter the command below to stop the instance.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server stop prod-instance
-    \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step18.png}
-    \end{center}
-
-    \item \textbf{prod-instance} should now be in the \textbf{\texttt{SHUTOFF}} state. Enter the command below to verify
-    this.
+    \item The instance is now ready to be deleted, but first list the servers so that the effect of the next step can be
+    observed.
     \begin{lstlisting}
-        ubuntu@workstation~$: openstack server list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
@@ -390,7 +414,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Enter the command below to delete the instance.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server delete prod-instance
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server delete prod-instance
     \end{lstlisting}
 
     \begin{center}
@@ -399,7 +423,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \item Ensure that the instance was deleted by seeing that the server list is empty.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
