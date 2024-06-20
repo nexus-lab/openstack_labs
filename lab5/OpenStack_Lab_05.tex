@@ -6,13 +6,16 @@
 \section*{Introduction}
 \label{sec:introduction}
 \addcontentsline{toc}{section}{\nameref{sec:introduction}}
-In this lab, you will use the \textbf{\texttt{cloud-init}} utility to customize OpenStack instances.
+In this lab, you will use the \texttt{cloud-init} utility to customize OpenStack instances. This utility is used to
+perform actions from an instance upon creation. For example, it can be used to install a list of packages or change the
+message of the day displayed upon login to the instance.
 
 \section*{Objectives}
 \label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
-    \item Customize an instance with \textbf{\texttt{cloud-init}}.
+    \item Customize an instance with \texttt{cloud-init} using both the \textit{Horizon Dashboard}.
+    \item Customize an instance with \texttt{cloud-init} using the \textit{OpenStack Unified CLI}.
     \item Verify instance customization.
 \end{itemize}
 \clearpage
@@ -22,10 +25,10 @@ In this lab, you will use the \textbf{\texttt{cloud-init}} utility to customize 
 %%%%%%%%%%%
 % Section 1
 %%%%%%%%%%%
-\section{Creating Customized Instances}
-\label{sec:creating_customized_instances}
-In this task, you will customize two instances using \textbf{\texttt{cloud-init}} capabilities and features. You will
-log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and running.
+\section{Setting Up the Environment}
+\label{sec:settup_up_the_environment}
+In this task, you will set up the OpenStack environment to support the customized external instances you will create in
+the following sections.
 
 \begin{enumerate}
     % TODO: Viewing the default Apache web page will require being able to access the instance
@@ -45,53 +48,80 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
         \includegraphics[width=\linewidth]{images/part1/step2.png}
     \end{center}
 
-    \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
-    password \textbf{secret}.
+    \item Open a terminal window and source the keystone credentials for the \textbf{admin} user.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
-    \item Switch to the \textbf{demo} project. Navigate to \textbf{Admin $>$ Network $>$ Routers}. Check the box in the
-    same row as \textbf{router1}, then click \textbf{Delete Routers}.
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step3.png}
+    \end{center}
+
+    \item In this lab, we will create our own router and external network. First, the default router and external
+    network need to be deleted. List the routers to find the default router's name so it can be deleted.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ openstack router list \
+        > --max-width 80
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
-    \item In the \textit{Confirm Delete Routers} dialog box that pops up, click \textbf{Delete Routers}.
+    \begin{tipbox}
+        When typing the command, make sure there is a space between \texttt{list} and the \texttt{\textbackslash}
+        character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
+    \end{tipbox}
+
+    \item Before the router can be deleted, it must be disconnected from all subnets. Show more details about
+    \textbf{router1} to see the subnets to which it is connected.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ openstack router show router1 \
+        > --max-width 80
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
-    \item Now, navigate to \textbf{Networks}. Check the box in the same row as \textbf{public}, then click
-    \textbf{Delete Networks}.
+    \item The previous command only outputs IDs, which can be used to remove the subnets from the router. However, to
+    avoid having to type long ID strings, find the names of the subnets and remove them that way. List the subnets to
+    see the which names are mapped to the IDs from the previous step.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ openstack subnet list \
+        > --max-width 100
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
-    \item In the \textit{Confirm Delete Networks} dialog box that pops up, click \textbf{Delete Networks}.
+    \item By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and
+    \textbf{ipv6-private-subnet} subnets. Remove \textbf{private-subnet} subnet from \textbf{router1}.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ openstack router remove subnet \
+        > router1 \
+        > private-subnet
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
-    \item Leave the web browser open and open a terminal window. Source the keystone credentials for the \textbf{admin}
-    user.
+    \item Now, remove \textbf{ipv6-private-subnet} from \textbf{router1}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ source ~/keystonerc-admin
+        ubuntu@workstation:~$ openstack router remove subnet \
+        > router1 \
+        > ipv6-private-subnet
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
-    \item A few resources need to be created to help with customizing the instances. First, create an external network
-    named \textbf{external}. Set the network type to \textbf{flat} and the physical network to \textbf{public}. Set the
-    network as shared and external.
+    \item Now, the router can be deleted. Delete \textbf{router1}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack network create external \
-        > --external --share \
-        > --provider-network-type flat \
-        > --provider-physical-network public
+        ubuntu@workstation:~$ openstack router delete router1
     \end{lstlisting}
 
     \begin{center}
@@ -99,135 +129,258 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{center}
 
     \begin{tipbox}
-        When typing the command, make sure there is a space between \texttt{external} and the \texttt{\textbackslash}
-        character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
+        While you cannot delete a router that still has connections to subnets through the OpenStack Unified CLI,
+        deleting a router through the Horizon Dashboard will automatically remove its connections.
     \end{tipbox}
 
-    \item Create a subnet named \textbf{subext} in the \textbf{external} network. Give the subnet a range of
-    \textbf{172.25.250.60} to \textbf{172.25.250.80}. Disable DHCP services for the subnet and use the address
-    \textbf{172.25.250.254} as the gateway as well as the DNS name server.
+    \item List the available networks to find the name of the default external network.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack subnet create \
-        > --subnet-range 172.25.250.0/24 \
-        > --no-dhcp \
-        > --gateway 172.25.250.254 \
-        > --dns-nameserver 172.25.250.254 \
-        > --allocation-pool start=172.25.250.60,end=172.25.250.80 \
-        > --network external \
-        > subext
+        ubuntu@workstation:~$ openstack network list \
+        > --max-width 100
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
-    \item From the floating IP pool in the \textbf{external} network, create a floating IP.
+    \item From the output of the previous step, you can see that the \textbf{public} network should be the default
+    external network. Delete the \textbf{public} network.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack floating ip create external
+        ubuntu@workstation:~$ openstack network delete public
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
-    \item Create a router named \textbf{exercise-router}.
+    \begin{tipbox}
+        You can confirm that \textbf{public} is an external network by viewing its details with the command
+        \texttt{openstack network show public}.
+    \end{tipbox}
+
+    \item Now, we will create our own resources. First, create an external network named \textbf{extern-net}. Set the
+    network type to \textbf{flat} and the physical network to \textbf{public}. Set the network as shared and external.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack router create exercise-router
+        [ubuntu@workstation (keystone-admin)]:~$ openstack network create \
+        > --external --share \
+        > --provider-network-type flat \
+        > --provider-physical-network public \
+        > extern-net
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
-    \item Connect the router to the \textbf{shared-subnet} subnet.
+    \item Create a subnet named \textbf{extern-subnet} in the \textbf{extern-net} network. Give the subnet a range of
+    \textbf{172.25.250.60} to \textbf{172.25.250.80}. Disable DHCP services for the subnet and use the address
+    \textbf{172.25.250.254} as the gateway as well as the DNS name server.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack router add subnet \
-        > exercise-router shared-subnet
+        [ubuntu@workstation (keystone-admin)]:~$ openstack subnet create \
+        > --subnet-range 172.25.250.0/24 \
+        > --no-dhcp \
+        > --gateway 172.25.250.254 \
+        > --dns-nameserver 172.25.250.254 \
+        > --allocation-pool start=172.25.250.60,end=172.25.250.80 \
+        > --network extern-net \
+        > extern-subnet
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
-    \item Set the \textbf{external} network as the gateway for the router.
+    \item List the floating IPs to make sure none are already allocated. The list should be empty.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack router set \
-        > --external-gateway external \
-        > exercise-router
+        [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
-    \item Create the key pair \textbf{dev-keypair} and save the private key to the file
-    \textbf{\texttildemid/Downloads/dev-keypair.pem}.
+    \item From the floating IP pool in the \textbf{extern-net} network, create a floating IP.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack keypair create \
-        > dev-keypair > ~/Downloads/dev-keypair.pem
+        [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip create extern-net
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
-    \item Use the \textbf{\texttt{chmod}} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu}
-    user has read/write permissions on the file, and groups and other users have no permissions to the file.
+    \item Create a router named \textbf{extern-router}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ chmod 600 ~/Downloads/dev-keypair.pem
+        [ubuntu@workstation (keystone-admin)]:~$ openstack router create extern-router
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
-    \item Create the \textbf{dev-secgroup} security group.
+    \item List the available subnets to see what the router can be connected to.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack security group \
-        > create dev-secgroup
+        [ubuntu@workstation (keystone-admin)]:~$ openstack subnet list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step17.png}
     \end{center}
 
-    \item Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
+    \item Connect the router to the \textbf{shared-subnet} subnet.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack security group \
-        > rule create \
-        > --protocol icmp \
-        > dev-secgroup
+        [ubuntu@workstation (keystone-admin)]:~$ openstack router add subnet \
+        > extern-router shared-subnet
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step18.png}
     \end{center}
 
-    \item Add another security rule to allow remote connection using SSH on the default port 22.
+    \item Set the \textbf{extern-net} network as the gateway for the router.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack security group \
-        > rule create \
-        > --protocol tcp \
-        > --dst-port 22 \
-        > dev-secgroup
+        [ubuntu@workstation (keystone-admin)]:~$ openstack router set \
+        > --external-gateway extern-net \
+        > extern-router
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step19.png}
     \end{center}
 
-    \item Now that the necessary resources have been created, focus back to the web browser. Navigate to
-    \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance}.
+    \item List the current key pairs to make sure there are not any already allocated. The list should be empty.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack keypair list
+    \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step20.png}
+    \end{center}
+
+    \item Create the key pair \textbf{dev-keypair} and save the private key to the file
+    \textbf{\texttildemid/Downloads/dev-keypair.pem}.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack keypair create \
+        > dev-keypair > ~/Downloads/dev-keypair.pem
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step21.png}
+    \end{center}
+
+    \item View the permission of the \textbf{~/Downloads/dev-keypair.pem} file. You can see that the \textbf{ubuntu}
+    user has read and write privileges to the file, the \textbf{ubuntu} user group has read and write privileges to the
+    file, and other users have read permissions to the file. However, this is a sensitive file, and only the
+    \textbf{ubuntu} user should have any privileges to it.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ ls -l ~/Downloads/dev-keypair.pem
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step22.png}
+    \end{center}
+
+    \item Use the \texttt{chmod} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu}
+    user has read/write permissions on the file, and groups and other users have no permissions to the file.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ chmod 600 ~/Downloads/dev-keypair.pem
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step23.png}
+    \end{center}
+
+    \item List the permissions again to ensure that the change took effect.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ ls -l ~/Downloads/dev-keypair.pem
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step24.png}
+    \end{center}
+
+    \item Create the \textbf{dev-secgroup} security group.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack security group create \
+        > dev-secgroup
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step25.png}
+    \end{center}
+
+    \item List the default security group rules.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step26.png}
+    \end{center}
+
+    \begin{notebox}
+        You can verify with the command \texttt{openstack security group rule show RULE\_ID} that the default rules
+        allow any outgoing traffic over IPv4 or IPv6.
+    \end{notebox}
+
+    \item Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule create \
+        > --protocol icmp \
+        > dev-secgroup
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step27.png}
+    \end{center}
+
+    \item Add another security rule to allow remote connection using SSH on the default port 22.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule create \
+        > --protocol tcp \
+        > --dst-port 22 \
+        > dev-secgroup
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step28.png}
+    \end{center}
+
+    \item List the security group rules again to see that the new rules have taken effect.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part1/step29.png}
+    \end{center}
+
+    \item Close the terminal window and continue to the next task.
+\end{enumerate}
+
+%%%%%%%%%%%
+% Section 2
+%%%%%%%%%%%
+\section{Creating a Customized Instance Using the Horizon Dashboard}
+\label{sec:creating_a_customized_instance_using_the_horizon_dashboard}
+In this task, you will create a customized instance using the Horizon Dashboard and log into the instance to verify
+that the customization took effect.
+
+\begin{enumerate}
+    \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
+    password \textbf{secret}.
+
+    \item Make sure the \textbf{demo} project is selected. Navigate to \textbf{Project $>$ Compute $>$ Instances}, 
+    click \textbf{Launch Instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
     \item In the \textit{Details} tab, enter \textbf{instance1} in the \textit{Instance Name} field and click
     \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step21.png}
+        \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
     \item In the \textit{Source} tab, make sure \textbf{Image} is selected in the \textit{Select Boot Source} dropdown
@@ -235,7 +388,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     symbol in the same row. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step22.png}
+        \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
     \begin{stopbox}
@@ -243,10 +396,11 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
         section.
     \end{stopbox}
 
-    \item In the \textit{Flavor} tab, click the $\uparrow$ symbol in the same row as \textbf{m1.small}. Click \textbf{Next}.
+    \item In the \textit{Flavor} tab, click the $\uparrow$ symbol in the same row as \textbf{m1.small}. Click
+    \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step23.png}
+        \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
     \begin{stopbox}
@@ -258,7 +412,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step24.png}
+        \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
     \begin{stopbox}
@@ -269,14 +423,14 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \item In the \textit{Network Ports} tab, click \textbf{Next}.
     
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step25.png}
+        \includegraphics[width=\linewidth]{images/part2/step7.png}
     \end{center}
 
     \item In the \textit{Security Groups} tab, click the $\downarrow$ symbol in the same row as \textbf{default}, and
     click the $\uparrow$ symbol in the same row as \textbf{dev-secgroup}. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step26.png}
+        \includegraphics[width=\linewidth]{images/part2/step8.png}
     \end{center}
 
     \begin{stopbox}
@@ -288,7 +442,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     underneath the \textit{Allocated} section. Click \textbf{Next}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step27.png}
+        \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
     \item In the \textit{Configuration} tab, populate the \textbf{Customization Script} field with the content below.
@@ -299,7 +453,7 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step28.png}
+        \includegraphics[width=\linewidth]{images/part2/step10.png}
     \end{center}
 
     \begin{tipbox}
@@ -311,14 +465,14 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \textbf{Associate Floating IP} from the dropdown menu next to \textbf{Create Snapshot} in the row for the instance.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step29.png}
+        \includegraphics[width=\linewidth]{images/part2/step11.png}
     \end{center}
 
     \item Select any one of the IP addresses from the \textit{IP Address} dropdown and select
     \textbf{instance1: 192.168.233.XYZ} as the \textit{Port to be associated}. Click \textbf{Associate}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step30.png}
+        \includegraphics[width=\linewidth]{images/part2/step12.png}
     \end{center}
 
     \item To verify that the customization script worked, first click on \textbf{instance1} under the
@@ -326,23 +480,23 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     automatically. Click on \textbf{Click here to show only the console}. Log into the instance as \textbf{root} with
     the password \textbf{secret}.
 
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step13.png}
+    \end{center}
+
     \begin{notebox}
         Be patient for the login prompt. Even if OpenStack reports the instance to be active, it may still take several
         minutes to fully launch and present the login prompt.
     \end{notebox}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step31.png}
-    \end{center}
-
-    \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \textbf{\texttt{tail}}
+    \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \texttt{tail}
     command to print the last 10 lines of the log.
     \begin{lstlisting}
         root@instance1:~# tail /var/log/cloud-init.log
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step32.png}
+        \includegraphics[width=\linewidth]{images/part2/step14.png}
     \end{center}
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
@@ -351,148 +505,149 @@ log into the first instance to confirm \textbf{\texttt{cloud-init}} is up and ru
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step33.png}
+        \includegraphics[width=\linewidth]{images/part2/step15.png}
+    \end{center}
+
+    \item Close the tab with the terminal window and navigate back to \textbf{Project $>$ Compute $>$ Instances} if you
+    are not already on that page. We are finished with this instance and will create another one in the next section.
+    Select the checkbox next to the \textbf{instance1} and click \textbf{Delete Instances}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part2/step16.png}
     \end{center}
 
     \item Log out of the \textit{Horizon Dashboard} and close the web browser.
 
-    \item Focus back on the terminal and delete \textbf{instance1}.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server delete instance1
-    \end{lstlisting}
+    \item Continue to the next task.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step35.png}
-    \end{center}
+\end{enumerate}
+
+%%%%%%%%%%%
+% Section 3
+%%%%%%%%%%%
+\section{Creating a Customized Instance Using the OpenStack Unified CLI}
+\label{sec:creating_a_customized_instance_using_the_openstack_unified_cli}
+In this task, you will verify that \texttt{cloud-init} has correctly customized the two instances created in the
+previous section.
+
+\begin{enumerate}
+    \item If a terminal window is not already open, open one and source the admin credentials from the 
+    \textbf{\texttildemid/keystonerc-admin} file.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ source ~/keystonerc-admin
+    \end{lstlisting}
 
     \item Another instance will be created and customized using the \textit{OpenStack Unified CLI}. First, create a
     \textbf{user-data} script that will be attached to the instance at creation. Create a script called
-    \textbf{\texttildemid/hello} that matches the content shown below. Press \textbf{CTRL+X}, then \textbf{Y} to
-    accept the file changes. Press \textbf{Enter} to confirm and exit back to the terminal.
+    \textbf{\texttildemid/hello} that matches the content shown below. When the instance runs this script, it will
+    create the file \textbf{/root/hello.txt} with the contents \textbf{Hello, world!}, and it will append the line
+    \textbf{127.0.1.1 instance2} to the \textbf{/etc/hosts} file. This simply supresses a warning when issuing a
+    command with root privileges (i.e., \texttt{sudo ...}). Press \textbf{CTRL+X}, then \textbf{Y} to accept the file
+    changes. Press \textbf{Enter} to confirm and exit back to the terminal.
     \begin{lstlisting}
-        ubuntu@workstation:~$ nano ~/hello
+        [ubuntu@workstation (keystone-admin)]:~$ nano ~/hello
     \end{lstlisting}
     \begin{lstlisting}
         #!/bin/bash
         echo 'Hello, world!' > /root/hello.txt
+        echo '127.0.1.1' hostname >> /etc/hosts
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step36.png}
+        \includegraphics[width=\linewidth]{images/part3/step2.png}
     \end{center}
 
     \item Launch an instance using the \textbf{user-data} option with the previously created script to perform the
     customization. Use the \textbf{ubuntu} image, the \textbf{m1.small} flavor, the \textbf{shared} network, the
     \textbf{dev-secgroup} security group, and the \textbf{dev-keypair} key pair.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server create \
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
         > --image ubuntu \
         > --flavor m1.small \
         > --nic net-id=shared \
         > --security-group dev-secgroup \
         > --key-name dev-keypair \
         > --user-data ~/hello \
-        > --wait instance2
+        > instance2
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step37.png}
+        \includegraphics[width=\linewidth]{images/part3/step3.png}
     \end{center}
 
     \item Verify that the status of the \textbf{instance2} instance is \textbf{ACTIVE}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step38.png}
+        \includegraphics[width=\linewidth]{images/part3/step4.png}
     \end{center}
 
-    \item Generate another floating IP address to assign to this instance. Take note of the IP address generated, which
-    is listed in the \textit{floating\_ip\_address} and \textit{name} rows in the output from the below command.
+    \item List the floating IPs to see the free address, which was disassociated from the previous instance when the
+    instance was deleted.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack floating ip create external
+        [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step39.png}
+        \includegraphics[width=\linewidth]{images/part3/step5.png}
     \end{center}
 
-    \item Assign the floating IP generated from the last step to \textbf{instance2}.
+    \item Assign the floating IP to \textbf{instance2}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server add floating ip \
-        instance2 172.25.250.63
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server add floating ip \
+        instance2 172.25.250.76
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step40.png}
+        \includegraphics[width=\linewidth]{images/part3/step6.png}
     \end{center}
 
-    \begin{notebox}
-        The actual value of your floating IP address may be different.
-    \end{notebox}
-
-\end{enumerate}
-
-%%%%%%%%%%%
-% Section 2
-%%%%%%%%%%%
-\section{Verify Customized Instances}
-\label{sec:verify_customized_instances}
-In this task, you will verify that \textbf{\texttt{cloud-init}} has correctly customized the two instances created in the
-previous section.
-
-\begin{enumerate}
-    \item If a terminal window is not already open, open one and source the admin credentials from the 
-    \textbf{\texttildemid/keystonerc-admin} file.
-
-    \item Determine the floating IP address associated with \textbf{instance2}. Remember that the floating IP address is
-    in the \textbf{172.25.250.0/24} subnet.
+    \item Verify that the instance was assigned the floating IP address.
     \begin{lstlisting}
-        ubuntu@workstation:~$ openstack server show instance2 \
-        > | grep address
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list \
+        > -c Name \
+        > -c Networks
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step2.png}
+        \includegraphics[width=\linewidth]{images/part3/step7.png}
     \end{center}
 
-    \begin{notebox}
-        The floating IP addresses in your output may differ from these examples.
-    \end{notebox}
-
-    \item Use the \textbf{\texttt{scp}} command to copy the \textbf{\texttildemid/Downloads/dev-keypair.pem} file to
+    \item Use the \texttt{scp} command to copy the \textbf{\texttildemid/Downloads/dev-keypair.pem} file to
     the \textbf{devstack} machine. When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
     \textbf{ubuntu}.
     \begin{lstlisting}
-        ubuntu@workstation:~$ scp ~/Downloads/dev-keypair.pem \
+        [ubuntu@workstation (keystone-admin)]:~$ scp ~/Downloads/dev-keypair.pem \
         > ubuntu@192.168.1.20:~/dev-keypair.pem
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step3.png}
+        \includegraphics[width=\linewidth]{images/part3/step8.png}
     \end{center}
 
-    \item SSH into the \textbf{devstack} machine. The password is the same as the last step.
+    \item SSH into the \textbf{devstack} machine. Enter \textbf{ubuntu} when prompted for a password.
     \begin{lstlisting}
-        ubuntu@workstation:~$ ssh 192.168.1.20
+        [ubuntu@workstation (keystone-admin)]:~$ ssh 192.168.1.20
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step4.png}
+        \includegraphics[width=\linewidth]{images/part3/step9.png}
     \end{center}
 
     \item SSH into \textbf{instance2} using the \textbf{dev-keypair} private key.
     \begin{lstlisting}
-        ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.63
+        ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.76
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step5.png}
+        \includegraphics[width=\linewidth]{images/part3/step10.png}
     \end{center}
 
     \begin{notebox}
-        It may take several minutes for the instance to fully boot and be available for an SSH connection.
+        It may take several minutes for the instance to fully boot and be available for an SSH connection. Until then,
+        the connection will be refused.
     \end{notebox}
 
     \item Check \textbf{/var/log/cloud-init.log} to confirm that the \textbf{cloud-init} script ran.
@@ -501,7 +656,16 @@ previous section.
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step6.png}
+        \includegraphics[width=\linewidth]{images/part3/step11.png}
+    \end{center}
+
+    \item View the \textbf{/etc/hosts} file to ensure that the hostname was appended correctly.
+    \begin{lstlisting}
+        ubuntu@instance2:~$ cat /etc/hosts
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step12.png}
     \end{center}
 
     \item Ensure that the \textbf{/root/hello.txt} file exists and has the correct content.
@@ -510,7 +674,7 @@ previous section.
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step7.png}
+        \includegraphics[width=\linewidth]{images/part3/step13.png}
     \end{center}
 
     \item The lab is now complete.
