@@ -118,8 +118,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \includegraphics[width=\linewidth]{images/part2/step1.png}
     \end{center}
 
-    \item Use the \textbf{\texttt{source}} command with the \textbf{keystonerc-admin} argument to access OpenStack
-    as the admin.
+    \item Use the \textbf{source} command with the \textbf{keystonerc-admin} argument to access OpenStack as the admin.
     \begin{lstlisting}
         ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
@@ -149,9 +148,8 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
     \end{center}
 
     \begin{tipbox}
-        When typing the command make sure there is a space between \textbf{\texttt{create}} and the
-        \textbf{\texttt{\textbackslash}}, and press \textbf{Enter} to get the \textbf{\texttt{>}} and continue typing
-        therest of the command.
+        When typing the command make sure there is a space between \textbf{create} and the \textbf{\textbackslash}, and
+        press \textbf{Enter} to get the \textbf{$>$} and continue typing therest of the command.
     \end{tipbox}
 
     \item Verify the project has been created.
@@ -325,11 +323,6 @@ In this task, you will manage users using the \textit{OpenStack Unified CLI}.
         \includegraphics[width=\linewidth]{images/part4/step4.png}
     \end{center}
 
-    \begin{tipbox}
-        When typing the command, make sure there is a space between \texttt{create} and the \texttt{\textbackslash}
-        character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
-    \end{tipbox}
-
     \item Verify the user was created.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack user list
@@ -372,12 +365,12 @@ In this task, you will manage users using the \textit{OpenStack Unified CLI}.
         \includegraphics[width=\linewidth]{images/part4/step8.png}
     \end{center}
 
-    \item Edit the \textbf{\texttildemid/keystonerc-cloud-dev} file and change the \texttt{OS\_USERNAME} from
-    \textbf{admin} to \textbf{cloud-dev} and the \texttt{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev} using the
-    \texttt{nano} command. Additionally, change the line beginning with \texttt{export PS1=...} so that
-    \texttt{(keystone-admin)} becomes \texttt{(keystone-cloud-dev)}. Modify the file so the content matches below. When
+    \item Edit the \textbf{\texttildemid/keystonerc-cloud-dev} file and change the \textbf{OS\_USERNAME} from
+    \textbf{admin} to \textbf{cloud-dev} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev} using the
+    \textbf{nano} command. Additionally, change the line beginning with \textbf{export PS1=...} so that
+    \textbf{(keystone-admin)} becomes \textbf{(keystone-cloud-dev)}. Modify the file so the content matches below. When
     you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes. Press \textbf{Enter} to save
-    and exit \textbf{\texttt{nano}}.
+    and exit \textbf{nano}.
     \label{it:edit_keystone}
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-dev
@@ -441,7 +434,7 @@ In this task, you will manage users using the \textit{OpenStack Unified CLI}.
 
     \item Set the password, \textbf{password} in the keystone credential file for \textbf{cloud-test3}. Modify the file
     so the content matches below. When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file
-    changes. Press \textbf{Enter} to save and exit \textbf{\texttt{nano}}.
+    changes. Press \textbf{Enter} to save and exit \textbf{nano}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-test3
     \end{lstlisting}
@@ -460,8 +453,8 @@ In this task, you will manage users using the \textit{OpenStack Unified CLI}.
         \includegraphics[width=\linewidth]{images/part4/step17.png}
     \end{center}
 
-    \item Now that the \textbf{cloud-test3} user has been enabled, verify that the \textbf{\texttt{openstack flavor
-    list}} command returns a list of available flavors.
+    \item Now that the \textbf{cloud-test3} user has been enabled, verify that the \textbf{openstack flavor list}
+    command returns a list of available flavors.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-cloud-test3)]:~$ openstack flavor list
     \end{lstlisting}

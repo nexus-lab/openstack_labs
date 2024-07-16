@@ -180,11 +180,11 @@ existing projects, users, flavors, images, and instances, and to launch an insta
         \includegraphics[width=\linewidth]{images/part2/step1.png}
     \end{center}
 
-    \item The \textbf{keystonerc-admin} file in the home directory defines several \texttt{OS\_*} environment variables
-    that allow you to use the OpenStack platform on the \textbf{devstack} server through the OpenStack Unified
-    CLI. The username will be \textbf{admin}, the password will be be \textbf{secret}, the project will be
-    \textbf{demo}, and the IP address for \texttt{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server,
-    \textbf{192.168.1.20}. You can run \textbf{\texttt{cat}} on the file to view its contents.
+    \item The \textbf{keystonerc-admin} file in the home directory defines several \textbf{OS\_*} environment variables
+    that allow you to use the OpenStack platform on the \textbf{devstack} server through the OpenStack Unified CLI. Th
+     username will be \textbf{admin}, the password will be be \textbf{secret}, the project will be \textbf{demo}, and
+     the IP address for \textbf{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server, \textbf{192.168.1.20}.
+     You can run \textbf{cat} on the file to view its contents.
     \begin{lstlisting}
         ubuntu@workstation:~$ cat ~/keystonerc-admin
     \end{lstlisting}
@@ -193,8 +193,8 @@ existing projects, users, flavors, images, and instances, and to launch an insta
         \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
-    \item Use the \texttt{source} command with the \textbf{keystonerc-admin} argument to enable all the
-    \texttt{OS\_*} environment variables included in the \textbf{keystonerc-admin} file.
+    \item Use the \textbf{source} command with the \textbf{keystonerc-admin} argument to enable all the
+    \textbf{OS\_*} environment variables included in the \textbf{keystonerc-admin} file.
     \begin{lstlisting}
         ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
@@ -204,22 +204,22 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
         
     \begin{notebox}
-        The \texttt{export PS1=...} line at the end of the keystone credentials file modifies the shell prompt to show
+        The \textbf{export PS1=...} line at the end of the keystone credentials file modifies the shell prompt to show
         the OpenStack user whose credentials are keyed in. So, after running this command, you will notice that your
         shell prompt has changed to show you are keyed in as the \textbf{admin} user.
     \end{notebox}
 
     \begin{notebox}
         The same prompt without color can be achieved with the line
-        \texttt{export PS1='[\textbackslash u@\textbackslash h (keystone-admin)]:\textbackslash w\$ '}. Here,
-        \texttt{\textbackslash u} stands for the current username, \texttt{\textbackslash h} is the hostname, and
-        \texttt{\textbackslash w} is the current working directory. The other escape sequences specify the colors of the
-        prompt. For example, \texttt{\textbackslash[\textbackslash 033[01;32m\textbackslash]} sets the color to a light
-        green, and \texttt{\textbackslash[\textbackslash 033[00m\textbackslash]} resets the color to the default
+        \textbf{export PS1='[\textbackslash u@\textbackslash h (keystone-admin)]:\textbackslash w\$ '}. Here,
+        \textbf{\textbackslash u} stands for the current username, \textbf{\textbackslash h} is the hostname, and
+        \textbf{\textbackslash w} is the current working directory. The other escape sequences specify the colors of the
+        prompt. For example, \textbf{\textbackslash[\textbackslash 033[01;32m\textbackslash]} sets the color to a light
+        green, and \textbf{\textbackslash[\textbackslash 033[00m\textbackslash]} resets the color to the default
         (white in this case).
     \end{notebox}
 
-    \item Verify that the \texttt{OS\_*} environment variables have been exported to the shell environment.
+    \item Verify that the \textbf{OS\_*} environment variables have been exported to the shell environment.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ env | grep OS_
     \end{lstlisting}
@@ -251,8 +251,8 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{notebox}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help project show}} command to determine how to display the details of a
-        particular project.
+        Use the \textbf{openstack help project show} command to determine how to display the details of a particular
+        project.
     \end{tipbox}
 
     \item List the available users.
@@ -274,8 +274,8 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help user show}} command to determine how to display details of a specific
-        user account.
+        Use the \textbf{openstack help user show} command to determine how to display details of a specific user
+        account.
     \end{tipbox}
 
     \item Enter the command below to list all available flavors.
@@ -288,7 +288,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help flavor list}} command to determine how to display all available flavors.
+        Use the \textbf{openstack help flavor list} command to determine how to display all available flavors.
     \end{tipbox}
 
     \item Enter the command below to display the details specifically for the \textbf{m1.small} flavor.
@@ -310,7 +310,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help image}} command to determine how to list all images.
+        Use the \textbf{openstack help image} command to determine how to list all images.
     \end{tipbox}
 
     \item Enter the command below to list all available networks.
@@ -323,7 +323,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \begin{tipbox}
-        Use the \textbf{\texttt{openstack help network}} command to determine how to list all networks.
+        Use the \textbf{openstack help network} command to determine how to list all networks.
     \end{tipbox}
 
     \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using
@@ -342,7 +342,7 @@ existing projects, users, flavors, images, and instances, and to launch an insta
 
     \begin{tipbox}
         When typing the command, make sure there is a space between the last word of the line and the
-        \texttt{\textbackslash}, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the
+        \textbf{\textbackslash}, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the
         command.
     \end{tipbox}
 
@@ -385,8 +385,8 @@ existing projects, users, flavors, images, and instances, and to launch an insta
     \end{center}
 
     \item The web browser will open directly to the instance's console through noVNC. Log into \textbf{prod-instance}
-    using \textbf{root} as the username and \textbf{secret} as the password. Then use the \textbf{\texttt{ping}}
-    command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
+    using \textbf{root} as the username and \textbf{secret} as the password. Then use the \textbf{ping} command to
+    verify connectivity with the DHCP server (\textbf{192.168.233.2}).
     \begin{lstlisting}
         $ ping -c3 192.168.233.2
     \end{lstlisting}

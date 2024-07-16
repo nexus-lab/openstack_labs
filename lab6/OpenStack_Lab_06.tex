@@ -1,20 +1,21 @@
 \documentclass[letterpaper, 12pt]{article}
 \input{../common.tex}
 \begin{document}
-\preamble{Lab 06: Deploying an FTP Server}
+\preamble{Lab 06: Managing an OpenStack Instance}
 
 \section*{Introduction}
 \label{sec:introduction}
 \addcontentsline{toc}{section}{\nameref{sec:introduction}}
-In this lab, you will practice and demonstrate the knowledge and skills you acquired throughout the course by deploying
-an FTP server through OpenStack.
+Up to this point, whenever you have launched an instance, its resources and running state have remained mostly constant.
+However, OpenStack instances are quite flexible, even after being launched. In this lab, you will launch an instance and
+perform several management operations while it is running.
 
 \section*{Objectives}
 \label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
-    \item Launch an instance in your OpenStack environment and customize the instance to run an FTP server.
-    \item Access the FTP server from the workstation to confirm the configuration.
+    \item Create a snapshot of an instance.
+    \item Manage the running and power state of an instance.
 \end{itemize}
 \clearpage
 
@@ -23,15 +24,19 @@ an FTP server through OpenStack.
 %%%%%%%%%%%
 % Section 1
 %%%%%%%%%%%
-\section{Creating an Environment}
-\label{sec:creating_an_environment}
-In this task, you will create all the resources necessary to create an external instance running an FTP server. The
-architecture will be comprised of an external network and an internal network, a new privileged user and a
-non-privileged user, and a set of new security rules to allow SSH and FTP access to the instance. A floating IP will be
-associated with the instance to permit external connectivity.
+\section{Creating a Snapshot Using the Horizon Dashboard}
+\label{sec:creating_a_snapshot_web}
+In this task, you will launch an instance, modify its configuration, and make a snapshot of it for later use. Taking a
+snapshot of an image captures its state and data on disk. An OpenStack snapshot can be used as an image to launch other
+instances. There are a couple situations where snapshots might be a useful tool. One is to aid in the backup of instance
+or as a precaution before a major change so that the image is easily recoverable. Another use of snapshots is to build
+off an existing image to create a better template for new instances. For instance, if you want to launch multiple FTP
+servers, instead of launching each one from a basic Ubuntu image and modifying their configurations individually, you
+might set up one instance completely, take a snapshot, and use the snapshot as a template for the other instances to
+save time and prevent mistakes.
 
 \begin{enumerate}
-    \item Log into the \textbf{workstation} machine as \textbf{ubuntu} with the password \textbf{ubuntu}.
+    \item Log into the \textbf{workstation} machine as the \textbf{ubuntu} user with password \textbf{ubuntu}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step1.png}
@@ -46,693 +51,713 @@ associated with the instance to permit external connectivity.
         \includegraphics[width=\linewidth]{images/part1/step2.png}
     \end{center}
 
-    \item Open a terminal window and source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ source ~/kesytonerc-admin
-    \end{lstlisting}
+    \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
+    password \textbf{secret}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step3.png}
-    \end{center}
-
-    \item In this lab, we will create our own project and set of users to simulate a more realistic working environment.
-    First, create the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack project create prod \
-        > --domain default
-    \end{lstlisting}
+    \item Ensure the \textbf{demo} project is selected. Navigate to \textbf{Project $>$ Compute $>$ Instances}, and
+    click \textbf{Launch Instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step4.png}
     \end{center}
 
-    \begin{tipbox}
-        When typing the command, make sure there is a space between \texttt{prod} and the \texttt{\textbackslash}
-        character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
-    \end{tipbox}
-
-    \item Create a user named \textbf{superuser} with the password \textbf{secret} to the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack user create \
-        > --project prod \
-        > --password secret \
-        > superuser
-    \end{lstlisting}
+    \item In the \textit{Details} tab, enter \textbf{instance1} in the \textit{Instance Name} field and click
+    \textbf{Next}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
-    \item Assign the \textbf{admin} role to the user \textbf{superuser}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack role add \
-        > --project prod \
-        > --user superuser \
-        > admin
-    \end{lstlisting}
+    \item In the \textit{Source} tab, make sure \textbf{Image} is selected in the \textit{Select Boot Source} dropdown
+    and select \textbf{No} under \textit{Create New Volume}. Select the \textbf{ubuntu} image by clicking the $\uparrow$
+    symbol in the same row. Click \textbf{Next}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
-    \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-admin} to
-    \textbf{\texttildemid/keystonerc-superuser}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-admin \
-        > ~/keystonerc-superuser
-    \end{lstlisting}
+    \begin{stopbox}
+        Before proceeeding to the next step, confirm that \textbf{ubuntu} appears underneath the \textit{Allocated}
+        section.
+    \end{stopbox}
+
+    \item In the \textit{Flavor} tab, click the $\uparrow$ symbol in the same row as \textbf{m1.small}. Click
+    \textbf{Next}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
-    \item Use \texttt{nano} to edit the \textbf{\texttildemid/keystonerc-superuser} file. Change the
-    \texttt{OS\_USERNAME} to \textbf{superuser}, and change the \texttt{OS\_PROJECT\_NAME} to \textbf{prod}. Finally,
-    in the line beginning \texttt{export PS1=...}, replace \textbf{(keystone-admin)} with \textbf{(keystone-superuer)}.
-    The file should match the the contents shown below. Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y}
-    and then \textbf{Enter} to save the changes to the file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-superuser
-    \end{lstlisting}    
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{m1.small} appears underneath the \textit{Allocated}
+        section.
+    \end{stopbox}
+
+    \item In the \textit{Networks} tab, click the $\uparrow$ symbol in the same row as \textbf{shared}. Click
+    \textbf{Launch Instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step8.png}
     \end{center}
 
-    \item Now, create a non-privileged user called \textbf{cloud-dev} with the password \textbf{secret}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack user create \
-        > --project prod \
-        > --password secret \
-        > cloud-dev
-    \end{lstlisting}
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{shared} appeears underneath the \textit{Allocated}
+        section.
+    \end{stopbox}
+
+    \item Access the instance's console by clicking on \textbf{instance1} under the \textit{Instance Name} column. Then,
+    navigate to the \textit{Console} tab if you are not directed there automatically. Click on \textbf{Click here to
+    show only the console}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step9.png}
     \end{center}
 
-    \item Assign \textbf{cloud-dev} the \textbf{member} role in the \textbf{prod} project so that it can perform actions
-    in that project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack role add \
-        > --project prod \
-        > --user cloud-dev \
-        > member
-    \end{lstlisting}
+    \item Log into the instance as \textbf{root} with the password \textbf{secret}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step10.png}
     \end{center}
 
-    \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-superuser} to
-    \textbf{\texttildemid/keystonerc-cloud-dev}.
+    \begin{notebox}
+        It may take several minutes for the instance to fully boot up and present a login prompt.
+    \end{notebox}
+
+    \item Now, we will make a change to the instance and create a snapshot. Create the \textbf{/root/hello.txt} file
+    with the contents \textbf{Hello, world!}.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-superuser \
-        > ~/keystonerc-cloud-dev
+        root@instance1:~# echo 'Hello, world!' > /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
-    \item Use \texttt{nano} to edit the \textbf{\texttildemid/keystonerc-cloud-dev} file. Change the
-    \texttt{OS\_USERNAME} to \textbf{cloud-dev}. In the line beginning \texttt{export PS1=...}, replace
-    \textbf{(keystone-superuser)} with \textbf{(keystone-cloud-dev)} The file should match the contents shown below.
-    Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the
-    file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-dev
-    \end{lstlisting}
+    \item Now, navigate back to \textbf{Project $>$ Compute $>$ Instances}. Before creating a snapshot, click the
+    dropdown next to \textbf{Create Snapshot} in the same row as \textbf{instance1}, then click \textbf{Shut Off
+    Instance}. This will prevent any inconsistencies in the resulting snapshot.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step12.png}
     \end{center}
 
-    \item Now, source the \textbf{keystonerc-superuser} keystone file to begin working with admin privileges in the
-    \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ source ~/keystonerc-superuser
-    \end{lstlisting}
+    \begin{tipbox}
+        A ``live snapshot'' is a snapshot of a running instance, which may only include a snapshot of the disk, while
+        some OS state may be lost.
+    \end{tipbox}
+    \begin{notebox}
+        Stopping instances and otherwise changing their running states will be explored further later in this lab.
+    \end{notebox}
+
+    \item When the \textit{Status} column shows that \textbf{instance1} is \textbf{Shutoff}, click \textbf{Create
+    Snapshot}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step13.png}
     \end{center}
 
-    \item Before making an external network for the project, the default router and external network need to be deleted.
-    List the routers to find the default router's name.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router list \
-        --max-width 80
-    \end{lstlisting}
+    \item In the \textbf{Create Snapshot} dialog, enter \textbf{instance1-snapshot} in the \textit{Snapshot Name} field.
+    Click \textbf{Create Snapshot}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step14.png}
     \end{center}
 
-    \item Before the router can be deleted, it must be disconnected from all subnets. Show the details of
-    \textbf{router1} to find the subnets to remove from it.
+    \begin{stopbox}
+        When you create the snapshot, you will be redirected to \textbf{Projects $>$ Compute $>$ Images}. Wait until
+        \textbf{instance1-snapshot} is \textbf{Active} before proceeding.
+    \end{stopbox}
 
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router show router1 \
-        > --max-width 100
-    \end{lstlisting}
+    \item Navgiate back to the \textbf{Instances} page. The instance is no longer needed, so select the checkbox next to
+    \textbf{instance1} and click \textbf{Delete Instances}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step15.png}
     \end{center}
 
-    \item The previous command only outputs IDs, which can be used to remove the subnets from the router. To use the
-    subnet names, list the subnets to see which names are mapped to the IDs from the previous step.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet list \
-        > --max-width 100
-    \end{lstlisting}
+    \item In the \textbf{Confirm Delete Instances} dialog, click \textbf{Delete Instances}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
-    \item By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and
-    \textbf{ipv6-private-subnet} subnets. Remove both subnets from \textbf{router1}
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
-        > router1 \
-        > private-subnet
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
-        > router1 \
-        > ipv6-private-subnet
-    \end{lstlisting}
+    \item To verify that the snapshot works correctly, launch another instance named \textbf{instance1} using the
+    snapshot. Follow the same steps that were used to create \textbf{instance1}. However, in the \textit{Source} tab of
+    the \textbf{Launch Instance} dialog, select \textbf{Image Snapshot} under \textit{Select Boot Source} click the
+    $\uparrow$ symbol next to \textbf{instance1-snapshot}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step17.png}
     \end{center}
 
-    \item Now, \textbf{router1} can be deleted. Delete \textbf{router1}.
+    \begin{tipbox}
+        The snapshot will also appear on the \textbf{Project $>$ Compute $>$ Images} page. It should say
+        \textbf{Snapshot} in the \textit{Type} column. For an alternative method of launching an image using the
+        snapshot, navigate to this page, click \textbf{Launch} in the same row as the snapshot, and enter the required
+        information in the following dialog. The snapshot can also be deleted from here.
+    \end{tipbox}
+
+    \item Open the instance's console and log in with the username \textbf{root} and password \textbf{secret}. Check
+    that the file created in the previous instance also exists on this instance.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router delete router1
+        root@instance1:~# cat /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step18.png}
     \end{center}
 
-    \item List the available networks to find the name of the default external network
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack network list \
-        > --max-width 100
-    \end{lstlisting}
+    \begin{notebox}
+        It may take several minutes for the instance to fully boot up and present a login prompt.
+    \end{notebox}
+
+    \item Exit the instance's console, navigate back to \textbf{Project $>$ Compute $>$ Instances}, and delete the
+    instance.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step19.png}
     \end{center}
 
-    \item From the output of the previous step, you can see that the \textbf{public} network should be the default
-    external network. Delete the \textbf{public} network.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack network delete public
-    \end{lstlisting}
+    \item You will create another snapshot with the \textit{OpenStack Unified CLI} in the next task, so
+    \textbf{instance1-snapshot} can safely be deleted. Navigate to \textbf{Project $>$ Compute $>$ Images}, select
+    \textbf{instance1-snapshot}, and click \textbf{Delete Images}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step20.png}
     \end{center}
 
-    \begin{tipbox}
-        You can confirm that \textbf{public} is an external network by viewing its details with the command
-        \texttt{openstack network show public}.
-    \end{tipbox}
-
-    \item Create an external, shared network called \textbf{extern-net}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack network create \
-        > --external --share \
-        > --provider-network-type flat \
-        > --provider-physical-network public
-        > extern-net
-    \end{lstlisting}
-
+    \item In the \textbf{Confirm Delete Image} dialog, click \textbf{Delete Image}.
+    
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step21.png}
     \end{center}
 
-    \item Create the \textbf{extern-subnet} subnet in the \textbf{172.25.250.0/24} range. Make the floating IP
-    allocation pool range from \textbf{172.25.250.25} to \textbf{172.250.250.30}, and allow DHCP. Set both the gateway
-    and DNS nameserver addresses to \textbf{172.25.250.254}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet create \
-        > --subnet-range 172.25.250.0/24 \
-        > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
-        > --dhcp --network extern-net \
-        > --gateway 172.25.250.254 \
-        > --dns-nameserver 172.25.250.254 \
-        > extern-subnet
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step22.png}
-    \end{center}
-
-    \item Source the \textbf{~/keystonerc-cloud-dev} keystone credentials file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ source ~/keystonerc-cloud-dev
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step23.png}
-    \end{center}
-
-    \item Create an internal network called \textbf{intern-net}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack network create intern-net
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step24.png}
-    \end{center}
-
-    \item Create a subnet for \textbf{intern-net} called \textbf{intern-subnet} in the \textbf{192.168.0.0/24} range. Allow DHCP on
-    the subnet.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack subnet create \
-        > --dhcp \
-        > --subnet-range 192.168.0.0/24 \
-        > --network intern-net \
-        > intern-subnet
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step25.png}
-    \end{center}
-
-    \item Create a router named \textbf{router1} so that the internal and external networks can be connected.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router create router1
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step26.png}
-    \end{center}
-
-    \item Add a port to the router for the internal network.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router add subnet \
-        > router1
-        > intern-subnet
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step27.png}
-    \end{center}
-
-    \item Set the \textbf{extern-net} network as the gateway for the router.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router set \
-        > --external-gateway extern-net \
-        > router1
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step28.png}
-    \end{center}
-
-    \item Allocate a floating IP address from the \textbf{extern-net} network for hte \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip create extern-net
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step29.png}
-    \end{center}
-
-    \item Generate a key pair for the \textbf{cloud-dev} user named \textbf{key1}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack keypair create \
-        > key1 > ~/Downloads/key1.pem
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step30.png}
-    \end{center}
-
-    \item Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write
-    permissions.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ chmod 600 ~/Downloads/key1.pem
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step31.png}
-    \end{center}
-
-    \item Create a security group named \textbf{ftp-secgroup} for the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group create \
-        > --description "SSH, ICMP, and FTP" \
-        > ftp-secgroup
-    \end{lstlisting}    
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step32.png}
-    \end{center}
-
-    \item Create a security group rule to allow \textbf{ICMP} traffic from any IP address.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
-        > rule create \
-        > --proto icmp \
-        > ftp-secgroup
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step33.png}
-    \end{center}
-
-    \item Create a security group rule to allow \textbf{SSH} traffic from any IP address. SSH uses the TCP protocol on
-    port 22 by default.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
-        > rule create \
-        > --proto tcp \
-        > --dst-port 22:22 \
-        > ftp-secgroup
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step34.png}
-    \end{center}
-
-    \item Create a security group rule to allow \textbf{FTP} traffic from any IP address. FTP uses the TCP protocol on
-    port 20 (data channel) and port 21 (control channel).
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
-        > rule create \
-        > --proto tcp \
-        > --dst-port 20:21 \
-        > ftp-secgroup
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step35.png}
-    \end{center}
-
-    \item Create an image named \textbf{ftp} with the file \textbf{\texttildemid/Downloads/ftp.img}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack image create \
-        > --disk-format qcow2 \
-        > --file ~/Downloads/ftp.img \
-        > --max-width 100 \
-        > ftp
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step36.png}
-    \end{center}
-
-    \item The FTP server instance is almost ready to be launched. First, use \texttt{nano} to create a file named
-    \texttt{script} in the home directory. Be sure it has the correct indentation and matches the contents shown below.
-    Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the
-    file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ nano ~/script
-    \end{lstlisting}
-    \begin{lstlisting}
-        #cloud-config
-        runcmd:
-         - echo "This instance has been customized by cloud-init" > /etc/motd
-         - echo "127.0.1.1" hostname >> /etc/hosts
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step37.png}
-    \end{center}
-
-    \begin{notebox}
-        This \texttt{cloud-init} script writes to the ``message of the day'' file, whose contents will be displayed
-        upon a successful login. It also appends the hostname to the \textbf{/etc/hosts} file to suppress a warning that
-        normally occurs when running commands with root privileges.
-    \end{notebox}
-
-    \item Leave the terminal window open and continue to the next task.
+    \item Log out of the dashboard, close the browser window, and continue to the next task.
 \end{enumerate}
 
 %%%%%%%%%%%
 % Section 2
 %%%%%%%%%%%
-\section{Launching an FTP Server Instance}
-\label{sec:launch_an_ftp_server_instance}
-In this task, you will deploy an FTP server in your environment and verify its external connectivity and functionality.
+\section{Creating a Snapshot Using the OpenStack Unififed CLI}
+\label{sec:creating_a_snapshot_cli}
+In this task, you will repeat the steps from the previous task in the \textit{OpenStack Unified CLI}.
 
 \begin{enumerate}
-    \item Create an instance named \textbf{ftp-server} using \textbf{intern-net} for the internal network,
-    \textbf{m1.small} as the flavor, and \textbf{ubuntu} as the image.
+    \item Open a terminal window and source the keystone credentials for the \textbf{admin} user.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server create \
-        > --image ftp \
-        > --flavor m1.small \
-        > --security-group ftp-secgroup \
-        > --user-data ~/script \
-        > --key-name key1 \
-        > --nic net-id=intern-net \
-        > ftp-server
+        ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step1.png}
     \end{center}
 
-    \item Ensure that the instance state is \textbf{ACTIVE}.
+    \item List the current instances. The list should be empty.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step2.png}
     \end{center}
 
-    \item When the instance state is \textbf{ACTIVE}, list the floating IP addresses available.
+    \item Now, we will create the same snapshot as before from the command line. Launch an instance. Use the
+    \textbf{ubuntu} image, the \textbf{m1.small} flavor, and the \textbf{shared} network.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip list \
-        > --max-width 80
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
+        > --image ubuntu \
+        > --flavor m1.small \
+        > --nic net-id=shared \
+        instance2
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
-    \item Associate an open floating IP address to the instance.
+    \item List the instances again to ensure it was created correctly.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server add \
-        > floating ip ftp-server 172.25.250.27
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list \
+        > --max-width 80
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
-    \begin{notebox}
-        When associating the floating IP, make sure to use the IP address that appears for you in the previous step as
-        it may differ from this example.
-    \end{notebox}
+    \begin{tipbox}
+        When typing the command, make sure there is a space between \textbf{list} and the \textbf{\textbackslash}
+        character, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
+    \end{tipbox}
 
-    \item Use the \textbf{\texttt{scp}} command to copy the \textbf{\texttildemid/Downloads/key1.pem} file to the
-    \textbf{devstack} machine. When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
-    \textbf{ubuntu}.
+    \item Show the URL to the console of the instance. Right-click the URL and click \textbf{Open Link}.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ scp ~/Downloads/key1.pem \
-        > ubuntu@192.168.1.20:~/key1.pem
+        [ubuntu@workstation (keystone-admin)]:~$ openstack console url show instance2
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
-    \item SSH into the \textbf{devstack} machine. Enter \textbf{ubuntu} when prompted for a password.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ ssh 192.168.1.20
-    \end{lstlisting}
-
+    \item Log in to \textbf{instance2} as \textbf{root} with the password \textbf{secret}.
+    
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
-    \item SSH into the \textbf{ftp-server} instance using the \textbf{key1} private key. Notice that the message of the
-    of the day uploaded with the \texttt{cloud-init} script appears near the bottom of the output.
+    \begin{notebox}
+        It may take several minutes for the instance to fully boot up and present a login prompt.
+    \end{notebox}
+
+    \item Create the \textbf{/root/hello.txt} file with the contents \textbf{Hello, world!}.
     \begin{lstlisting}
-        ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.27
+        root@instance2:~# echo 'Hello, world!' > /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step7.png}
     \end{center}
 
-    \begin{notebox}
-        It may take several minutes for the instance to fully boot and be available for an SSH connection. Until then,
-        the connection will be refused.
-    \end{notebox}
-
-    \item Verify that the \textbf{/etc/hosts} file was updated properly.
+    \item Close the browser window and return focus to the terminal window. Stop the instance before making a snapshot.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ cat /etc/hosts
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server stop instance2
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step8.png}
     \end{center}
 
-    \item Verify that the \texttt{vsftpd} package is installed.
+    \item List the current images. The list should have two items.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ apt list --installed | grep vsftpd
+        [ubuntu@workstation (keystone-admin)]:~$ openstack image list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step9.png}
     \end{center}
 
-    \item Use \texttt{nano} to edit the \textbf{/etc/vsftpd.conf} configuration file and uncomment the variables
-    \texttt{anonymous\_enable}, \texttt{write\_enable}, \texttt{anon\_upload\_enable}, and
-    \texttt{anon\_mkdir\_write\_enable} by deleting the ``\texttt{\#}'' character that comes before them. For
-    the variable \texttt{anonymous\_enable}, change the \texttt{NO} to \texttt{YES}. Then, append the following lines:
-    \texttt{allow\_writeable\_chroot=YES} and \texttt{anon\_root=/var/ftp}. The content of the file should resemble the
-    output given below.
+    \item Make a snapshot of the instance.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo nano /etc/vsftpd.conf
-    \end{lstlisting}
-    \begin{lstlisting}
-        anonymous_enable=YES
-        write_enable=YES
-        anon_upload_enable=YES
-        anon_mkdir_write_enable=YES
-        allow_writeable_chroot=YES
-        anon_root=/var/ftp
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server image create \
+        > instance2 \
+        > --name instance2-snapshot
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step10.png}
     \end{center}
 
-    \item Create a folder for anonymous FTP users.
+    \item List the current images again to ensure the snapshot was create properly.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo mkdir -p /var/ftp/pub
+        [ubuntu@workstation (keystone-admin)]:~$ openstack image list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step11.png}
     \end{center}
 
-    \item Remove all ownership from the root FTP folder and remove all write permissions from this folder.
+    \item To verify the correctness of the snapshot, first delete the instance.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo chown nobody:nogroup /var/ftp
-        ubuntu@ftp-server:~$ sudo chmod a-w /var/ftp
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server delete instance2
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step12.png}
     \end{center}
 
-    \item Change the ownership of the \textbf{/var/ftp/pub} directory so that the \textbf{ftp} user and group owns
-    everything within this directory.
+    \item Confirm the deletion of the instance.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo chown -R ftp. /var/ftp/pub
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step13.png}
     \end{center}
 
-    \item View the permissions of the \textbf{/var/ftp} folder to ensure that no users or groups have ownership or write
-    privileges for the \textbf{/var/ftp} folder and that the \textbf{ftp} user and group owns the \textbf{/var/ftp/pub}
-    directory and its contents.
+    \item Now, recreate the instance, using \textbf{instance2-snapshot} as the image.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ ls -al /var/ftp
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
+        > --image instance2-snapshot \
+        > --flavor m1.small \
+        > --nic net-id=shared \
+        instance2
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step14.png}
     \end{center}
 
-    \item Restart the \texttt{vsftpd} service so the changes will take effect.
+    \item Using the same steps as before, log in to the instance's console as \textbf{root} using the password
+    \textbf{secret}. Verify that the \textbf{/root/hello.txt} file exists.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo systemctl restart vsftpd
+        root@instance2:~# cat /root/hello.txt
     \end{lstlisting}
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step15.png}
     \end{center}
 
-    \item View the status of the \texttt{vsftpd} service. If all changes were made correctly, it should report that the
-    service is active. If it reports that the service has failed, there is mostly likely a mistake in the
-    \textbf{/var/vsftpd.conf} file. Press \textbf{Q} to regain the command prompt.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo systemctl status vsftpd
-    \end{lstlisting}
+    \begin{notebox}
+        It may take several minutes for the instance to fully boot up and present a login prompt.
+    \end{notebox}
 
+    \item This instance will be used in the following sections. Leave both the browser and terminal windows open and
+    continue to the next task.
+    
+\end{enumerate}
+
+% TODO: In the case that volumes are added to these labs, rescuing instances should be discussed in the following two
+% sections.
+
+%%%%%%%%%%%
+% Section 3
+%%%%%%%%%%%
+\section{Managing the Running State of an Instance Using the Horizon Dashboard}
+\label{sec:managing_the_running_state_of_an_instance_web}
+OpenStack allows for managing the running and power state of instances in several ways, and each method may be useful in
+different situations. In this task, you will manage the running and power state of an instance by starting, stopping,
+pausing, suspending, resuming, shelving, unshelving, and rebooting the instance using the \textit{Horizon Dashboard}.
+
+\begin{enumerate}
+    \item Open a new tab in the browser window and navigate to \textbf{192.168.1.20}. Log in as \textbf{admin} with the
+    password \textbf{secret}.
+
+    \item Pausing an instance is one way to manage the running state of an OpenStack instance. When an instance is
+    paused, its operation is frozen, and its state and memory are preserved in the RAM of the underlying compute node.
+    Pausing an instance does not release its resources. When the instance is resumed, it will pick up any processes
+    where they left off. To view the effects of pausing an instance, first focus back on the tab with the instance's
+    console and continuously ping the DHCP server.
+    \begin{lstlisting}
+        root@instance2:~# ping 192.168.233.2
+    \end{lstlisting} 
+    
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step16.png}
+        \includegraphics[width=\linewidth]{images/part3/step2.png}
     \end{center}
 
-    \item Exit from the \textbf{ftp-server} instance.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ exit
-    \end{lstlisting}
+    \begin{tipbox}
+        Pausing an instance is useful when the operation of an instance needs to be interrupted but its state should be
+        kept intact. For example, an instance might be paused while making changes to the underlying infrastructure
+        to prevent disrupting processes and requiring applications or the instance to be restarted. Pausing an instance
+        is similar to putting a computer in sleep mode.
+    \end{tipbox}
+
+    \item To pause the instance, navigate to \textbf{Project $>$ Compute $>$ Instances}, click the dropdown next to
+    \textbf{Create Snapshot} in the same row as \textbf{instance2}, and click \textbf{Pause Instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step17.png}
-    \end{center}
-
-    \item From \textbf{workstation}, create a text file named \textbf{test\_file.txt} containing the string ``This is my
-    file''.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ echo "This is my file" > ~/test_file.txt
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step18.png}
-    \end{center}
-
-    \item Open an FTP session to the FTP server and upload the \textbf{test\_file.txt} file. Log out when done. Use
-    \textbf{anonymous} as the user and when prompted for the password, press the \textbf{Enter} key for no password
-    input. Follow the instructions from the example and summary below.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ ftp 172.25.250.27
-        ftp> passive
-        ftp> dir
-        ftp> cd pub
-        ftp> put ~/test_file.txt test_file.txt
-        ftp> bye
-    \end{lstlisting}
-
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step19.png}
+        \includegraphics[width=\linewidth]{images/part3/step3.png}
     \end{center}
 
     \begin{notebox}
-        The IP address may differ slightly from this example. Make sure to use the floating IP address that you created.
+        You may have to scroll down to find the option.
     \end{notebox}
 
-    \item SSH into the \textbf{ftp-server} instance.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ ssh -i ~/key1.pem cloud-user@172.25.250.27
-    \end{lstlisting}
-
+    \item Now, view the console again to see that it is frozen and no more ping replies are appearing.
+    
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step20.png}
+        \includegraphics[width=\linewidth]{images/part3/step4.png}
     \end{center}
 
-    \item Verify the file uploaded successfully.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo cat /var/ftp/pub/test_file.txt
-    \end{lstlisting}
+    \item Navigate back to the \textbf{Instances} page. Click the dropdown next to \textbf{Create Snapshot} in the same
+    row as \textbf{instance2} and click \textbf{Resume Instance}.
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step21.png}
+        \includegraphics[width=\linewidth]{images/part3/step5.png}
     \end{center}
 
-    \item Exit from the \textbf{ftp-server} instance.
+    \item View the console again to see that the ping replies have resumed. Press \textbf{Ctrl+C} to stop the
+    \textbf{ping} command.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step6.png}
+    \end{center}
+
+    \item Suspending an instance is similar to pausing an instance. The main difference is that the instance's state is
+    written to a persistent disk of the underlying compute node rather than memory. This means the state can be
+    preserved even if the compute node loses power during the suspension. Suspending an instance does not release its
+    resources. When the instance is resumed, it will pick up any processes where they left off. To view the effects of
+    suspending an instance, perform the same experiment as before. Focus on the tab with the instance's console and
+    continuously ping the DHCP server.
     \begin{lstlisting}
-        ubuntu@ftp-server:~$ exit
+        root@instance2:~# ping 192.168.233.2
+    \end{lstlisting} 
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step7.png}
+    \end{center}
+
+    \begin{tipbox}
+        Suspending an instance is useful in similar situations as pausing. However, suspending an image allows the
+        compute node to be rebooted or migrated without disrupting the processes of the instance and requiring
+        applications or the instance to be restarted. Suspending an instance is similar to putting a computer in
+        hibernation mode.
+    \end{tipbox}
+
+    \item To suspend the instance, navigate back to \textbf{Project $>$ Compute $>$ Instances}, click the dropdown next
+    to \textbf{Create Snapshot}, and click \textbf{Suspsend Instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step8.png}
+    \end{center}
+
+    \begin{notebox}
+        You may have to scroll down to find the option.
+    \end{notebox}
+
+    \item View the console again to see that the connection has been ended. When the instance is resumed, a new
+    connection will be created, and this tab will still be unresponsive. Close the tab containing the instance console.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step9.png}
+    \end{center}
+
+    \item Navigate back to the \textbf{Instances} page. Click the dropdown next to \textbf{Create Snapshot} in the same
+    row as \textbf{instance2} and click \textbf{Resume Instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step10.png}
+    \end{center}
+
+    \item Click on \textbf{instance2} and select the \textbf{Console} tab to see that the ping replies have resumed.
+    Press \textbf{Ctrl+C} to stop the \textbf{ping} process.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step11.png}
+    \end{center}
+
+    \item Shutting off or stopping an instance turns off the instance. The instance state and any data stored in the
+    instance's RAM will be lost. Any data stored on an ephemeral disk may be lost when an instance is stopped. Stopping
+    an instance does not release its resources. To stop an instance, navigate to the \textbf{Instances} page. Click the
+    dropdown next to \textbf{Create Snapshot} in the same row as \textbf{instance2} and click \textbf{Shut Off
+    Instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step12.png}
+    \end{center}
+
+    \begin{notebox}
+        You may have to scroll down to find the option.
+    \end{notebox}
+    
+    \item In the \textbf{Confirm Shutt Off Instance} dialog, click \textbf{Shut Off Instance}.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step13.png}
+    \end{center}
+
+    \item When the power state of the instance indicates that it is shut off, the \textbf{Create Snapshot} button will
+    become \textbf{Start Instance}. Click this button to turn the instance back on.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part3/step14.png}
+    \end{center}
+
+    \begin{tipbox}
+        In addition to shutting off an instance, an instance can also be soft or hard rebooted, or turned off and back
+        on. A soft reboot allows the instance to perform a graceful shutdown, while hard rebooting an instance is
+        analogous to pulling the power cord from a computer.
+    \end{tipbox}
+
+    \item Shelving an instance stops the instance and takes a snapshot, then releases the resources of the instance
+    besides its IP address. To shelve an instance, navigate to the \textbf{Instances} page. Click the dropdown next to
+    \textbf{Create Snapshot}, then click \textbf{Shelve Instance}.
+
+    \begin{tipbox}
+        When using OpenStack through a third-party cloud provider, shelving an instance usually results in only paying
+        for the snapshot being created, and you should not be billed for the regular price of running the instance.
+        Therefore, shelving an instance allows keeping the configuration of the instance intact while freeing up
+        resources and reducing cost. An instance might be shelved over weekends or outside working hours for these
+        reasons.
+    \end{tipbox}
+
+    \item When an instance is shelved, the \textbf{Create Snapshot} button will become \textbf{Associate Floating IP}.
+    To unshelve an instance, click the dropdown next to this button, then click \textbf{Unshelve Instance}. The instance
+    will reboot.
+
+    \item Close the browser window and continue to the next task.
+\end{enumerate}
+
+%%%%%%%%%%%
+% Section 4
+%%%%%%%%%%%
+\section{Managing the Running State of an Instance Using the OpenStack Unififed CLI}
+\label{sec:managing_the_power_state_of_an_instance_cli}
+In this task, you will repeat the steps from the previous task in the \textit{OpenStack Unified CLI}.
+
+\begin{enumerate}
+    \item If a terminal window is not already open, open one and source the keystone credentials for the \textbf{admin}
+    user.
+    \begin{lstlisting}
+        ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
 
     \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step22.png}
+        \includegraphics[width=\linewidth]{images/part4/step1.png}
+    \end{center}
+
+    \item Show the URL to the console of the instance. Right-click the URL and click \textbf{Open Link}.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack console url show instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step2.png}
+    \end{center}
+
+    \item Log in to \textbf{instance2} as \textbf{root} with the password \textbf{secret}.
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step3.png}
+    \end{center}
+
+    \begin{notebox}
+        Since the instance was unshelved, it may take several minutes for the instance to reboot and present a login
+        prompt.
+    \end{notebox}
+
+    \item Continuously ping the DHCP server to see the effects of pausing an instance.
+    \begin{lstlisting}
+        root@instance2:~# ping 192.168.233.2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step4.png}
+    \end{center}
+
+    \item Focus back on the terminal window and pause the instance.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server pause instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step5.png}
+    \end{center}
+
+    \item Now, view the browser window again to see that the instance is frozen and no more ping replies are appearing.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step6.png}
+    \end{center}
+
+    \item Focus back on the terminal window and resume the instance
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server unpause instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step7.png}
+    \end{center}
+
+    \item View the browser window again to see that more ping replies are coming in. Press \textbf{Ctrl+C} to stop the
+    \textbf{ping} process.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step8.png}
+    \end{center}
+
+    \item Start the \textbf{ping} process again to view the effects of suspending an instance.
+    \begin{lstlisting}
+        root@instance2:~# ping 192.168.233.2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step9.png}
+    \end{center}
+
+    \item Focus back on the terminal window and suspend the instance.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server suspend instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step10.png}
+    \end{center}
+
+    \item View the console again to see that the connection has been ended. When the instance is resumed, a new
+    connection will be created, and this tab will still be unresponsive. Close the browser window.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step11.png}
+    \end{center}
+
+    \item Focus back on the terminal window and resume the instance.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server resume instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step12.png}
+    \end{center}
+
+    \item Show the URL to the console of the instance. Right-click the URL and click \textbf{Open Link}.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack console url show instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step13.png}
+    \end{center}
+
+    \item Log in to \textbf{instance2} as \textbf{root} with the password \textbf{secret}.
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step14.png}
+    \end{center}
+
+    \item Note that more ping replies are now coming in. Press \textbf{Ctrl+C} to stop the \textbf{instance}, and
+    close the browser window.
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step15.png}
+    \end{center}
+
+    \item Focus back on the terminal window and confirm that \textbf{instance2} is listed as \textbf{ACTIVE}.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list \
+        > --max-width 80
+    \end{lstlisting}
+    
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step16.png}
+    \end{center}
+
+    \item Stop the instance.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server stop instance2
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step17.png}
+    \end{center}
+
+    \item Verify that the status of \textbf{instance2} is \textbf{SHUTOFF}.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list \
+        > --max-width 80
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step18.png}
+    \end{center}
+
+    \item Power the instance back on.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server start instance2 \
+        > --max-width 80
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step19.png}
+    \end{center}
+
+    \item Verify that the status of \textbf{instance2} is \textbf{ACTIVE}.
+    \begin{lstlisting}
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+    \end{lstlisting}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{images/part4/step20.png}
     \end{center}
 
     \item The lab is now complete.

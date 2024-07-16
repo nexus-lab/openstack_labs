@@ -6,7 +6,7 @@
 \section*{Introduction}
 \label{sec:introduction}
 \addcontentsline{toc}{section}{\nameref{sec:introduction}}
-In this lab, you will use the \texttt{cloud-init} utility to customize OpenStack instances. This utility is used to
+In this lab, you will use the \textbf{cloud-init} utility to customize OpenStack instances. This utility is used to
 perform actions from an instance upon creation. For example, it can be used to install a list of packages or change the
 message of the day displayed upon login to the instance.
 
@@ -14,8 +14,8 @@ message of the day displayed upon login to the instance.
 \label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
-    \item Customize an instance with \texttt{cloud-init} using both the \textit{Horizon Dashboard}.
-    \item Customize an instance with \texttt{cloud-init} using the \textit{OpenStack Unified CLI}.
+    \item Customize an instance with \textbf{cloud-init} using the \textit{Horizon Dashboard}.
+    \item Customize an instance with \textbf{cloud-init} using the \textit{OpenStack Unified CLI}.
     \item Verify instance customization.
 \end{itemize}
 \clearpage
@@ -69,8 +69,8 @@ the following sections.
     \end{center}
 
     \begin{tipbox}
-        When typing the command, make sure there is a space between \texttt{list} and the \texttt{\textbackslash}
-        character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest of the command.
+        When typing the command, make sure there is a space between \textbf{list} and the \textbf{\textbackslash}
+        character, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
     \end{tipbox}
 
     \item Before the router can be deleted, it must be disconnected from all subnets. Show more details about
@@ -155,7 +155,7 @@ the following sections.
 
     \begin{tipbox}
         You can confirm that \textbf{public} is an external network by viewing its details with the command
-        \texttt{openstack network show public}.
+        \textbf{openstack network show public}.
     \end{tipbox}
 
     \item Now, we will create our own resources. First, create an external network named \textbf{extern-net}. Set the
@@ -279,7 +279,7 @@ the following sections.
         \includegraphics[width=\linewidth]{images/part1/step22.png}
     \end{center}
 
-    \item Use the \texttt{chmod} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu}
+    \item Use the \textbf{chmod} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu}
     user has read/write permissions on the file, and groups and other users have no permissions to the file.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ chmod 600 ~/Downloads/dev-keypair.pem
@@ -318,7 +318,7 @@ the following sections.
     \end{center}
 
     \begin{notebox}
-        You can verify with the command \texttt{openstack security group rule show RULE\_ID} that the default rules
+        You can verify with the command \textbf{openstack security group rule show RULE\_ID} that the default rules
         allow any outgoing traffic over IPv4 or IPv6.
     \end{notebox}
 
@@ -369,8 +369,8 @@ that the customization took effect.
     \item Open the web browser and navigate to \textbf{192.168.1.20}. Log into the dashboard as \textbf{admin} with the
     password \textbf{secret}.
 
-    \item Make sure the \textbf{demo} project is selected. Navigate to \textbf{Project $>$ Compute $>$ Instances}, 
-    click \textbf{Launch Instance}.
+    \item Make sure the \textbf{demo} project is selected. Navigate to \textbf{Project $>$ Compute $>$ Instances},
+    and click \textbf{Launch Instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step2.png}
@@ -489,7 +489,7 @@ that the customization took effect.
         minutes to fully launch and present the login prompt.
     \end{notebox}
 
-    \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \texttt{tail}
+    \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \textbf{tail}
     command to print the last 10 lines of the log.
     \begin{lstlisting}
         root@instance1:~# tail /var/log/cloud-init.log
@@ -510,7 +510,7 @@ that the customization took effect.
 
     \item Close the tab with the terminal window and navigate back to \textbf{Project $>$ Compute $>$ Instances} if you
     are not already on that page. We are finished with this instance and will create another one in the next section.
-    Select the checkbox next to the \textbf{instance1} and click \textbf{Delete Instances}.
+    Select the checkbox next to \textbf{instance1} and click \textbf{Delete Instances}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step16.png}
@@ -527,7 +527,7 @@ that the customization took effect.
 %%%%%%%%%%%
 \section{Creating a Customized Instance Using the OpenStack Unified CLI}
 \label{sec:creating_a_customized_instance_using_the_openstack_unified_cli}
-In this task, you will verify that \texttt{cloud-init} has correctly customized the two instances created in the
+In this task, you will verify that \textbf{cloud-init} has correctly customized the two instances created in the
 previous section.
 
 \begin{enumerate}
@@ -542,7 +542,7 @@ previous section.
     \textbf{\texttildemid/hello} that matches the content shown below. When the instance runs this script, it will
     create the file \textbf{/root/hello.txt} with the contents \textbf{Hello, world!}, and it will append the line
     \textbf{127.0.1.1 instance2} to the \textbf{/etc/hosts} file. This simply supresses a warning when issuing a
-    command with root privileges (i.e., \texttt{sudo ...}). Press \textbf{CTRL+X}, then \textbf{Y} to accept the file
+    command with root privileges (i.e., \textbf{sudo ...}). Press \textbf{CTRL+X}, then \textbf{Y} to accept the file
     changes. Press \textbf{Enter} to confirm and exit back to the terminal.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ nano ~/hello
@@ -615,7 +615,7 @@ previous section.
         \includegraphics[width=\linewidth]{images/part3/step7.png}
     \end{center}
 
-    \item Use the \texttt{scp} command to copy the \textbf{\texttildemid/Downloads/dev-keypair.pem} file to
+    \item Use the \textbf{scp} command to copy the \textbf{\texttildemid/Downloads/dev-keypair.pem} file to
     the \textbf{devstack} machine. When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
     \textbf{ubuntu}.
     \begin{lstlisting}

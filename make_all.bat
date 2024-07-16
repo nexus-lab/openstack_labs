@@ -23,3 +23,7 @@ popd
 pushd lab6
 make
 popd
+
+pushd lab7
+make
+popd

@@ -131,14 +131,14 @@ an external network.
     \end{center}
 
     \begin{tipbox}
-        When typing the command, make sure there is a space between \texttt{extern-net2} and the
-        \texttt{\textbackslash} character, and press \textbf{Enter} to get the \texttt{>} and continue typing the rest
+        When typing the command, make sure there is a space between \textbf{extern-net2} and the
+        \textbf{\textbackslash} character, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest
         of the command.
     \end{tipbox}
 
     \begin{tipbox}
-        To keep the output from overflowing while keeping the formatting intact, use the \texttt{--max-width n} option
-        to limit the output to \texttt{n} characters per line. This is especially useful for commands that output long
+        To keep the output from overflowing while keeping the formatting intact, use the \textbf{--max-width n} option
+        to limit the output to \textbf{n} characters per line. This is especially useful for commands that output long
         IDs or have many columns in the output table.
     \end{tipbox}
 
@@ -367,7 +367,7 @@ instance to other networks both within OpenStack and outside the cloud.
         \includegraphics[width=\linewidth]{images/part2/step16.png}
     \end{center}
 
-    \item Use the \texttt{ping} command on the IP address found from the \texttt{openstack router show} command to
+    \item Use the \textbf{ping} command on the IP address found from the \textbf{openstack router show} command to
     verify that the router can be reached. Receiving ping replies verifies the connectivity of the router since the
     \textbf{devstack} machine is outside of the OpenStack cloud environment.
     \begin{lstlisting}
@@ -513,13 +513,13 @@ address can be exchanged for a different one while the instance is still running
     \end{center}
 
     \begin{tipbox}
-        You can use the \texttt{--floating-ip-address IP\_ADDRESS} argument to allocate a specific IP address.
+        You can use the \textbf{--floating-ip-address IP\_ADDRESS} argument to allocate a specific IP address.
         However, make sure to list the available addresses before attempting to allocate it. If that particular floating
         IP address already exists, the command will throw an \textit{HttpException: Conflict} error.
     \end{tipbox}
     \begin{tipbox}
-        A floating IP address can be disassociated from and instance using the command \texttt{openstack floating ip
-        remove INSTANCE FLOATING\_IP\_ADDRESS} and deleted using the command \texttt{openstack floating ip delete
+        A floating IP address can be disassociated from and instance using the command \textbf{openstack floating ip
+        remove INSTANCE FLOATING\_IP\_ADDRESS} and deleted using the command \textbf{openstack floating ip delete
         IP\_ADDRESS}.
     \end{tipbox}
 
@@ -627,7 +627,7 @@ that will be used later in the lab to connect to OpenStack instances from outsid
         \includegraphics[width=\linewidth]{images/part4/step7.png}
     \end{center}
 
-    \item To better protect the private key, use the \texttt{chmod} command with a mode of \textbf{600} to make it so
+    \item To better protect the private key, use the \textbf{chmod} command with a mode of \textbf{600} to make it so
     that the \textbf{ubuntu} user has read/write permissions on the private key file, and groups and other users
     have no permissions to the file.
     \begin{lstlisting}
@@ -678,7 +678,7 @@ network traffic while disallowing others.
     \end{center}
 
     \item Select \textbf{All ICMP} from the \textit{Rule} dropdown and click \textbf{Add}. This will allow ICMP traffic,
-    namely the \texttt{ping} command, to reach instances in this security group.
+    namely the \textbf{ping} command, to reach instances in this security group.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part5/step5.png}
@@ -775,7 +775,7 @@ network traffic while disallowing others.
     \end{center}
 
     \begin{tipbox}
-        You can use the command \texttt{openstack security group rule show RULE\_ID} to show the details of each rule
+        You can use the command \textbf{openstack security group rule show RULE\_ID} to show the details of each rule
         and confirm that they are the same default rules you get when creating a security group throug the Horizon
         Dashboard. The rules allow all outgoing traffic over IPv4 and IPv6.
     \end{tipbox}
@@ -834,7 +834,7 @@ network traffic while disallowing others.
 Up to this point, we have created an external network, a router, a floating IP address, an SSH key pair, and a security
 group. These are all the resources necessary to create and interact with an external instance from outside the OpenStack
 cloud. In this task, you will launch an external instance and verify its connectivity and functionality using the
-\texttt{ssh} and \texttt{ping} commands.
+\textbf{ssh} and \textbf{ping} commands.
 
 \begin{enumerate}
     \item If a terminal window is not already open, open one and source the admin credentials from the 
@@ -910,11 +910,11 @@ cloud. In this task, you will launch an external instance and verify its connect
     \end{center}
 
     \begin{tipbox}
-        For commands that output tables, you can pull out only the columns you want by using the \texttt{-c} option
+        For commands that output tables, you can pull out only the columns you want by using the \textbf{-c} option
         followed by the column name. This option can be chained as in the command above to list multiple columns.
     \end{tipbox}
 
-    \item Use the \texttt{scp} command to send the \textbf{keypair2} key pair to the \textbf{devstack} machine using
+    \item Use the \textbf{scp} command to send the \textbf{keypair2} key pair to the \textbf{devstack} machine using
     the SSH protocol. Use the password \textbf{ubuntu} for authentication.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ scp ~/Downloads/keypair2.pem \
