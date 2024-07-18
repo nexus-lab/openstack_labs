@@ -527,10 +527,9 @@ pausing, suspending, resuming, shelving, unshelving, and rebooting the instance 
     \end{center}
 
     \item Shutting off or stopping an instance turns off the instance. The instance state and any data stored in the
-    instance's RAM will be lost. Any data stored on an ephemeral disk may be lost when an instance is stopped. Stopping
-    an instance does not release its resources. To stop an instance, navigate to the \textbf{Instances} page. Click the
-    dropdown next to \textbf{Create Snapshot} in the same row as \textbf{instance2} and click \textbf{Shut Off
-    Instance}.
+    instance's RAM will be lost. Stopping an instance does not release its resources. To stop an instance, navigate to
+    the \textbf{Instances} page. Click the dropdown next to \textbf{Create Snapshot} in the same row as
+    \textbf{instance2} and click \textbf{Shut Off Instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step12.png}
@@ -558,22 +557,6 @@ pausing, suspending, resuming, shelving, unshelving, and rebooting the instance 
         on. A soft reboot allows the instance to perform a graceful shutdown, while hard rebooting an instance is
         analogous to pulling the power cord from a computer.
     \end{tipbox}
-
-    \item Shelving an instance stops the instance and takes a snapshot, then releases the resources of the instance
-    besides its IP address. To shelve an instance, navigate to the \textbf{Instances} page. Click the dropdown next to
-    \textbf{Create Snapshot}, then click \textbf{Shelve Instance}.
-
-    \begin{tipbox}
-        When using OpenStack through a third-party cloud provider, shelving an instance usually results in only paying
-        for the snapshot being created, and you should not be billed for the regular price of running the instance.
-        Therefore, shelving an instance allows keeping the configuration of the instance intact while freeing up
-        resources and reducing cost. An instance might be shelved over weekends or outside working hours for these
-        reasons.
-    \end{tipbox}
-
-    \item When an instance is shelved, the \textbf{Create Snapshot} button will become \textbf{Associate Floating IP}.
-    To unshelve an instance, click the dropdown next to this button, then click \textbf{Unshelve Instance}. The instance
-    will reboot.
 
     \item Close the browser window and continue to the next task.
 \end{enumerate}
@@ -610,11 +593,6 @@ In this task, you will repeat the steps from the previous task in the \textit{Op
     \begin{center}
         \includegraphics[width=\linewidth]{images/part4/step3.png}
     \end{center}
-
-    \begin{notebox}
-        Since the instance was unshelved, it may take several minutes for the instance to reboot and present a login
-        prompt.
-    \end{notebox}
 
     \item Continuously ping the DHCP server to see the effects of pausing an instance.
     \begin{lstlisting}
