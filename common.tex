@@ -54,7 +54,7 @@
     }
 }
 
-% Macro to insert title page, define header and footer, and insert table of contents for each lab.
+% Macro to insert title page, define header and footer, and insert table of contents and about section for each lab.
 % The argument is the title of the lab.
 \newcommand{\preamble}[1]
 {
@@ -64,6 +64,17 @@
     % Insert table of contents
     \pagestyle{fancy}
     \tableofcontents
+    \clearpage
+
+    \section*{About This Document}
+    \label{sec:about_this_document}
+    \begin{itemize}
+        \item This document was developed by a team at the University of Tennessee at Chattanooga led by Dr. Mengjun Xie
+        (\href{mailto:mengjun-xie@utc.edu}{mengjun-xie@utc.edu}).
+        \item The development of this document was supported by a National Centers of Academic Excellence in
+        Cybersecurity Grant (\#H98230-20-1-0351), housed at the National Security Agency. 
+        \item This document is licensed with a Creative Commons Attribution 4.0 International License.
+    \end{itemize}
     \clearpage
 }
 
