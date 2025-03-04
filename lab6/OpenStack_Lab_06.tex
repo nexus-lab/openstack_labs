@@ -340,7 +340,8 @@ In this task, you will repeat the steps from the previous task in the \textit{Op
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack server image create \
         > instance2 \
-        > --name instance2-snapshot
+        > --name instance2-snapshot \
+        > --max-width 80
     \end{lstlisting}
 
     \begin{center}
@@ -721,8 +722,7 @@ In this task, you will repeat the steps from the previous task in the \textit{Op
 
     \item Power the instance back on.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server start instance2 \
-        > --max-width 80
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server start instance2
     \end{lstlisting}
 
     \begin{center}
@@ -731,7 +731,8 @@ In this task, you will repeat the steps from the previous task in the \textit{Op
 
     \item Verify that the status of \textbf{instance2} is \textbf{ACTIVE}.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack server list \
+        > --max-width 80
     \end{lstlisting}
 
     \begin{center}

@@ -266,7 +266,7 @@ associated with the instance to permit external connectivity.
         [ubuntu@workstation (keystone-superuser)]:~$ openstack network create \
         > --external --share \
         > --provider-network-type flat \
-        > --provider-physical-network public
+        > --provider-physical-network public \
         > extern-net
     \end{lstlisting}
 
@@ -335,7 +335,7 @@ associated with the instance to permit external connectivity.
     \item Add a port to the router for the internal network.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router add subnet \
-        > router1
+        > router1 \
         > intern-subnet
     \end{lstlisting}
 
@@ -356,7 +356,8 @@ associated with the instance to permit external connectivity.
 
     \item Allocate a floating IP address from the \textbf{extern-net} network for hte \textbf{prod} project.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip create extern-net
+        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip create \
+        > extern-net
     \end{lstlisting}
 
     \begin{center}
@@ -458,7 +459,7 @@ associated with the instance to permit external connectivity.
         #cloud-config
         runcmd:
          - echo "This instance has been customized by cloud-init" > /etc/motd
-         - echo "127.0.1.1" hostname >> /etc/hosts
+         - echo "127.0.1.1" ftp-server >> /etc/hosts
     \end{lstlisting}
 
     \begin{center}
@@ -467,8 +468,8 @@ associated with the instance to permit external connectivity.
 
     \begin{notebox}
         This \textbf{cloud-init} script writes to the ``message of the day'' file, whose contents will be displayed
-        upon a successful login. It also appends the hostname to the \textbf{/etc/hosts} file to suppress a warning that
-        normally occurs when running commands with root privileges.
+        upon a successful login. It also appends the hostname to the \textbf{/etc/hosts} file to suppress an ``unable to
+        resolve host'' warning that would otherwise occur when running commands with \texttt{sudo}.
     \end{notebox}
 
     \item Leave the terminal window open and continue to the next task.
@@ -520,8 +521,8 @@ In this task, you will deploy an FTP server in your environment and verify its e
 
     \item Associate an open floating IP address to the instance.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server add \
-        > floating ip ftp-server 172.25.250.27
+        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server add floating ip \
+        > ftp-server 172.25.250.27
     \end{lstlisting}
 
     \begin{center}
@@ -710,7 +711,7 @@ In this task, you will deploy an FTP server in your environment and verify its e
 
     \item SSH into the \textbf{ftp-server} instance.
     \begin{lstlisting}
-        ubuntu@devstack:~$ ssh -i ~/key1.pem cloud-user@172.25.250.27
+        ubuntu@devstack:~$ ssh -i ~/key1.pem ubuntu@172.25.250.27
     \end{lstlisting}
 
     \begin{center}

@@ -252,7 +252,7 @@ instance to other networks both within OpenStack and outside the cloud.
         \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
-    \item Select \textbf{shared: 172.25.233.0/24 (shared-subnet)} from the \textit{Subnet} dropdown and click
+    \item Select \textbf{shared: 192.168.233.0/24 (shared-subnet)} from the \textit{Subnet} dropdown and click
     \textbf{Submit} to add the interface. This will connect the \textbf{extern-net2} network to the \textbf{shared}
     network.
 
@@ -293,7 +293,7 @@ instance to other networks both within OpenStack and outside the cloud.
     \item Unset the \textbf{extern-net2} network as the gateway for the router.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack router unset \
-        > --external-gateway router2
+        > --external-gateway router1
     \end{lstlisting}
 
     \begin{center}
@@ -934,7 +934,7 @@ cloud. In this task, you will launch an external instance and verify its connect
         \includegraphics[width=\linewidth]{images/part6/step8.png}
     \end{center}
 
-    \item Ping the \textbf{external-instance} instance using the floating IP that was assigned to it in the previous
+    \item Ping the \textbf{instance-external} instance using the floating IP that was assigned to it in the previous
     task.
     \begin{lstlisting}
         ubuntu@devstack:~$ ping -c3 172.25.250.75
