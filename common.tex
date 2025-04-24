@@ -70,7 +70,7 @@
     \label{sec:about_this_document}
     \begin{itemize}
         \item This document was developed by a team at the University of Tennessee at Chattanooga led by Dr. Mengjun Xie
-        (\href{mailto:mengjun-xie@utc.edu}{mengjun-xie@utc.edu}).
+        (\href{mailto:mengjun-xie@utc.edu}{\textbf{mengjun-xie@utc.edu}}).
         \item The development of this document was supported by a National Centers of Academic Excellence in
         Cybersecurity Grant (\#H98230-20-1-0351), housed at the National Security Agency. 
         \item This document is licensed with a Creative Commons Attribution 4.0 International License.
@@ -115,7 +115,8 @@
 \clubpenalty10000
 
 \usepackage{graphicx}
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor={[named] headingcolor}}
 
 \usepackage{sectsty}
 \sectionfont{\color{headingcolor}}
@@ -123,6 +124,7 @@
 % Table of Contents
 \usepackage{bookmark}
 \usepackage[titles]{tocloft}
+\usepackage[title]{appendix}
 \renewcommand{\cfttoctitlefont}{\Large\bfseries\color{headingcolor}}
 \renewcommand{\cftsecfont}{\normalfont\normalsize}
 \renewcommand{\cftsecpagefont}{\normalfont\normalsize}

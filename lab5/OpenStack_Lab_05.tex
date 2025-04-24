@@ -310,7 +310,8 @@ the following sections.
 
     \item List the default security group rules.
     \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list
+        [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
+        > --fit-width dev-secgroup
     \end{lstlisting}
 
     \begin{center}
@@ -492,7 +493,7 @@ that the customization took effect.
     \item Check \textbf{/var/log/cloud-init.log} to confirm that \textbf{cloud-init} ran. Use the \textbf{tail}
     command to print the last 10 lines of the log.
     \begin{lstlisting}
-        root@instance1:~# tail /var/log/cloud-init.log
+        root@instance1:~# sudo tail /var/log/cloud-init.log
     \end{lstlisting}
 
     \begin{center}

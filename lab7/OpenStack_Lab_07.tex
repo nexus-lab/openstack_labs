@@ -108,7 +108,7 @@ associated with the instance to permit external connectivity.
 
     \item Use \textbf{nano} to edit the \textbf{\texttildemid/keystonerc-superuser} file. Change the
     \textbf{OS\_USERNAME} to \textbf{superuser}, and change the \textbf{OS\_PROJECT\_NAME} to \textbf{prod}. Finally,
-    in the line beginning \textbf{export PS1=...}, replace \textbf{(keystone-admin)} with \textbf{(keystone-superuer)}.
+    in the line beginning \textbf{export PS1=...}, replace \textbf{(keystone-admin)} with \textbf{(keystone-superuser)}.
     The file should match the the contents shown below. Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y}
     and then \textbf{Enter} to save the changes to the file.
     \begin{lstlisting}
@@ -384,6 +384,7 @@ associated with the instance to permit external connectivity.
         \includegraphics[width=\linewidth]{images/part1/step31.png}
     \end{center}
 
+    % TODO(lucas): Needs a fit-width
     \item Create a security group named \textbf{ftp-secgroup} for the \textbf{prod} project.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group create \
@@ -435,6 +436,7 @@ associated with the instance to permit external connectivity.
         \includegraphics[width=\linewidth]{images/part1/step35.png}
     \end{center}
 
+    % TODO(lucas): Mention that this file already exists on the file system
     \item Create an image named \textbf{ftp} with the file \textbf{\texttildemid/Downloads/ftp.img}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack image create \
@@ -468,7 +470,7 @@ associated with the instance to permit external connectivity.
 
     \begin{notebox}
         This \textbf{cloud-init} script writes to the ``message of the day'' file, whose contents will be displayed
-        upon a successful login. It also appends the hostname to the \textbf{/etc/hosts} file to suppress an ``unable to
+        upon a successful login. It also appends \textbf{127.0.1.1 ftp-server} to the \textbf{/etc/hosts} file to suppress an ``unable to
         resolve host'' warning that would otherwise occur when running commands with \texttt{sudo}.
     \end{notebox}
 
@@ -555,6 +557,7 @@ In this task, you will deploy an FTP server in your environment and verify its e
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
+    % TODO(lucas): Add another note box reminding to use the IP you generated
     \item SSH into the \textbf{ftp-server} instance using the \textbf{key1} private key. Notice that the message of the
     of the day uploaded with the \textbf{cloud-init} script appears near the bottom of the output.
     \begin{lstlisting}
