@@ -10,6 +10,11 @@
 \usepackage{fancyhdr}
 \renewcommand{\sectionmark}[1]{\markboth{#1}{#1}}
 
+% Used to detect whether a section is an appendix to print the right thing in the footer
+\usepackage{etoolbox}
+\newtoggle{inappendix}
+\pretocmd{\appendix}{\clearpage\toggletrue{inappendix}}{}{}
+
 % Save standard definitions for head and foot rules (lines separating header and footer from text)
 \let\HeadRule\headrule
 \let\FootRule\footrule
@@ -47,7 +52,11 @@
         \fancyhf{}
         \fancyhead[L]{\footnotesize #1}
         \fancyhead[R]{\includegraphics[height=0.85\headheight]{images/nexus_lab_logo.png}}
-        \fancyfoot[L]{\ifnum\value{section}>0 \footnotesize Section \thesection: \rightmark \fi}
+        \fancyfoot[L]{%
+            \footnotesize%
+            \ifnum\value{section}>0%
+            \iftoggle{inappendix}{Appendix \thesection: \rightmark}{Section \thesection: \rightmark}%
+            \fi}
         \fancyfoot[R]{\footnotesize\thepage}
         \renewcommand{\headrulewidth}{1.5pt}
         \renewcommand{\footrulewidth}{1.5pt}
@@ -72,7 +81,7 @@
         \item This document was developed by a team at the University of Tennessee at Chattanooga led by Dr. Mengjun Xie
         (\href{mailto:mengjun-xie@utc.edu}{\textbf{mengjun-xie@utc.edu}}).
         \item The development of this document was supported by a National Centers of Academic Excellence in
-        Cybersecurity Grant (\#H98230-20-1-0351), housed at the National Security Agency. 
+        Cybersecurity Grant (\#H98230-20-1-0351), housed at the National Security Agency.
         \item This document is licensed with a Creative Commons Attribution 4.0 International License.
     \end{itemize}
     \clearpage
@@ -175,25 +184,25 @@
 \makeatletter
 \tcbset{
   note/.style={%
-        enhanced, 
+        enhanced,
         breakable,
         colback=blue!10!white,
         colframe=blue!80!white,
-        attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight},
         title={#1},
         boxed title size=title,
         boxed title style={%
-            sharp corners, 
-            rounded corners=northwest, 
-            colback=tcbcolframe, 
+            sharp corners,
+            rounded corners=northwest,
+            colback=tcbcolframe,
             boxrule=0pt,
         },
         underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+            \path[fill=tcbcolframe] (title.south west)--(title.south east)
                 to[out=0, in=180] ([xshift=5mm]title.east)--
                 (title.center-|frame.east)
-                [rounded corners=\kvtcb@arc] |- 
-                (frame.north) -| cycle; 
+                [rounded corners=\kvtcb@arc] |-
+                (frame.north) -| cycle;
         },
     }
 }
@@ -202,26 +211,26 @@
 \makeatletter
 \tcbset{
     stop/.style={%
-        enhanced, 
+        enhanced,
         breakable,
         colback=white,
         colback=red!10!white,
         colframe=red!80!white,
-        attach boxed title to top left={yshift*=-\tcboxedtitleheight}, 
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight},
         title={#1},
         boxed title size=title,
         boxed title style={%
-            sharp corners, 
-            rounded corners=northwest, 
-            colback=tcbcolframe, 
+            sharp corners,
+            rounded corners=northwest,
+            colback=tcbcolframe,
             boxrule=0pt,
         },
         underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+            \path[fill=tcbcolframe] (title.south west)--(title.south east)
                 to[out=0, in=180] ([xshift=5mm]title.east)--
                 (title.center-|frame.east)
-                [rounded corners=\kvtcb@arc] |- 
-                (frame.north) -| cycle; 
+                [rounded corners=\kvtcb@arc] |-
+                (frame.north) -| cycle;
         },
     }
 }
@@ -230,7 +239,7 @@
 \makeatletter
 \tcbset{
     tip/.style={%
-        enhanced, 
+        enhanced,
         breakable,
         colback=white,
         colback=green!10,
@@ -240,17 +249,17 @@
         title={#1},
         boxed title size=title,
         boxed title style={%
-            sharp corners, 
-            rounded corners=northwest, 
-            colback=tcbcolframe, 
+            sharp corners,
+            rounded corners=northwest,
+            colback=tcbcolframe,
             boxrule=0pt,
         },
         underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east) 
+            \path[fill=tcbcolframe] (title.south west)--(title.south east)
                 to[out=0, in=180] ([xshift=5mm]title.east)--
                 (title.center-|frame.east)
-                [rounded corners=\kvtcb@arc] |- 
-                (frame.north) -| cycle; 
+                [rounded corners=\kvtcb@arc] |-
+                (frame.north) -| cycle;
         },
     }
 }
