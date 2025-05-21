@@ -67,6 +67,7 @@
 % The argument is the title of the lab.
 \newcommand{\preamble}[1]
 {
+    \pagenumbering{roman}
     \inserttitlepage{#1}
     \headfoot{#1}
 
@@ -92,7 +93,8 @@
     \section*{Lab Settings}
     \label{sec:lab_settings}
     \addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
-    The information in the table below will be needed in order to complete the lab. The task sections below provide details on the use of this information.
+    The information in the table below will be needed in order to complete the lab.
+    The task sections below provide details on the use of this information.
     \begin{table*}[htbp]
         \centering
         \begin{tabular}{|c|c|c|c|}
@@ -108,6 +110,11 @@
         \end{tabular}
     \end{table*}
     \clearpage
+
+    % IMPORTANT(lucas): If another frontmatter section ever gets placed after this, this command needs to be moved
+    % to the end of that section.
+    % I have placed this here and not in each lab purely for convenience and to ensure I don't forget any.
+    \pagenumbering{arabic}
 }
 
 % Sans-serif font
