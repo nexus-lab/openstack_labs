@@ -54,14 +54,15 @@ In this task, you will create and delete a project using the \textit{Horizon Das
     \includegraphics[scale=0.7]{images/part1/step3.png}
     \end{center}
 
-    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.20}) into the address bar, and log
-    into the OpenStack Horizon Dashboard. The username is \textbf{admin}, and the password is \textbf{secret}.
+    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.20}) into the address bar, and log into the OpenStack Horizon Dashboard.
+    The username is \textbf{admin}, and the password is \textbf{secret}.
 
     \begin{center}
         \includegraphics[scale=0.5]{images/part1/step4.png}
     \end{center}
 
-    \item Create a project named \textbf{dev}. First, navigate to \textbf{Identity $>$ Projects}, then click
+    \item Create a project named \textbf{dev}.
+    First, navigate to \textbf{Identity $>$ Projects}, then click
     \textbf{Create Project}.
 
     \begin{center}
@@ -79,17 +80,16 @@ In this task, you will create and delete a project using the \textit{Horizon Das
         Notice the \textbf{dev} project now appears in the \textit{Horizon Dashboard}.
     \end{notebox}
 
-    \item Suppose that the \textbf{alt\_demo} project is no longer needed and can be deleted. To delete this project,
-    click the checkbox in the same row as \textbf{alt\_demo}, then click \textbf{Delete Projects}.
+    \item Suppose that the \textbf{alt\_demo} project is no longer needed and can be deleted.
+    To delete this project, click the checkbox in the same row as \textbf{alt\_demo}, then click \textbf{Delete Projects}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step7.png}
     \end{center}
 
     \begin{tipbox}
-        The above method allows selecting and deleting multiple projects at once. A single project can also be deleted
-        by clicking the dropdown in the same row as the project in the \textbf{Actions} column and clicking
-        \textbf{Delete Project}.
+        The above method allows selecting and deleting multiple projects at once.
+        A single project can also be deleted by clicking the dropdown in the same row as the project in the \textbf{Actions} column and clicking \textbf{Delete Project}.
     \end{tipbox}
 
     \item In the \textbf{Confirm Delete Projects} popup box, click \textbf{Delete Projects}.
@@ -152,8 +152,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
     \end{center}
 
     \begin{tipbox}
-        When typing the command make sure there is a space between \textbf{create} and \textbf{\textbackslash}, and
-        press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
+        When typing the command make sure there is a space between \textbf{create} and \textbf{\textbackslash}, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
     \end{tipbox}
 
     \item Verify that the project has been created.
@@ -211,8 +210,7 @@ In this task, you will use the \textit{Horizon Dashboard} to manage users, assig
 You will create a user who is an administrator of the \textbf{dev} project, and that user will perform several admin actions in that project, such as creating user accounts, setting user passwords, and adding users to the project.
 
 \begin{enumerate}
-    \item Open the web browser, navigate to the OpenStack login page at \textbf{http://192.168.1.20}, and log in with
-    the username \textbf{admin} and the password \textbf{secret}.
+    \item Open the web browser, navigate to the OpenStack login page at \textbf{http://192.168.1.20}, and log in with the username \textbf{admin} and the password \textbf{secret}.
 
     \begin{center}
         \includegraphics[scale=0.5]{images/part3/step1.png}
@@ -251,8 +249,7 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
         \includegraphics[width=\linewidth]{images/part3/step5.png}
     \end{center}
 
-    \item In the \textit{Create User} dialog box, enter \textbf{cloud-test1} in the \textit{User Name} field, and
-    \textbf{secret} in the \textit{Password} and \textit{Confirm Password} fields.
+    \item In the \textit{Create User} dialog box, enter \textbf{cloud-test1} in the \textit{User Name} field, and \textbf{secret} in the \textit{Password} and \textit{Confirm Password} fields.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step6.png}
@@ -262,8 +259,9 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
         You may need to use the scroll bar on the right side of the dialog box to see the rest of the fields.
     \end{tipbox}
 
-    \item After scrolling down if necessary, select the \textbf{dev} project from the \textit{Primary Project} drop
-    down. Leave the \textit{Role} set to \textbf{member}. Click \textbf{Create User}.
+    \item After scrolling down if necessary, select the \textbf{dev} project from the \textit{Primary Project} drop down.
+    Leave the \textit{Role} set to \textbf{member}.
+    Click \textbf{Create User}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step7.png}
@@ -310,7 +308,8 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
     \end{center}
 
     \item Navigate to \textbf{Identity $>$ Users}.
-    Disable the \textbf{cloud-test2} user account. On the \textit{Users} tab, click the dropdown in the \textit{Actions} column for the \textbf{cloud-test2} user account entry, and click \textbf{Disable User}.
+    Disable the \textbf{cloud-test2} user account.
+    On the \textit{Users} tab, click the dropdown in the \textit{Actions} column for the \textbf{cloud-test2} user account entry, and click \textbf{Disable User}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part3/step13.png}
@@ -334,7 +333,8 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
         \includegraphics[width=\linewidth]{images/part3/step15.png}
     \end{center}
 
-    \item Change the password for \textbf{cloud-test2} to \textbf{password}. Enter \textbf{password} into the
+    \item Change the password for \textbf{cloud-test2} to \textbf{password}.
+    Enter \textbf{password} into the
     \textit{Password} and \textit{Confirm Password} fields, then click \textbf{Save}.
 
     \begin{center}
@@ -347,9 +347,7 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
         \includegraphics[width=\linewidth]{images/part3/step17.png}
     \end{center}
 
-    \item Log out of the dashboard and log back in as \textbf{cloud-test2} with the password \textbf{password} to verify
-    that the user's password has been set and that the user can log in.
-
+    \item Log out of the dashboard and log back in as \textbf{cloud-test2} with the password \textbf{password} to verify that the user's password has been set and that the user can log in.
 
     \begin{center}
         \includegraphics[scale=0.5]{images/part3/step18.png}
@@ -359,7 +357,8 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
         The \textbf{cloud-test2} and \textbf{cloud-test3} users were not deleted in this section because they will be used in the following section to demonstrate deleting users from the command line.
     \end{notebox}
 
-    \item Log out of the dashboard and close the web browser. Continue to the next task.
+    \item Log out of the dashboard and close the web browser.
+    Continue to the next task.
 \end{enumerate}
 
 %%%%%%%%%%%
@@ -517,12 +516,11 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \includegraphics[width=\linewidth]{images/part4/step11.png}
     \end{center}
 
-    \item Edit the \textbf{\texttildemid/keystonerc-cloud-test3} file and change the \textbf{OS\_USERNAME} from
-    \textbf{admin} to \textbf{cloud-test3} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev} using the
-    \textbf{nano} command. Additionally, change the line beginning with \textbf{export PS1=…} so that
-    \textbf{(keystone-admin)} becomes \textbf{(keystone-cloud-test3)}. Modify the file so that the content matches below. When
-    you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes. Press \textbf{Enter} to save
-    and exit \textbf{nano}.
+    \item Edit the \textbf{\texttildemid/keystonerc-cloud-test3} file and change the \textbf{OS\_USERNAME} from \textbf{admin} to \textbf{cloud-test3} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev} using the \textbf{nano} command.
+    Additionally, change the line beginning with \textbf{export PS1=…} so that \textbf{(keystone-admin)} becomes \textbf{(keystone-cloud-test3)}.
+    Modify the file so that the content matches below.
+    When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes.
+    Press \textbf{Enter} to save and exit \textbf{nano}.
     \label{it:edit_keystone}
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-test3
@@ -604,7 +602,8 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
     \end{center}
 
     \begin{tipbox}
-        Multiple user settings can be changed with one command. For example, this command sets the password and enables the user:
+        Multiple user settings can be changed with one command.
+        For example, this command sets the password and enables the user:
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack user set \
             > --password password \
@@ -615,7 +614,8 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
 
     \item In the keystone credentials file for \textbf{cloud-test3}, change the password to \textbf{password}.
     Modify the file so that the content matches below.
-    When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes. Press \textbf{Enter} to save and exit \textbf{nano}.
+    When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes.
+    Press \textbf{Enter} to save and exit \textbf{nano}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-test3
     \end{lstlisting}
@@ -634,8 +634,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \includegraphics[width=\linewidth]{images/part4/step20.png}
     \end{center}
 
-    \item Now that the \textbf{cloud-test3} user has been enabled, verify that the \textbf{openstack flavor list}
-    command returns a list of available flavors.
+    \item Now that the \textbf{cloud-test3} user has been enabled, verify that the \textbf{openstack flavor list} command returns a list of available flavors.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-cloud-test3)]:~$ openstack flavor list
     \end{lstlisting}

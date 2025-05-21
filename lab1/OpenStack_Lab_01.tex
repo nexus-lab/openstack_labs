@@ -55,19 +55,23 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         \includegraphics[scale=0.65]{images/part1/step4.png}
     \end{center}
 
-    \item Click on the dropdown menu in the top left corner of the webpage, then select \textbf{demo} as the project. Navigate to \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance} in the top right corner.
+    \item Click on the dropdown menu in the top left corner of the webpage, then select \textbf{demo} as the project.
+    Navigate to \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance} in the top right corner.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step5.png}
     \end{center}
 
-    \item In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their default values. Click \textbf{Next}.
+    \item In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their default values.
+    Click \textbf{Next}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step6.png}
     \end{center}
 
-    \item In the \textit{Select Boot Source} dropdown, \textbf{Image} should already be selected. Set \textit{Create New Volume} to \textbf{No}, and scroll down (if needed) to click the $\uparrow$ icon beside of \textbf{ubuntu} to use \textbf{ubuntu} as the image. Click \textbf{Next}.
+    \item In the \textit{Select Boot Source} dropdown, \textbf{Image} should already be selected.
+    Set \textit{Create New Volume} to \textbf{No}, and scroll down (if needed) to click the $\uparrow$ icon beside of \textbf{ubuntu} to use \textbf{ubuntu} as the image.
+    Click \textbf{Next}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step7.png}
@@ -77,7 +81,8 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         Before proceeding to the next step, confirm that \textbf{ubuntu} appears underneath the \textit{Allocated} section.
     \end{stopbox}
 
-    \item Scroll down (if needed) and click the $\uparrow$ icon beside the \textbf{m1.small} flavor. Click \textbf{Next}.
+    \item Scroll down (if needed) and click the $\uparrow$ icon beside the \textbf{m1.small} flavor.
+    Click \textbf{Next}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step8.png}
@@ -97,7 +102,8 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         Before proceeding to the next step, confirm that \textbf{shared} appears underneath the \textit{Allocated} section.
     \end{stopbox}
 
-    \item If all required fields have been set, the \textbf{Launch Instance} button in the bottom right corner should now be available. Click \textbf{Launch Instance}.
+    \item If all required fields have been set, the \textbf{Launch Instance} button in the bottom right corner should now be available.
+    Click \textbf{Launch Instance}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step10.png}
@@ -113,7 +119,8 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
         \includegraphics[width=\linewidth]{images/part1/step11.png}
     \end{center}
 
-    \item In the new tab, click the \textit{Console} tab. Optionally, to make the console take up the whole tab, click the \textbf{Click here to show only console} link.
+    \item In the new tab, click the \textit{Console} tab.
+    Optionally, to make the console take up the whole tab, click the \textbf{Click here to show only console} link.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step12.png}
@@ -140,7 +147,8 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
 
     \item Close the console tab for \textbf{prod-instance}.
 
-    \item Focus back on the tab showing instances and delete \textbf{prod-instance}. Select the checkbox for \textbf{prod-instance} and click the \textbf{Delete Instances} button.
+    \item Focus back on the tab showing instances and delete \textbf{prod-instance}.
+    Select the checkbox for \textbf{prod-instance} and click the \textbf{Delete Instances} button.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part1/step16.png}
@@ -162,13 +170,15 @@ In this task, you will launch an instance using the \textit{Horizon Dashboard}.
 In this task, you will launch an instance using the \textit{OpenStack Unified command-line interface (CLI)}.
 
 \begin{enumerate}
-    \item Open a terminal, either by right-clicking the desktop and selecting \textbf{Open Terminal Here}, by clicking the terminal icon in the icon bar at the bottom of the screen, or by selecting \textbf{Applications} at the top left of the screen, then selecting \textbf{Terminal Emulator}.
+    \item Open a terminal by clicking the terminal icon in the icon bar at the bottom of the screen.
+    A terminal can also be opened by right-clicking the desktop and selecting \textbf{Open Terminal Here}, or by selecting \textbf{Applications} at the top left of the screen, then selecting \textbf{Terminal Emulator}.
 
     \begin{center}
         \includegraphics[width=\linewidth]{images/part2/step1.png}
     \end{center}
 
-    \item Source the \textbf{keystonerc-admin} file. This will provide a connection with the local OpenStack service with the credentials of the \textbf{admin} user, and the command prompt will change to indicate the current OpenStack user whose credentials are keyed in.
+    \item Source the \textbf{keystonerc-admin} file.
+    This will provide a connection with the local OpenStack service with the credentials of the \textbf{admin} user, and the command prompt will change to indicate the current OpenStack user whose credentials are keyed in.
     \begin{lstlisting}
         ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
@@ -181,7 +191,10 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \textbf{keystonerc} files will be discussed in more depth in a future lab.
     \end{notebox}
 
-    \item The OpenStack CLI is now ready to use, allowing us to create an instance. Just like in the Horizon Dashboard, an image, a flavor, and a network are required. Before launching an instance, we will list the available options for these resources. First, enter the command below to list all available images.
+    \item The OpenStack CLI is now ready to use, allowing us to create an instance.
+    Just like in the Horizon Dashboard, an image, a flavor, and a network are required.
+    Before launching an instance, we will list the available options for these resources.
+    First, list all available images.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack image list
     \end{lstlisting}
@@ -190,7 +203,7 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \includegraphics[width=\linewidth]{images/part2/step3.png}
     \end{center}
 
-    \item Enter the command below to list all available flavors.
+    \item List all available flavors.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack flavor list
     \end{lstlisting}
@@ -199,7 +212,7 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \includegraphics[width=\linewidth]{images/part2/step4.png}
     \end{center}
 
-    \item Enter the command below to display the details specifically for the \textbf{m1.small} flavor.
+    \item Display the details specifically for the \textbf{m1.small} flavor.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack flavor show m1.small
     \end{lstlisting}
@@ -208,7 +221,7 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \includegraphics[width=\linewidth]{images/part2/step5.png}
     \end{center}
 
-    \item Enter the command below to list all available networks.
+    \item List all available networks.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack network list
     \end{lstlisting}
@@ -217,7 +230,7 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \includegraphics[width=\linewidth]{images/part2/step6.png}
     \end{center}
 
-    \item Enter the command below to create a new instance with the name \textbf{prod-instance}, using \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
+    \item Create a new instance with the name \textbf{prod-instance}, using \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
         > --image ubuntu \
@@ -231,7 +244,7 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
     \end{center}
 
     \begin{tipbox}
-        When typing the command, make sure there is a space between the last word of the line and the \textbf{\textbackslash}, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
+        When typing the command, make sure there is a space between the last word of the line and \textbf{\textbackslash}, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
     \end{tipbox}
 
     \item Use the \textbf{openstack server list} command to list all the available instances.
@@ -244,10 +257,10 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
     \end{center}
 
     \begin{notebox}
-        The UUID in the \textit{ID} field and the IP address in the \textit{Networks} field may differ from thescreenshot provided.
+        The UUID in the \textit{ID} field and the IP address in the \textit{Networks} field may differ from the screenshot provided.
     \end{notebox}
 
-    \item Enter the command below to display more details about the instance \textbf{prod-instance}.
+    \item Display more details about the instance \textbf{prod-instance}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack server show prod-instance
     \end{lstlisting}
@@ -260,7 +273,8 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         The UUID for the instance \textbf{prod-instance} can be used in place of \textbf{prod-instance} in the above command to identify the instance.
     \end{tipbox}
 
-    \item Enter the command below to display the instance's console URL. Then right click on the URL and select
+    \item Display the instance's console URL.
+    Then right-click on the URL and select
     \textbf{Open Link}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack console url show prod-instance
@@ -270,7 +284,9 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \includegraphics[width=\linewidth]{images/part2/step10.png}
     \end{center}
 
-    \item The web browser will open directly to the instance's console through noVNC. Log into \textbf{prod-instance} using \textbf{root} as the username and \textbf{secret} as the password. Then use the \textbf{ping} command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
+    \item The web browser will open directly to the instance's console through noVNC.
+    Log into \textbf{prod-instance} using \textbf{root} as the username and \textbf{secret} as the password.
+    Then use the \textbf{ping} command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
     \begin{lstlisting}
         $ ping -c3 192.168.233.2
     \end{lstlisting}
@@ -294,7 +310,7 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
         \includegraphics[width=\linewidth]{images/part2/step13.png}
     \end{center}
 
-    \item Enter the command below to delete the instance.
+    \item Delete the instance.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack server delete prod-instance
     \end{lstlisting}
@@ -322,19 +338,23 @@ In this task, you will launch an instance using the \textit{OpenStack Unified co
 \appendix
 \section{OpenStack Unified CLI Help}
 
-The OpenStack Unified CLI has many commands. Thankfully, they follow a predictable form:
+The OpenStack Unified CLI has many commands.
+Thankfully, they follow a predictable form:
 \begin{lstlisting}
     openstack [<global-options>] <object-1> <action> [<object-2>] [<command-arguments>]
 \end{lstlisting}
 \noindent
-Items in square brackets indicate that they are not present in every command. For instance,
+Items in square brackets indicate that they are not present in every command.
+For instance,
 \begin{lstlisting}
     openstack image list
 \end{lstlisting}
 \noindent
-contains only one object and an action. We will encounter more complex commands in the future, but it is good to keep this common structure in mind. For more information on the structure of OpenStack CLI commands, visit the \href{https://docs.openstack.org/python-openstackclient/latest/cli/commands.html}{\textbf{Command Structure Documentation}}.
+contains only one object and an action.
+We will encounter more complex commands in the future, but it is good to keep this common structure in mind.
+For more information on the structure of OpenStack CLI commands, visit the \href{https://docs.openstack.org/python-openstackclient/latest/cli/commands.html}{\textbf{Command Structure Documentation}}.
 
-To see what actions can be performed on a given object, it is always possible to run a command structured like
+To see what actions can be performed on a given object, it is always possible to run a command structured like this:
 \begin{lstlisting}
     openstack <object> --help
 \end{lstlisting}
@@ -346,7 +366,7 @@ For instance, to see what actions you can perform on instances, you can run the 
 \noindent
 Other objects include \textbf{image}, \textbf{flavor}, \textbf{network}, and many more that will appear throughout the labs.
 
-Additionally, to see what parameters you can pass to an action, you can run a command structured like
+Additionally, to see what parameters you can pass to an action, you can run a command structured like this:
 \begin{lstlisting}
     openstack <object> <action> --help
 \end{lstlisting}
