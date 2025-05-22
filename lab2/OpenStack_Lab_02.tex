@@ -16,10 +16,10 @@ Projects also own resources such as virtual machines and containers.
 \label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
-    \item Create and delete projects using the \textit{Horizon Dashboard}.
-    \item Create and delete projects using the \textit{OpenStack Unified CLI}.
-    \item Manage users and roles using the \textit{Horizon Dashboard}.
-    \item Manage users and roles using the \textit{OpenStack Unified CLI}.
+    \item Create and delete projects with the \textit{Horizon Dashboard}.
+    \item Create and delete projects with the \textit{OpenStack Unified CLI}.
+    \item Manage users and roles with the \textit{Horizon Dashboard}.
+    \item Manage users and roles with the \textit{OpenStack Unified CLI}.
 \end{itemize}
 \clearpage
 
@@ -30,7 +30,7 @@ Projects also own resources such as virtual machines and containers.
 %%%%%%%%%%%
 \section{Creating and Deleting Projects with the Horizon Dashboard}
 \label{sec:create_and_delete_projects_using_the_horizon_dashboard}
-In this task, you will create and delete a project using the \textit{Horizon Dashboard}.
+In this task, you will create and delete a project with the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
     \item Log into the \textbf{workstation} machine as the \textbf{ubuntu} user with password \textbf{ubuntu}.
@@ -325,7 +325,7 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
         The account is now disabled, and the \textbf{cloud-test2} user will receive an invalid credentials error when it attempts to log in.
     \end{notebox}
 
-    \item Log back in to the dashboard as \textbf{cloud-admin}, using the password \textbf{secret}.
+    \item Log back in to the dashboard as \textbf{cloud-admin} with the password \textbf{secret}.
     Navigate to \textbf{Identity $>$ Users}.
     Click the dropdown in the \textit{Actions} column in the row for \textbf{cloud-test2}, and click \textbf{Change Password}.
 
@@ -400,7 +400,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         For example, \textbf{\textbackslash[\textbackslash 033[01;32m\textbackslash]} sets the color to a light green, and \textbf{\textbackslash[\textbackslash 033[00m\textbackslash]} resets the color to the default (white in this case).
     \end{notebox}
 
-    \item Source the credentials for \textbf{admin} using the \textbf{keystonerc-admin} file.
+    \item Source the credentials for \textbf{admin} from the \textbf{keystonerc-admin} file.
     \begin{lstlisting}
         ubuntu@workstation:~$ source ~/keystonerc-admin
     \end{lstlisting}
@@ -516,7 +516,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \includegraphics[width=\linewidth]{images/part4/step11.png}
     \end{center}
 
-    \item Edit the \textbf{\texttildemid/keystonerc-cloud-test3} file and change the \textbf{OS\_USERNAME} from \textbf{admin} to \textbf{cloud-test3} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev} using the \textbf{nano} command.
+    \item Edit the \textbf{\texttildemid/keystonerc-cloud-test3} file and change the \textbf{OS\_USERNAME} from \textbf{admin} to \textbf{cloud-test3} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev}.
     Additionally, change the line beginning with \textbf{export PS1=…} so that \textbf{(keystone-admin)} becomes \textbf{(keystone-cloud-test3)}.
     Modify the file so that the content matches below.
     When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes.
@@ -577,7 +577,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \includegraphics[width=\linewidth]{images/part4/step16.png}
     \end{center}
 
-    \item Source the keystone credentials using the \textbf{admin} user keystone file so that further changes can be made to the \textbf{cloud-test3} user account.
+    \item Source the keystone credentials file of the \textbf{admin} user so that further changes can be made to the \textbf{cloud-test3} user account.
     Then, change the password for the \textbf{cloud-test3} user to \textbf{password}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-cloud-test3)]:~$ source ~/keystonerc-admin
@@ -730,7 +730,7 @@ The remainder of the lab will demonstrate the process of creating and using an a
         \includegraphics[width=\linewidth]{images/appendix/step4.png}
     \end{center}
 
-    \item Edit the \textbf{\texttildemid/keystonerc-cloud-admin2} file and change the \textbf{OS\_USERNAME} from \textbf{admin} to \textbf{cloud-admin2} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev} using the \textbf{nano} command.
+    \item Edit the \textbf{\texttildemid/keystonerc-cloud-admin2} file and change the \textbf{OS\_USERNAME} from \textbf{admin} to \textbf{cloud-admin2} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev}.
     Additionally, change the line beginning with \textbf{export PS1=…} so that \textbf{(keystone-admin)} becomes \textbf{(keystone-cloud-admin2)}.
     Modify the file so that the content matches below.
     When you are finished, press \textbf{CTRL+X}, then \textbf{Y} to accept the file changes.

@@ -24,7 +24,7 @@ In this lab, you will launch an instance and perform several management operatio
 %%%%%%%%%%%
 % Section 1
 %%%%%%%%%%%
-\section{Creating a Snapshot Using the Horizon Dashboard}
+\section{Creating a Snapshot with the Horizon Dashboard}
 \label{sec:creating_a_snapshot_web}
 In this task, you will launch an instance, modify its configuration, and make a snapshot of it for later use.
 Taking a snapshot of an image captures its state and data on disk.
@@ -176,7 +176,7 @@ That snapshot could then be used as a template for the other instances to save t
         \includegraphics[width=\linewidth]{images/part1/step16.png}
     \end{center}
 
-    \item To verify that the snapshot works correctly, launch another instance named \textbf{instance1} using the snapshot.
+    \item To verify that the snapshot works correctly, use the snapshot to launch another instance named \textbf{instance1}.
     Follow the same steps that were used to create \textbf{instance1}.
     However, in the \textit{Source} tab of the \textbf{Launch Instance} dialog, select \textbf{Image Snapshot} under \textit{Boot Source} click the $\uparrow$ symbol next to \textbf{instance1-snapshot}.
 
@@ -187,7 +187,7 @@ That snapshot could then be used as a template for the other instances to save t
     \begin{tipbox}
         The snapshot will also appear on the \textbf{Project $>$ Compute $>$ Images} page.
         It should say \textbf{Snapshot} in the \textit{Type} column.
-        For an alternative method of launching an image using the snapshot, navigate to this page, click \textbf{Launch} in the same row as the snapshot, and enter the required information in the following dialog.
+        For an alternative method of launching an image with the snapshot, navigate to this page, click \textbf{Launch} in the same row as the snapshot, and enter the required information in the following dialog.
         The snapshot can also be deleted from here.
     \end{tipbox}
 
@@ -230,7 +230,7 @@ That snapshot could then be used as a template for the other instances to save t
 %%%%%%%%%%%
 % Section 2
 %%%%%%%%%%%
-\section{Creating a Snapshot Using the OpenStack Unified CLI}
+\section{Creating a Snapshot with the OpenStack Unified CLI}
 \label{sec:creating_a_snapshot_cli}
 In this task, you will repeat the steps from the previous task in the \textit{OpenStack Unified CLI}.
 
@@ -384,7 +384,7 @@ In this task, you will repeat the steps from the previous task in the \textit{Op
         \includegraphics[width=\linewidth]{images/part2/step14.png}
     \end{center}
 
-    \item Using the same steps as before, log in to the instance's console as \textbf{root} using the password \textbf{secret}.
+    \item Using the same steps as before, log in to the instance's console as \textbf{root} with the password \textbf{secret}.
     Verify that the \textbf{/root/hello.txt} file exists.
     \begin{lstlisting}
         root@instance2:~# cat /root/hello.txt
@@ -409,10 +409,10 @@ In this task, you will repeat the steps from the previous task in the \textit{Op
 %%%%%%%%%%%
 % Section 3
 %%%%%%%%%%%
-\section{Managing the Running State of an Instance Using the Horizon Dashboard}
+\section{Managing the Running State of an Instance with the Horizon Dashboard}
 \label{sec:managing_the_running_state_of_an_instance_web}
 OpenStack allows for managing the running and power state of instances in a variety of ways, and each method may be useful in different situations.
-In this task, you will manage the running and power state of an instance by starting, stopping, pausing, suspending, resuming, shelving, unshelving, and rebooting the instance using the \textit{Horizon Dashboard}.
+In this task, you will manage the running and power state of an instance by starting, stopping, pausing, suspending, resuming, shelving, unshelving, and rebooting the instance with the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
     \item Open a new tab in the browser window and navigate to \textbf{192.168.1.20}.
@@ -558,7 +558,7 @@ In this task, you will manage the running and power state of an instance by star
 %%%%%%%%%%%
 % Section 4
 %%%%%%%%%%%
-\section{Managing the Running State of an Instance Using the OpenStack Unified CLI}
+\section{Managing the Running State of an Instance with the OpenStack Unified CLI}
 \label{sec:managing_the_power_state_of_an_instance_cli}
 In this task, you will repeat the steps from the previous task in the \textit{OpenStack Unified CLI}.
 

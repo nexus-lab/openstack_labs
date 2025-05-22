@@ -14,8 +14,8 @@ For example, it can be used to install a list of packages or change the message 
 \label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
-    \item Customize an instance with \textbf{cloud-init} using the \textit{Horizon Dashboard}.
-    \item Customize an instance with \textbf{cloud-init} using the \textit{OpenStack Unified CLI}.
+    \item Customize an instance with \textbf{cloud-init} with the \textit{Horizon Dashboard}.
+    \item Customize an instance with \textbf{cloud-init} with the \textit{OpenStack Unified CLI}.
     \item Verify instance customization.
 \end{itemize}
 \clearpage
@@ -360,9 +360,9 @@ In this task, you will set up the OpenStack environment to support the customize
 %%%%%%%%%%%
 % Section 2
 %%%%%%%%%%%
-\section{Creating a Customized Instance Using the Horizon Dashboard}
+\section{Creating a Customized Instance with the Horizon Dashboard}
 \label{sec:creating_a_customized_instance_using_the_horizon_dashboard}
-In this task, you will create a customized instance using the Horizon Dashboard and log into the instance to verify that the customization took effect.
+In this task, you will create a customized instance with the Horizon Dashboard and log into the instance to verify that the customization took effect.
 
 \begin{enumerate}
     \item Open the web browser and navigate to \textbf{192.168.1.20}.
@@ -519,7 +519,7 @@ In this task, you will create a customized instance using the Horizon Dashboard 
 %%%%%%%%%%%
 % Section 3
 %%%%%%%%%%%
-\section{Creating a Customized Instance Using the OpenStack Unified CLI}
+\section{Creating a Customized Instance with the OpenStack Unified CLI}
 \label{sec:creating_a_customized_instance_using_the_openstack_unified_cli}
 In this task, you will verify that \textbf{cloud-init} has correctly customized the two instances created in the previous section.
 
@@ -529,7 +529,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         [ubuntu@workstation (keystone-admin)]:~$ source ~/keystonerc-admin
     \end{lstlisting}
 
-    \item Another instance will be created and customized using the \textit{OpenStack Unified CLI}.
+    \item Another instance will be created and customized with the \textit{OpenStack Unified CLI}.
     First, create a \textbf{user-data} script that will be attached to the instance at creation.
     Create a script called \textbf{\texttildemid/hello} that matches the content shown below.
     When the instance runs this script, it will create the file \textbf{/root/hello.txt} with the contents \textbf{Hello, world!}, and it will append the line \textbf{127.0.1.1 instance2} to the \textbf{/etc/hosts} file.
@@ -549,7 +549,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         \includegraphics[width=\linewidth]{images/part3/step2.png}
     \end{center}
 
-    \item Launch an instance using the \textbf{user-data} option with the previously created script to perform the customization.
+    \item Launch an instance with the \textbf{user-data} option with the previously created script to perform the customization.
     Use the \textbf{ubuntu} image, the \textbf{m1.small} flavor, the \textbf{shared} network, the \textbf{dev-secgroup} security group, and the \textbf{dev-keypair} key pair.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
@@ -626,7 +626,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         \includegraphics[width=\linewidth]{images/part3/step9.png}
     \end{center}
 
-    \item SSH into \textbf{instance2} using the \textbf{dev-keypair} private key.
+    \item SSH into \textbf{instance2} with the \textbf{dev-keypair} private key.
     \begin{lstlisting}
         ubuntu@devstack:~$ ssh -i ~/dev-keypair.pem 172.25.250.76
     \end{lstlisting}

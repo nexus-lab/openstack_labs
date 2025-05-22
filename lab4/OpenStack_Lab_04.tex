@@ -140,7 +140,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
         This is especially useful for commands that output long IDs or have many columns in the output table.
     \end{tipbox}
 
-    \item The next set of steps will show how to recreate the external network from the beginning of the lab using the CLI.
+    \item The next set of steps will show how to recreate the external network from the beginning of the lab from the CLI.
     To free up the necessary resources, first delete the \textbf{extern-net1} network.
     This will also delete the \textbf{extern-subnet1} subnet.
     \begin{lstlisting}
@@ -213,7 +213,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
 %%%%%%%%%%%
 \section{Preparing OpenStack Routers to Deploy an Instance}
 \label{sec:preparing_openstack_routers_to_deploy_an_instance}
-In this task, you will create and configure a router using the \textit{Horizon Dashboard} and \textit{OpenStack CLI} and use command line tools to test the connectivity of the router.
+In this task, you will create and configure a router with the \textit{Horizon Dashboard} and \textit{OpenStack CLI} and use command line tools to test the connectivity of the router.
 The router will serve to connect the external instance to other networks both within OpenStack and outside the cloud.
 
 \begin{enumerate}
@@ -273,7 +273,7 @@ The router will serve to connect the external instance to other networks both wi
         \includegraphics[width=\linewidth]{images/part2/step8.png}
     \end{center}
 
-    \item Next, we will recreate this router using the CLI, so we will delete \textbf{router1}.
+    \item Next, we will recreate this router from the CLI, so we will delete \textbf{router1}.
     First, however, we will see how to remove subnets and gateways from the router.
     Recall that in a previous step, we added an interface to connect \textbf{router1} to the \textbf{shared-subnet} subnet on the \textbf{shared} network.
     Remove the connection to this subnet.
@@ -311,7 +311,7 @@ The router will serve to connect the external instance to other networks both wi
         The previous steps that performed these steps manually were only for demonstration and are not necessary for simply deleting the router.
     \end{notebox}
 
-    \item Now, we will replicate the previous router using the CLI.
+    \item Now, we will replicate the previous router from the CLI.
     Create a router named \textbf{router2}.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack router create router2
@@ -399,7 +399,7 @@ The router will serve to connect the external instance to other networks both wi
 %%%%%%%%%%%
 \section{Maintaining Floating IP Addresses}
 \label{sec:maintaining_floating_ip_addresses}
-In this task, you will create a floating IP address and allocate it to an instance using the Horizon Dashboard and the OpenStack Unified CLI.
+In this task, you will create a floating IP address and allocate it to an instance with the Horizon Dashboard and the OpenStack Unified CLI.
 While instances are assigned a private, fixed IP address at creation to communicate with other instances, they can also be assigned a floating IP address, which is used for communication outside the OpenStack cloud environment.
 While the private IP address of instance is fixed until the instance is deleted, a floating IP address can be exchanged for a different one while the instance is still running.
 
@@ -512,7 +512,7 @@ While the private IP address of instance is fixed until the instance is deleted,
         If that particular floating IP address already exists, the command will throw an \textit{HttpException: Conflict} error.
     \end{tipbox}
     \begin{tipbox}
-        A floating IP address can be disassociated from and instance using the command \textbf{openstack floating ip remove INSTANCE FLOATING\_IP\_ADDRESS} and deleted using the command \textbf{openstack floating ip delete IP\_ADDRESS}.
+        A floating IP address can be disassociated from and instance with the command \textbf{openstack floating ip remove INSTANCE FLOATING\_IP\_ADDRESS} and deleted with the command \textbf{openstack floating ip delete IP\_ADDRESS}.
     \end{tipbox}
 
     \item Associate the floating IP with \textbf{instance1}.
@@ -812,7 +812,7 @@ This is similar to constructing firewall rules and will be used to allow certain
 \label{sec:launching_an_external_isntance}
 Up to this point, we have created an external network, a router, a floating IP address, an SSH key pair, and a security group.
 These are all the resources necessary to create and interact with an external instance from outside the OpenStack cloud.
-In this task, you will launch an external instance and verify its connectivity and functionality using the \textbf{ssh} and \textbf{ping} commands.
+In this task, you will launch an external instance and verify its connectivity and functionality with the \textbf{ssh} and \textbf{ping} commands.
 
 \begin{enumerate}
     \item If a terminal window is not already open, open one and source the admin credentials from the \textbf{\texttildemid/keystonerc-admin} file.
@@ -834,7 +834,7 @@ In this task, you will launch an external instance and verify its connectivity a
         \includegraphics[width=\linewidth]{images/part6/step2.png}
     \end{center}
 
-    \item Launch an instance named \textbf{instance-external} using the \textbf{ubuntu} image, the \textbf{m1.small} flavor, the \textbf{keypair2} key pair, the \textbf{shared} network, and the \textbf{secgroup2} security group.
+    \item Launch an instance named \textbf{instance-external} with the \textbf{ubuntu} image, the \textbf{m1.small} flavor, the \textbf{keypair2} key pair, the \textbf{shared} network, and the \textbf{secgroup2} security group.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
         > --image ubuntu \
@@ -885,11 +885,11 @@ In this task, you will launch an external instance and verify its connectivity a
     \end{center}
 
     \begin{tipbox}
-        For commands that output tables, you can pull out only the columns you want by using the \textbf{-c} option followed by the column name.
+        For commands that output tables, you can pull out only the columns you want with the \textbf{-c} option followed by the column name.
         This option can be chained as in the command above to list multiple columns.
     \end{tipbox}
 
-    \item Use the \textbf{scp} command to send the \textbf{keypair2} key pair to the \textbf{devstack} machine using the SSH protocol.
+    \item Use the \textbf{scp} command to send the \textbf{keypair2} key pair to the \textbf{devstack} machine over SSH.
     Use the password \textbf{ubuntu} for authentication.
     \begin{lstlisting}
         [ubuntu@workstation (keystone-admin)]:~$ scp ~/Downloads/keypair2.pem \
@@ -910,7 +910,7 @@ In this task, you will launch an external instance and verify its connectivity a
         \includegraphics[width=\linewidth]{images/part6/step8.png}
     \end{center}
 
-    \item Ping the \textbf{instance-external} instance using the floating IP that was assigned to it in the previous task.
+    \item Ping the \textbf{instance-external} instance with the floating IP that was assigned to it in the previous task.
     \begin{lstlisting}
         ubuntu@devstack:~$ ping -c3 172.25.250.75
     \end{lstlisting}
@@ -923,7 +923,7 @@ In this task, you will launch an external instance and verify its connectivity a
         You should receive three successful ping replies.
     \end{notebox}
 
-    \item SSH into the \textbf{instance-external} instance, using the \textbf{keypair2.pem} file to authenticate.
+    \item SSH into the \textbf{instance-external} instance with the \textbf{keypair2.pem} file.
     Enter \textbf{yes} when asked if you want to continue.
     \begin{lstlisting}
         ubuntu@devstack:~$ ssh -i ~/keypair2.pem \
