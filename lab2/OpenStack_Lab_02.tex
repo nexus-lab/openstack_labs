@@ -28,7 +28,7 @@ Projects also own resources such as virtual machines and containers.
 %%%%%%%%%%%
 % Section 1
 %%%%%%%%%%%
-\section{Creating and Deleting Projects with the Horizon Dashboard}\label{sec:create_and_delete_projects_using_the_horizon_dashboard}
+\section{Creating and Deleting Projects with the Horizon Dashboard}\label{sec:creating-and_deleting_projects_with_the_horizon_dashboard}
 In this task, you will create and delete a project with the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
@@ -128,7 +128,7 @@ In this task, you will create and delete a project with the \textit{Horizon Dash
 %%%%%%%%%%%
 % Section 2
 %%%%%%%%%%%
-\section{Creating and Deleting Projects with the OpenStack Unified CLI}\label{sec:create_and_delete_projects_using_the_openstack_unified_cli}
+\section{Creating and Deleting Projects with the OpenStack Unified CLI}\label{sec:creating-and-deleting-projects-with-the-openstack-unified-cli}
 In this task, you will use the \textit{OpenStack Unified CLI} to create and delete a project from the command line.
 
 \begin{enumerate}
@@ -239,7 +239,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
 %%%%%%%%%%%
 % Section 3
 %%%%%%%%%%%
-\section{Managing Users and Roles with the Horizon Dashboard}\label{sec:managing_users_using_the_horizon_dashboard}
+\section{Managing Users and Roles with the Horizon Dashboard}\label{sec:managing-users-using-the-horizon-dashboard}
 In this task, you will use the \textit{Horizon Dashboard} to manage users, assign user roles, and configure user privileges.
 You will create a user who is an administrator of the \textbf{dev} project, and that user will perform several admin actions in that project, such as creating user accounts, setting user passwords, and adding users to the project.
 
@@ -436,7 +436,7 @@ You will create a user who is an administrator of the \textbf{dev} project, and 
 %%%%%%%%%%%
 % Section 4
 %%%%%%%%%%%
-\section{Managing Users and Roles with the OpenStack Unified CLI}\label{sec:managing_users_using_the_openstack_unified_cli}
+\section{Managing Users and Roles with the OpenStack Unified CLI}\label{sec:managing-users-using-the-openstack-unified-cli}
 In this task, you will use the \textit{OpenStack Unified CLI} to manage users, assign user roles, and configure user privileges.
 
 \begin{enumerate}
@@ -597,7 +597,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{center}
     \end{labstep}
 
-    \begin{labstep}{it:copy-keystone}
+    \begin{labstep}
         Copy the existing \textbf{\texttildemid/keystonerc-admin} file to \textbf{\texttildemid/keystonerc-cloud-test3}.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-admin \
@@ -609,7 +609,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{center}
     \end{labstep}
 
-    \begin{labstep}{it:edit-keystone}
+    \begin{labstep}
         Edit the \textbf{\texttildemid/keystonerc-cloud-test3} file and change the \textbf{OS\_USERNAME} from \textbf{admin} to \textbf{cloud-test3} and the \textbf{OS\_PROJECT\_NAME} from \textbf{demo} to \textbf{dev}.
         Additionally, change the line beginning with \textbf{export PS1=…} so that \textbf{(keystone-admin)} becomes \textbf{(keystone-cloud-test3)}.
         Modify the file so that the content matches below.
