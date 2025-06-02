@@ -3,13 +3,11 @@
 \begin{document}
 \preamble{Lab 01: Launching an Instance}
 
-\section*{Introduction}
-\label{sec:introduction}
+\section*{Introduction}\label{sec:introduction}
 \addcontentsline{toc}{section}{\nameref{sec:introduction}}
 In this lab, you will launch an instance with the \textit{Horizon Dashboard} and the \textit{OpenStack Unified CLI}.
 
-\section*{Objectives}
-\label{sec:objectives}
+\section*{Objectives}\label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
     \item Use the \textit{Horizon Dashboard}.
@@ -28,139 +26,177 @@ In this lab, you will launch an instance with the \textit{Horizon Dashboard} and
 In this task, you will launch an instance with the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
-    \item Log into the \textbf{workstation} machine as the \textbf{ubuntu} user with password \textbf{ubuntu}.
+    \begin{labstep}
+        Log into the \textbf{workstation} machine as the \textbf{ubuntu} user with password \textbf{ubuntu}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step1.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step1.png}
+        \end{center}
+    \end{labstep}
 
-    \item Launch the graphical user interface.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ startx
-    \end{lstlisting}
+    \begin{labstep}
+        Launch the graphical user interface.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step2.png}
-    \end{center}
+        \begin{lstlisting}
+            ubuntu@workstation:~$ startx
+        \end{lstlisting}
 
-    \item Open the web browser.
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step2.png}
+        \end{center}
+    \end{labstep}
 
-    \begin{center}
-    \includegraphics[scale=0.75]{images/part1/step3.png}
-    \end{center}
+    \begin{labstep}
+        Open the web browser.
 
-    \item Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.20}) into the address bar, and log into the OpenStack Horizon Dashboard with username \textbf{admin} and password \textbf{secret}.
+        \begin{center}
+            \includegraphics[scale=0.75]{images/part1/step3.png}
+        \end{center}
+    \end{labstep}
 
-    \begin{center}
-        \includegraphics[scale=0.65]{images/part1/step4.png}
-    \end{center}
+    \begin{labstep}
+        Enter the IP address of the \textbf{devstack} machine (\textbf{192.168.1.20}) into the address bar, and log into the OpenStack Horizon Dashboard with username \textbf{admin} and password \textbf{secret}.
 
-    \item Click on the dropdown menu in the top left corner of the webpage, then select \textbf{demo} as the project.
-    Navigate to \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance} in the top right corner.
+        \begin{center}
+            \includegraphics[scale=0.65]{images/part1/step4.png}
+        \end{center}
+    \end{labstep}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step5.png}
-    \end{center}
+    \begin{labstep}
+        Click on the dropdown menu in the top left corner of the webpage, then select \textbf{demo} as the project.
+        Navigate to \textbf{Project $>$ Compute $>$ Instances}, then click \textbf{Launch Instance} in the top right corner.
 
-    \item In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their default values.
-    Click \textbf{Next}.
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step5.png}
+        \end{center}
+    \end{labstep}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
-    \end{center}
+    \begin{labstep}
+        In the \textit{Instance Name} field, type \textbf{prod-instance}, and leave the other fields with their default values.
+        Click \textbf{Next}.
 
-    \item In the \textit{Select Boot Source} dropdown, \textbf{Image} should already be selected.
-    Set \textit{Create New Volume} to \textbf{No}, and scroll down (if needed) to click the $\uparrow$ icon beside of \textbf{ubuntu} to use \textbf{ubuntu} as the image.
-    Click \textbf{Next}.
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step6.png}
+        \end{center}
+    \end{labstep}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step7.png}
-    \end{center}
+    \begin{labstep}
+        In the \textit{Select Boot Source} dropdown, \textbf{Image} should already be selected.
+        Set \textit{Create New Volume} to \textbf{No}, and scroll down (if needed) to click the $\uparrow$ icon beside of \textbf{ubuntu} to use \textbf{ubuntu} as the image.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step7.png}
+        \end{center}
+    \end{labstep}
 
     \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{ubuntu} appears underneath the \textit{Allocated} section.
     \end{stopbox}
 
-    \item Scroll down (if needed) and click the $\uparrow$ icon beside the \textbf{m1.small} flavor.
-    Click \textbf{Next}.
+    \begin{labstep}
+        Scroll down (if needed) and click the $\uparrow$ icon beside the \textbf{m1.small} flavor.
+        Click \textbf{Next}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step8.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step8.png}
+        \end{center}
+    \end{labstep}
 
     \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{m1.small} appears underneath the \textit{Allocated} section.
     \end{stopbox}
 
-    \item Click the $\uparrow$ icon beside the \textbf{shared} network.
+    \begin{labstep}
+        Click the $\uparrow$ icon beside the \textbf{shared} network.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \end{center}
+    \end{labstep}
 
     \begin{stopbox}
         Before proceeding to the next step, confirm that \textbf{shared} appears underneath the \textit{Allocated} section.
     \end{stopbox}
 
-    \item If all required fields have been set, the \textbf{Launch Instance} button in the bottom right corner should now be available.
-    Click \textbf{Launch Instance}.
+    \begin{labstep}
+        If all required fields have been set, the \textbf{Launch Instance} button in the bottom right corner should now be available.
+        Click \textbf{Launch Instance}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \end{center}
+    \end{labstep}
 
     \begin{stopbox}
         Wait for the \textit{Power State} of \textbf{prod-instance} to display the status of \textit{Running} before continuing to the next step.
     \end{stopbox}
 
-    \item To open the console of \textbf{prod-instance} in a new tab, right-click the name \textbf{prod-instance} and select \textbf{Open Link in New Tab}, or middle-click (press in the mouse wheel) the name \textbf{prod-instance}.
+    \begin{labstep}
+        To open the console of \textbf{prod-instance} in a new tab, right-click the name \textbf{prod-instance} and select \textbf{Open Link in New Tab}, or middle-click (press in the mouse wheel) the name \textbf{prod-instance}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \end{center}
+    \end{labstep}
 
-    \item In the new tab, click the \textit{Console} tab.
-    Optionally, to make the console take up the whole tab, click the \textbf{Click here to show only console} link.
+    \begin{labstep}
+        In the new tab, click the \textit{Console} tab.
+        Optionally, to make the console take up the whole tab, click the \textbf{Click here to show only console} link.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step12.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \end{center}
+    \end{labstep}
 
-    \item Log into the console as \textbf{root} with the password \textbf{secret}.
+    \begin{labstep}
+        Log into the console as \textbf{root} with the password \textbf{secret}.
+    \end{labstep}
 
     \begin{notebox}
         It may take several minutes for the instance to fully boot up and present a login prompt.
     \end{notebox}
 
-    \item In the console, ping \textbf{192.168.233.2} (DHCP server) to verify connectivity.
-    \begin{lstlisting}
-        $ ping -c3 192.168.233.2
-    \end{lstlisting}
+    \begin{labstep}
+        In the console, ping \textbf{192.168.233.2} (DHCP server) to verify connectivity.
+        \begin{lstlisting}
+            $ ping -c3 192.168.233.2
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step14.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         You should receive three successful ping replies.
     \end{notebox}
 
-    \item Close the console tab for \textbf{prod-instance}.
+    \begin{labstep}
+        Close the console tab for \textbf{prod-instance}.
+    \end{labstep}
 
-    \item Focus back on the tab showing instances and delete \textbf{prod-instance}.
-    Select the checkbox for \textbf{prod-instance} and click the \textbf{Delete Instances} button.
+    \begin{labstep}
+        Focus back on the tab showing instances and delete \textbf{prod-instance}.
+        Select the checkbox for \textbf{prod-instance} and click the \textbf{Delete Instances} button.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step16.png}
+        \end{center}
+    \end{labstep}
 
-    \item Confirm the deletion by clicking the \textbf{Delete Instances} button.
+    \begin{labstep}
+        Confirm the deletion by clicking the \textbf{Delete Instances} button.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step17.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step17.png}
+        \end{center}
+    \end{labstep}
 
-    \item Close the web browser.
+    \begin{labstep}
+        Close the web browser.
+        Continue to the next task.
+    \end{labstep}
 \end{enumerate}
 
 %%%%%%%%%%%
@@ -170,165 +206,196 @@ In this task, you will launch an instance with the \textit{Horizon Dashboard}.
 In this task, you will launch an instance with the \textit{OpenStack Unified command-line interface (CLI)}.
 
 \begin{enumerate}
-    \item Open a terminal by clicking the terminal icon in the icon bar at the bottom of the screen.
-    A terminal can also be opened by right-clicking the desktop and selecting \textbf{Open Terminal Here}, or by selecting \textbf{Applications} at the top left of the screen, then selecting \textbf{Terminal Emulator}.
+    \begin{labstep}
+        Open a terminal by clicking the terminal icon in the icon bar at the bottom of the screen.
+        A terminal can also be opened by right-clicking the desktop and selecting \textbf{Open Terminal Here}, or by selecting \textbf{Applications} at the top left of the screen, then selecting \textbf{Terminal Emulator}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step1.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step1.png}
+        \end{center}
+    \end{labstep}
 
-    \item Source the \textbf{keystonerc-admin} file.
-    This will provide a connection with the local OpenStack service with the credentials of the \textbf{admin} user, and the command prompt will change to indicate the current OpenStack user whose credentials are keyed in.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ source ~/keystonerc-admin
-    \end{lstlisting}
+    \begin{labstep}
+        Source the \textbf{keystonerc-admin} file.
+        This will provide a connection with the local OpenStack service with the credentials of the \textbf{admin} user, and the command prompt will change to indicate the current OpenStack user whose credentials are keyed in.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/keystonerc-admin
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step2.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step2.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         \textbf{keystonerc} files will be discussed in more depth in a future lab.
     \end{notebox}
 
-    \item The OpenStack CLI is now ready to use, allowing us to create an instance.
-    Just like in the Horizon Dashboard, an image, a flavor, and a network are required.
-    Before launching an instance, we will list the available options for these resources.
-    First, list all available images.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack image list
-    \end{lstlisting}
+    \begin{labstep}
+        The OpenStack CLI is now ready to use, allowing us to create an instance.
+        Just like in the Horizon Dashboard, an image, a flavor, and a network are required.
+        Before launching an instance, we will list the available options for these resources.
+        First, list all available images.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack image list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step3.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step3.png}
+        \end{center}
+    \end{labstep}
 
-    \item List all available flavors.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack flavor list
-    \end{lstlisting}
+    \begin{labstep}
+        List all available flavors.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack flavor list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step4.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step4.png}
+        \end{center}
+    \end{labstep}
 
-    \item Display the details specifically for the \textbf{m1.small} flavor.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack flavor show m1.small
-    \end{lstlisting}
+    \begin{labstep}
+        Display the details specifically for the \textbf{m1.small} flavor.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack flavor show m1.small
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step5.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step5.png}
+        \end{center}
+    \end{labstep}
 
-    \item List all available networks.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack network list
-    \end{lstlisting}
+    \begin{labstep}
+        List all available networks.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step6.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step6.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a new instance with the name \textbf{prod-instance}, using \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
-        > --image ubuntu \
-        > --flavor m1.small \
-        > --network shared \
-        > prod-instance
-    \end{lstlisting}
+    \begin{labstep}
+        Create a new instance with the name \textbf{prod-instance}, using \textbf{ubuntu} as the image, \textbf{m1.small} as the flavor, and \textbf{shared} as the network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
+            > --image ubuntu \
+            > --flavor m1.small \
+            > --network shared \
+            > prod-instance
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step7.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step7.png}
+        \end{center}
+    \end{labstep}
 
     \begin{tipbox}
         When typing the command, make sure there is a space between the last word of the line and \textbf{\textbackslash}, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
     \end{tipbox}
 
-    \item Use the \textbf{openstack server list} command to list all the available instances.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
-    \end{lstlisting}
+    \begin{labstep}
+        Use the \textbf{openstack server list} command to list all the available instances.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step8.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step8.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         The UUID in the \textit{ID} field and the IP address in the \textit{Networks} field may differ from the screenshot provided.
     \end{notebox}
 
-    \item Display more details about the instance \textbf{prod-instance}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server show prod-instance
-    \end{lstlisting}
+    \begin{labstep}
+        Display more details about the instance \textbf{prod-instance}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server show prod-instance
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step9.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step9.png}
+        \end{center}
+    \end{labstep}
 
     \begin{tipbox}
         The UUID for the instance \textbf{prod-instance} can be used in place of \textbf{prod-instance} in the above command to identify the instance.
     \end{tipbox}
 
-    \item Display the instance's console URL.
-    Then right-click on the URL and select
-    \textbf{Open Link}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack console url show prod-instance
-    \end{lstlisting}
+    \begin{labstep}
+        Display the instance's console URL.
+        Then right-click on the URL and select \textbf{Open Link}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack console url show prod-instance
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step10.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step10.png}
+        \end{center}
+    \end{labstep}
 
-    \item The web browser will open directly to the instance's console through noVNC.
-    Log into \textbf{prod-instance} using \textbf{root} as the username and \textbf{secret} as the password.
-    Then use the \textbf{ping} command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
-    \begin{lstlisting}
-        $ ping -c3 192.168.233.2
-    \end{lstlisting}
+    \begin{labstep}
+        The web browser will open directly to the instance's console through noVNC.
+        Log into \textbf{prod-instance} using \textbf{root} as the username and \textbf{secret} as the password.
+        Then use the \textbf{ping} command to verify connectivity with the DHCP server (\textbf{192.168.233.2}).
+        \begin{lstlisting}
+            $ ping -c3 192.168.233.2
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step11.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step11.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         You should receive three successful ping replies.
     \end{notebox}
 
-    \item Close the web browser and change focus back to the previous terminal window.
+    \begin{labstep}
+        Close the web browser and change focus back to the previous terminal window.
+    \end{labstep}
 
-    \item The instance is now ready to be deleted, but first list the servers so that the effect of the next step can be observed.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
-    \end{lstlisting}
+    \begin{labstep}
+        The instance is now ready to be deleted, but first list the servers so that the effect of the next step can be observed.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step13.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step13.png}
+        \end{center}
+    \end{labstep}
 
-    \item Delete the instance.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server delete prod-instance
-    \end{lstlisting}
+    \begin{labstep}
+        Delete the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server delete prod-instance
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step14.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step14.png}
+        \end{center}
+    \end{labstep}
 
-    \item Ensure that the instance was deleted by seeing that the server list is empty.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack server list
-    \end{lstlisting}
+    \begin{labstep}
+        Ensure that the instance was deleted by seeing that the server list is empty.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step15.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step15.png}
+        \end{center}
+    \end{labstep}
 
-    \item The lab is now complete.
+    \begin{labstep}
+        The lab is now complete.
+    \end{labstep}
 
 \end{enumerate}
 

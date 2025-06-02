@@ -76,12 +76,11 @@
     \tableofcontents
     \clearpage
 
-    \section*{About This Document}
-    \label{sec:about_this_document}
+    \section*{About This Document}\label{sec:about_this_document}
     \begin{itemize}
-        \item This document was developed by a team at the University of Tennessee at Chattanooga led by Dr. Mengjun Xie
+        \item This document was developed by a team at the University of Tennessee at Chattanooga led by Dr.\ Mengjun Xie
         (\href{mailto:mengjun-xie@utc.edu}{\textbf{mengjun-xie@utc.edu}}).
-        \item The development of this document was supported by a National Centers of Academic Excellence in Cybersecurity Grant (\#H98230-20-1-0351), housed at the National Security Agency.
+        \item The development of this document was supported by a National Centers of Academic Excellence in Cybersecurity Grant (\#H98230-20-1-0351), housed at the National Security Agency. % chktex 8
         \item This document is licensed with a Creative Commons Attribution 4.0 International License.
     \end{itemize}
     \clearpage
@@ -90,23 +89,22 @@
 % Macro to insert the Lab Settings page for each lab. Call after the Introduction and Objectives sections.
 \newcommand{\labsettings}
 {
-    \section*{Lab Settings}
-    \label{sec:lab_settings}
+    \section*{Lab Settings}\label{sec:lab_settings}
     \addcontentsline{toc}{section}{\nameref{sec:lab_settings}}
     The information in the table below will be needed in order to complete the lab.
     The task sections below provide details on the use of this information.
     \begin{table*}[htbp]
         \centering
-        \begin{tabular}{|c|c|c|c|}
-            \hline
+        \begin{tabular}{|c|c|c|c|} % chktex 44
+            \hline % chktex 44
             \rowcolor{gray!20} \textbf{Virtual Machine} & \textbf{IP Address} & \textbf{Account} & \textbf{Password} \\
-            \hline
+            \hline % chktex 44
             \multirow{2}{*}{\texttt{workstation}} & \multirow[t]{2}{*}{\texttt{ens3: 192.168.1.21}}  & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
                                                   & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.21}} &                                  &                                  \\
-            \hline
+            \hline % chktex 44
             \multirow{2}{*}{\texttt{devstack}}    & \multirow[t]{2}{*}{\texttt{ens3: 192.168.20}}    & \multirow{2}{*}{\texttt{ubuntu}} & \multirow{2}{*}{\texttt{ubuntu}} \\
                                                   & \multirow[t]{2}{*}{\texttt{ens4: 172.25.250.20}} &                                  &                                  \\
-            \hline
+            \hline % chktex 44
         \end{tabular}
     \end{table*}
     \clearpage
@@ -145,7 +143,7 @@
 \renewcommand{\cftdotsep}{0} % Make dots small and close together
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Add dots after section titles
 % Make dots go all the way to the page number
-\renewcommand{\cftsecfillnum}[1]{{\cftsecleader}\nobreak{\cftsecpagefont #1}\cftsecafterpnum\par}
+\renewcommand{\cftsecfillnum}[1]{{\cftsecleader}\nobreak{\cftsecpagefont#1}\cftsecafterpnum\par}
 
 \usepackage{multirow}
 \setlength{\tabcolsep}{16pt}
@@ -166,7 +164,6 @@
   tabsize=3,
   columns=fullflexible,
   keepspaces=true,
-  escapeinside={(*@}{@*)},
   literate={~}{{\texttildemid}}{1}
            {\#}{\#}{1},
   autogobble=true
@@ -203,7 +200,7 @@
             boxrule=0pt,
         },
         underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east)
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) % chktex 36
                 to[out=0, in=180] ([xshift=5mm]title.east)--
                 (title.center-|frame.east)
                 [rounded corners=\kvtcb@arc] |-
@@ -231,7 +228,7 @@
             boxrule=0pt,
         },
         underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east)
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) % chktex 36
                 to[out=0, in=180] ([xshift=5mm]title.east)--
                 (title.center-|frame.east)
                 [rounded corners=\kvtcb@arc] |-
@@ -260,7 +257,7 @@
             boxrule=0pt,
         },
         underlay boxed title={%
-            \path[fill=tcbcolframe] (title.south west)--(title.south east)
+            \path[fill=tcbcolframe] (title.south west)--(title.south east) % chktex 36
                 to[out=0, in=180] ([xshift=5mm]title.east)--
                 (title.center-|frame.east)
                 [rounded corners=\kvtcb@arc] |-
@@ -277,3 +274,17 @@
 \newtcolorbox{notebox}{note={Note}}
 \newtcolorbox{stopbox}{stop={Stop}}
 \newtcolorbox{tipbox}{tip={Tip}}
+
+% NOTE(lucas): This environment should wrap every instruction in the lab, including any listing or figure that follows.
+% Anything inside this environment will be kept on the same page.
+% Because it uses \item, this environment must be inside an enumerate or itemize environment.
+% This must be an environment and not a command because the lstlisting environment cannot be used inside of a command.
+% Also, do not put elements like noteboxes inside this environment because they can be messed up in some cases.
+\NewDocumentEnvironment{labstep}{}
+{%
+    \begin{minipage}{\linewidth}
+    \item
+}
+{%
+    \end{minipage}
+}

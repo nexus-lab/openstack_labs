@@ -3,13 +3,11 @@
 \begin{document}
 \preamble{Lab 07: Deploying an FTP Server}
 
-\section*{Introduction}
-\label{sec:introduction}
+\section*{Introduction}\label{sec:introduction}
 \addcontentsline{toc}{section}{\nameref{sec:introduction}}
 In this lab, you will practice and demonstrate the knowledge and skills you acquired throughout the course by deploying an FTP server through OpenStack.
 
-\section*{Objectives}
-\label{sec:objectives}
+\section*{Objectives}\label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
 \begin{itemize}[itemsep=0pt]
     \item Launch an instance in your OpenStack environment and customize the instance to run an FTP server.
@@ -22,716 +20,836 @@ In this lab, you will practice and demonstrate the knowledge and skills you acqu
 %%%%%%%%%%%
 % Section 1
 %%%%%%%%%%%
-\section{Creating an Environment}
-\label{sec:creating_an_environment}
+\section{Creating an Environment}\label{sec:creating_an_environment}
 In this task, you will create all the resources necessary to create an external instance running an FTP server.
 The architecture will be composed of an external network and an internal network, a new privileged user and a non-privileged user, and a set of new security rules to allow SSH and FTP access to the instance.
 A floating IP will be associated with the instance to permit external connectivity.
 
 \begin{enumerate}
-    \item Log into the \textbf{workstation} machine as \textbf{ubuntu} with the password \textbf{ubuntu}.
+    \begin{labstep}
+        Log into the \textbf{workstation} machine as \textbf{ubuntu} with the password \textbf{ubuntu}.
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step1.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step1.png}
+        \end{center}
+    \end{labstep}
 
-    \item Launch the graphical user interface.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ startx
-    \end{lstlisting}
+    \begin{labstep}
+        Launch the graphical user interface.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ startx
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step2.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step2.png}
+        \end{center}
+    \end{labstep}
 
-    \item Open a terminal window and source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file.
-    \begin{lstlisting}
-        ubuntu@workstation:~$ source ~/kesytonerc-admin
-    \end{lstlisting}
+    \begin{labstep}
+        Open a terminal window and source the \textbf{\texttildemid/keystonerc-admin} keystone credentials file.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/kesytonerc-admin
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step3.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step3.png}
+        \end{center}
+    \end{labstep}
 
-    \item In this lab, we will create our own project and set of users to simulate a more realistic working environment.
-    First, create the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack project create prod \
-        > --domain default
-    \end{lstlisting}
+    \begin{labstep}
+        In this lab, we will create our own project and set of users to simulate a more realistic working environment.
+        First, create the \textbf{prod} project.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack project create prod \
+            > --domain default
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step4.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step4.png}
+        \end{center}
+    \end{labstep}
 
     \begin{tipbox}
         When typing the command, make sure there is a space between \textbf{prod} and the \textbf{\textbackslash} character, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
     \end{tipbox}
 
-    \item Create a user named \textbf{superuser} with the password \textbf{secret} to the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack user create \
-        > --project prod \
-        > --password secret \
-        > superuser
-    \end{lstlisting}
+    \begin{labstep}
+        Create a user named \textbf{superuser} with the password \textbf{secret} to the \textbf{prod} project.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack user create \
+            > --project prod \
+            > --password secret \
+            > superuser
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step5.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step5.png}
+        \end{center}
+    \end{labstep}
 
-    \item Assign the \textbf{admin} role to the user \textbf{superuser}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack role add \
-        > --project prod \
-        > --user superuser \
-        > admin
-    \end{lstlisting}
+    \begin{labstep}
+        Assign the \textbf{admin} role to the user \textbf{superuser}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack role add \
+            > --project prod \
+            > --user superuser \
+            > admin
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step6.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step6.png}
+        \end{center}
+    \end{labstep}
 
-    \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-admin} to
-    \textbf{\texttildemid/keystonerc-superuser}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-admin \
-        > ~/keystonerc-superuser
-    \end{lstlisting}
+    \begin{labstep}
+        Copy the keystone credentials file \textbf{\texttildemid/keystonerc-admin} to
+        \textbf{\texttildemid/keystonerc-superuser}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-admin \
+            > ~/keystonerc-superuser
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step7.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step7.png}
+        \end{center}
+    \end{labstep}
 
-    \item Use \textbf{nano} to edit the \textbf{\texttildemid/keystonerc-superuser} file.
-    Change the \textbf{OS\_USERNAME} to \textbf{superuser}, and change the \textbf{OS\_PROJECT\_NAME} to \textbf{prod}.
-    Finally, in the line beginning \textbf{export PS1=…}, replace \textbf{(keystone-admin)} with \textbf{(keystone-superuser)}.
-    The file should match the contents shown below.
-    Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-superuser
-    \end{lstlisting}
+    \begin{labstep}
+        Use \textbf{nano} to edit the \textbf{\texttildemid/keystonerc-superuser} file.
+        Change the \textbf{OS\_USERNAME} to \textbf{superuser}, and change the \textbf{OS\_PROJECT\_NAME} to \textbf{prod}.
+        Finally, in the line beginning \textbf{export PS1=…}, replace \textbf{(keystone-admin)} with \textbf{(keystone-superuser)}.
+        The file should match the contents shown below.
+        Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-superuser
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step8.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step8.png}
+        \end{center}
+    \end{labstep}
 
-    \item Now, create a non-privileged user called \textbf{cloud-dev} with the password \textbf{secret}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack user create \
-        > --project prod \
-        > --password secret \
-        > cloud-dev
-    \end{lstlisting}
+    \begin{labstep}
+        Now, create a non-privileged user called \textbf{cloud-dev} with the password \textbf{secret}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack user create \
+            > --project prod \
+            > --password secret \
+            > cloud-dev
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step9.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step9.png}
+        \end{center}
+    \end{labstep}
 
-    \item Assign \textbf{cloud-dev} the \textbf{member} role in the \textbf{prod} project so that it can perform actions in that project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ openstack role add \
-        > --project prod \
-        > --user cloud-dev \
-        > member
-    \end{lstlisting}
+    \begin{labstep}
+        Assign \textbf{cloud-dev} the \textbf{member} role in the \textbf{prod} project so that it can perform actions in that project.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack role add \
+            > --project prod \
+            > --user cloud-dev \
+            > member
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step10.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step10.png}
+        \end{center}
+    \end{labstep}
 
-    \item Copy the keystone credentials file \textbf{\texttildemid/keystonerc-superuser} to \textbf{\texttildemid/keystonerc-cloud-dev}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-superuser \
-        > ~/keystonerc-cloud-dev
-    \end{lstlisting}
+    \begin{labstep}
+        Copy the keystone credentials file \textbf{\texttildemid/keystonerc-superuser} to \textbf{\texttildemid/keystonerc-cloud-dev}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ cp ~/keystonerc-superuser \
+            > ~/keystonerc-cloud-dev
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step11.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step11.png}
+        \end{center}
+    \end{labstep}
 
-    \item Use \textbf{nano} to edit the \textbf{\texttildemid/keystonerc-cloud-dev} file.
-    Change the \textbf{OS\_USERNAME} to \textbf{cloud-dev}.
-    In the line beginning \textbf{export PS1=…}, replace \textbf{(keystone-superuser)} with \textbf{(keystone-cloud-dev)} The file should match the contents shown below.
-    Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-dev
-    \end{lstlisting}
+    \begin{labstep}
+        Use \textbf{nano} to edit the \textbf{\texttildemid/keystonerc-cloud-dev} file.
+        Change the \textbf{OS\_USERNAME} to \textbf{cloud-dev}.
+        In the line beginning \textbf{export PS1=…}, replace \textbf{(keystone-superuser)} with \textbf{(keystone-cloud-dev)} The file should match the contents shown below.
+        Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ nano ~/keystonerc-cloud-dev
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step12.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \end{center}
+    \end{labstep}
 
-    \item Now, source the \textbf{keystonerc-superuser} keystone file to begin working with admin privileges in the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-admin)]:~$ source ~/keystonerc-superuser
-    \end{lstlisting}
+    \begin{labstep}
+        Now, source the \textbf{keystonerc-superuser} keystone file to begin working with admin privileges in the \textbf{prod} project.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ source ~/keystonerc-superuser
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step13.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step13.png}
+        \end{center}
+    \end{labstep}
 
-    \item Before making an external network for the project, the default router and external network need to be deleted.
-    List the routers to find the default router's name.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router list \
-        --max-width 80
-    \end{lstlisting}
+    \begin{labstep}
+        Before making an external network for the project, the default router and external network need to be deleted.
+        List the routers to find the default router's name.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router list \
+            --max-width 80
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step14.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step14.png}
+        \end{center}
+    \end{labstep}
 
-    \item Before the router can be deleted, it must be disconnected from all subnets.
-    Show the details of \textbf{router1} to find the subnets to remove from it.
+    \begin{labstep}
+        Before the router can be deleted, it must be disconnected from all subnets.
+        Show the details of \textbf{router1} to find the subnets to remove from it.
 
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router show router1 \
-        > --max-width 100
-    \end{lstlisting}
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router show router1 \
+            > --max-width 100
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step15.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step15.png}
+        \end{center}
+    \end{labstep}
 
-    \item The previous command only outputs IDs, which can be used to remove the subnets from the router.
-    To use the subnet names, list the subnets to see which names are mapped to the IDs from the previous step.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet list \
-        > --max-width 100
-    \end{lstlisting}
+    \begin{labstep}
+        The previous command only outputs IDs, which can be used to remove the subnets from the router.
+        To use the subnet names, list the subnets to see which names are mapped to the IDs from the previous step.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet list \
+            > --max-width 100
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step16.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step16.png}
+        \end{center}
+    \end{labstep}
 
-    \item By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and \textbf{ipv6-private-subnet} subnets.
-    Remove both subnets from \textbf{router1}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
-        > router1 \
-        > private-subnet
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
-        > router1 \
-        > ipv6-private-subnet
-    \end{lstlisting}
+    \begin{labstep}
+        By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and \textbf{ipv6-private-subnet} subnets.
+        Remove both subnets from \textbf{router1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
+            > router1 \
+            > private-subnet
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
+            > router1 \
+            > ipv6-private-subnet
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step17.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step17.png}
+        \end{center}
+    \end{labstep}
 
-    \item Now, \textbf{router1} can be deleted.
-    Delete \textbf{router1}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack router delete router1
-    \end{lstlisting}
+    \begin{labstep}
+        Now, \textbf{router1} can be deleted.
+        Delete \textbf{router1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router delete router1
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step18.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step18.png}
+        \end{center}
+    \end{labstep}
 
-    \item List the available networks to find the name of the default external network.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack network list \
-        > --max-width 100
-    \end{lstlisting}
+    \begin{labstep}
+        List the available networks to find the name of the default external network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack network list \
+            > --max-width 100
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step19.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step19.png}
+        \end{center}
+    \end{labstep}
 
-    \item From the output of the previous step, you can see that the \textbf{public} network should be the default external network.
-    Delete the \textbf{public} network.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack network delete public
-    \end{lstlisting}
+    \begin{labstep}
+        From the output of the previous step, you can see that the \textbf{public} network should be the default external network.
+        Delete the \textbf{public} network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack network delete public
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step20.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step20.png}
+        \end{center}
+    \end{labstep}
 
     \begin{tipbox}
         You can confirm that \textbf{public} is an external network by viewing its details with the command \textbf{openstack network show public}.
     \end{tipbox}
 
-    \item Create an external, shared network called \textbf{extern-net}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack network create \
-        > --external --share \
-        > --provider-network-type flat \
-        > --provider-physical-network public \
-        > extern-net
-    \end{lstlisting}
+    \begin{labstep}
+        Create an external, shared network called \textbf{extern-net}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack network create \
+            > --external --share \
+            > --provider-network-type flat \
+            > --provider-physical-network public \
+            > extern-net
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step21.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step21.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create the \textbf{extern-subnet} subnet in the \textbf{172.25.250.0/24} range.
-    Make the floating IP allocation pool range from \textbf{172.25.250.25} to \textbf{172.250.250.30}, and allow DHCP.
-    Set both the gateway and DNS nameserver addresses to \textbf{172.25.250.254}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet create \
-        > --subnet-range 172.25.250.0/24 \
-        > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
-        > --dhcp --network extern-net \
-        > --gateway 172.25.250.254 \
-        > --dns-nameserver 172.25.250.254 \
-        > extern-subnet
-    \end{lstlisting}
+    \begin{labstep}
+        Create the \textbf{extern-subnet} subnet in the \textbf{172.25.250.0/24} range.
+        Make the floating IP allocation pool range from \textbf{172.25.250.25} to \textbf{172.250.250.30}, and allow DHCP.
+        Set both the gateway and DNS nameserver addresses to \textbf{172.25.250.254}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet create \
+            > --subnet-range 172.25.250.0/24 \
+            > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
+            > --dhcp --network extern-net \
+            > --gateway 172.25.250.254 \
+            > --dns-nameserver 172.25.250.254 \
+            > extern-subnet
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step22.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step22.png}
+        \end{center}
+    \end{labstep}
 
-    \item Source the \textbf{~/keystonerc-cloud-dev} keystone credentials file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-superuser)]:~$ source ~/keystonerc-cloud-dev
-    \end{lstlisting}
+    \begin{labstep}
+        Source the \textbf{~/keystonerc-cloud-dev} keystone credentials file.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ source ~/keystonerc-cloud-dev
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step23.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step23.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create an internal network called \textbf{intern-net}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack network create intern-net
-    \end{lstlisting}
+    \begin{labstep}
+        Create an internal network called \textbf{intern-net}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack network create intern-net
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step24.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step24.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a subnet for \textbf{intern-net} called \textbf{intern-subnet} in the \textbf{192.168.0.0/24} range.
-    Allow DHCP on the subnet.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack subnet create \
-        > --dhcp \
-        > --subnet-range 192.168.0.0/24 \
-        > --network intern-net \
-        > intern-subnet
-    \end{lstlisting}
+    \begin{labstep}
+        Create a subnet for \textbf{intern-net} called \textbf{intern-subnet} in the \textbf{192.168.0.0/24} range.
+        Allow DHCP on the subnet.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack subnet create \
+            > --dhcp \
+            > --subnet-range 192.168.0.0/24 \
+            > --network intern-net \
+            > intern-subnet
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step25.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step25.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a router named \textbf{router1} so that the internal and external networks can be connected.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router create router1
-    \end{lstlisting}
+    \begin{labstep}
+        Create a router named \textbf{router1} so that the internal and external networks can be connected.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router create router1
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step26.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step26.png}
+        \end{center}
+    \end{labstep}
 
-    \item Add a port to the router for the internal network.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router add subnet \
-        > router1 \
-        > intern-subnet
-    \end{lstlisting}
+    \begin{labstep}
+        Add a port to the router for the internal network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router add subnet \
+            > router1 \
+            > intern-subnet
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step27.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step27.png}
+        \end{center}
+    \end{labstep}
 
-    \item Set the \textbf{extern-net} network as the gateway for the router.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router set \
-        > --external-gateway extern-net \
-        > router1
-    \end{lstlisting}
+    \begin{labstep}
+        Set the \textbf{extern-net} network as the gateway for the router.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router set \
+            > --external-gateway extern-net \
+            > router1
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step28.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step28.png}
+        \end{center}
+    \end{labstep}
 
-    \item Allocate a floating IP address from the \textbf{extern-net} network for the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip create \
-        > extern-net
-    \end{lstlisting}
+    \begin{labstep}
+        Allocate a floating IP address from the \textbf{extern-net} network for the \textbf{prod} project.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip create \
+            > extern-net
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step29.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step29.png}
+        \end{center}
+    \end{labstep}
 
-    \item Generate a key pair for the \textbf{cloud-dev} user named \textbf{key1}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack keypair create \
-        > key1 > ~/Downloads/key1.pem
-    \end{lstlisting}
+    \begin{labstep}
+        Generate a key pair for the \textbf{cloud-dev} user named \textbf{key1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack keypair create \
+            > key1 > ~/Downloads/key1.pem
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step30.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step30.png}
+        \end{center}
+    \end{labstep}
 
-    \item Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write permissions.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ chmod 600 ~/Downloads/key1.pem
-    \end{lstlisting}
+    \begin{labstep}
+        Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write permissions.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ chmod 600 ~/Downloads/key1.pem
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step31.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step31.png}
+        \end{center}
+    \end{labstep}
 
     % TODO(lucas): Needs a fit-width
-    \item Create a security group named \textbf{ftp-secgroup} for the \textbf{prod} project.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group create \
-        > --description "SSH, ICMP, and FTP" \
-        > ftp-secgroup
-    \end{lstlisting}
+    \begin{labstep}
+        Create a security group named \textbf{ftp-secgroup} for the \textbf{prod} project.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group create \
+            > --description "SSH, ICMP, and FTP" \
+            > ftp-secgroup
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step32.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step32.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a security group rule to allow \textbf{ICMP} traffic from any IP address.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
-        > rule create \
-        > --proto icmp \
-        > ftp-secgroup
-    \end{lstlisting}
+    \begin{labstep}
+        Create a security group rule to allow \textbf{ICMP} traffic from any IP address.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
+            > rule create \
+            > --proto icmp \
+            > ftp-secgroup
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step33.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step33.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a security group rule to allow \textbf{SSH} traffic from any IP address.
-    SSH uses the TCP protocol on port 22 by default.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
-        > rule create \
-        > --proto tcp \
-        > --dst-port 22:22 \
-        > ftp-secgroup
-    \end{lstlisting}
+    \begin{labstep}
+        Create a security group rule to allow \textbf{SSH} traffic from any IP address.
+        SSH uses the TCP protocol on port 22 by default.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
+            > rule create \
+            > --proto tcp \
+            > --dst-port 22:22 \
+            > ftp-secgroup
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step34.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step34.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a security group rule to allow \textbf{FTP} traffic from any IP address.
-    FTP uses the TCP protocol on port 20 (data channel) and port 21 (control channel).
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
-        > rule create \
-        > --proto tcp \
-        > --dst-port 20:21 \
-        > ftp-secgroup
-    \end{lstlisting}
+    \begin{labstep}
+        Create a security group rule to allow \textbf{FTP} traffic from any IP address.
+        FTP uses the TCP protocol on port 20 (data channel) and port 21 (control channel).
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
+            > rule create \
+            > --proto tcp \
+            > --dst-port 20:21 \
+            > ftp-secgroup
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step35.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step35.png}
+        \end{center}
+    \end{labstep}
 
     % TODO(lucas): Mention that this file already exists on the file system
-    \item Create an image named \textbf{ftp} with the file \textbf{\texttildemid/Downloads/ftp.img}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack image create \
-        > --disk-format qcow2 \
-        > --file ~/Downloads/ftp.img \
-        > --max-width 100 \
-        > ftp
-    \end{lstlisting}
+    \begin{labstep}
+        Create an image named \textbf{ftp} with the file \textbf{\texttildemid/Downloads/ftp.img}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack image create \
+            > --disk-format qcow2 \
+            > --file ~/Downloads/ftp.img \
+            > --max-width 100 \
+            > ftp
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step36.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step36.png}
+        \end{center}
+    \end{labstep}
 
-    \item The FTP server instance is almost ready to be launched.
-    First, use \textbf{nano} to create a file named \textbf{script} in the home directory.
-    Be sure it has the correct indentation and matches the contents shown below.
-    Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ nano ~/script
-    \end{lstlisting}
-    \begin{lstlisting}
-        #cloud-config
-        runcmd:
-         - echo "This instance has been customized by cloud-init" > /etc/motd
-         - echo "127.0.1.1" ftp-server >> /etc/hosts
-    \end{lstlisting}
+    \begin{labstep}
+        The FTP server instance is almost ready to be launched.
+        First, use \textbf{nano} to create a file named \textbf{script} in the home directory.
+        Be sure it has the correct indentation and matches the contents shown below.
+        Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ nano ~/script
+        \end{lstlisting}
+        \begin{lstlisting}
+            #cloud-config
+            runcmd:
+            - echo "This instance has been customized by cloud-init" > /etc/motd
+            - echo "127.0.1.1" ftp-server >> /etc/hosts
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part1/step37.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step37.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         This \textbf{cloud-init} script writes to the ``message of the day'' file, whose contents will be displayed upon a successful login.
         It also appends \textbf{127.0.1.1 ftp-server} to the \textbf{/etc/hosts} file to suppress an ``unable to resolve host'' warning that would otherwise occur when running commands with \texttt{sudo}.
     \end{notebox}
 
-    \item Leave the terminal window open and continue to the next task.
+    \begin{labstep}
+        Leave the terminal window open and continue to the next task.
+    \end{labstep}
 \end{enumerate}
 
 %%%%%%%%%%%
 % Section 2
 %%%%%%%%%%%
-\section{Launching an FTP Server Instance}
-\label{sec:launch_an_ftp_server_instance}
+\section{Launching an FTP Server Instance}\label{sec:launch_an_ftp_server_instance}
 In this task, you will deploy an FTP server in your environment and verify its external connectivity and functionality.
 
 \begin{enumerate}
-    \item Create an instance named \textbf{ftp-server} using \textbf{intern-net} for the internal network,
-    \textbf{m1.small} as the flavor, and \textbf{ubuntu} as the image.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server create \
-        > --image ftp \
-        > --flavor m1.small \
-        > --security-group ftp-secgroup \
-        > --user-data ~/script \
-        > --key-name key1 \
-        > --nic net-id=intern-net \
-        > ftp-server
-    \end{lstlisting}
+    \begin{labstep}
+        Create an instance named \textbf{ftp-server} using \textbf{intern-net} for the internal network,
+        \textbf{m1.small} as the flavor, and \textbf{ubuntu} as the image.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server create \
+            > --image ftp \
+            > --flavor m1.small \
+            > --security-group ftp-secgroup \
+            > --user-data ~/script \
+            > --key-name key1 \
+            > --nic net-id=intern-net \
+            > ftp-server
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step1.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step1.png}
+        \end{center}
+    \end{labstep}
 
-    \item Ensure that the instance state is \textbf{ACTIVE}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server list
-    \end{lstlisting}
+    \begin{labstep}
+        Ensure that the instance state is \textbf{ACTIVE}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server list
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step2.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step2.png}
+        \end{center}
+    \end{labstep}
 
-    \item When the instance state is \textbf{ACTIVE}, list the floating IP addresses available.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip list \
-        > --max-width 80
-    \end{lstlisting}
+    \begin{labstep}
+        When the instance state is \textbf{ACTIVE}, list the floating IP addresses available.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip list \
+            > --max-width 80
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step3.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step3.png}
+        \end{center}
+    \end{labstep}
 
-    \item Associate an open floating IP address to the instance.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server add floating ip \
-        > ftp-server 172.25.250.27
-    \end{lstlisting}
+    \begin{labstep}
+        Associate an open floating IP address to the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server add floating ip \
+            > ftp-server 172.25.250.27
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step4.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step4.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         When associating the floating IP, make sure to use the IP address that appears for you in the previous step as it may differ from this example.
     \end{notebox}
 
-    \item Use the \textbf{scp} command to copy the \textbf{\texttildemid/Downloads/key1.pem} file to the \textbf{devstack} machine.
-    When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
-\textbf{ubuntu}.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ scp ~/Downloads/key1.pem \
-        > ubuntu@192.168.1.20:~/key1.pem
-    \end{lstlisting}
+    \begin{labstep}
+        Use the \textbf{scp} command to copy the \textbf{\texttildemid/Downloads/key1.pem} file to the \textbf{devstack} machine.
+        When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
+        \textbf{ubuntu}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ scp ~/Downloads/key1.pem \
+            > ubuntu@192.168.1.20:~/key1.pem
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step5.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step5.png}
+        \end{center}
+    \end{labstep}
 
-    \item SSH into the \textbf{devstack} machine.
-    Enter \textbf{ubuntu} when prompted for a password.
-    \begin{lstlisting}
-        [ubuntu@workstation (keystone-cloud-dev)]:~$ ssh 192.168.1.20
-    \end{lstlisting}
+    \begin{labstep}
+        SSH into the \textbf{devstack} machine.
+        Enter \textbf{ubuntu} when prompted for a password.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ ssh 192.168.1.20
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step6.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step6.png}
+        \end{center}
+    \end{labstep}
 
     % TODO(lucas): Add another note box reminding to use the IP you generated
-    \item SSH into the \textbf{ftp-server} instance with the \textbf{key1} private key.
-    Notice that the message of the day uploaded with the \textbf{cloud-init} script appears near the bottom of the output.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.27
-    \end{lstlisting}
+    \begin{labstep}
+        SSH into the \textbf{ftp-server} instance with the \textbf{key1} private key.
+        Notice that the message of the day uploaded with the \textbf{cloud-init} script appears near the bottom of the output.
+        \begin{lstlisting}
+            ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.27
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step7.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step7.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         It may take several minutes for the instance to fully boot and be available for an SSH connection.
         Until then, the connection will be refused.
     \end{notebox}
 
-    \item Verify that the \textbf{/etc/hosts} file was updated properly.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ cat /etc/hosts
-    \end{lstlisting}
+    \begin{labstep}
+        Verify that the \textbf{/etc/hosts} file was updated properly.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ cat /etc/hosts
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step8.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step8.png}
+        \end{center}
+    \end{labstep}
 
-    \item Verify that the \textbf{vsftpd} package is installed.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ apt list --installed | grep vsftpd
-    \end{lstlisting}
+    \begin{labstep}
+        Verify that the \textbf{vsftpd} package is installed.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ apt list --installed | grep vsftpd
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step9.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step9.png}
+        \end{center}
+    \end{labstep}
 
-    \item Use \textbf{nano} to edit the \textbf{/etc/vsftpd.conf} configuration file and uncomment the variables \textbf{anonymous\_enable}, \textbf{write\_enable}, \textbf{anon\_upload\_enable}, and \textbf{anon\_mkdir\_write\_enable} by deleting the ``\textbf{\#}'' character that comes before them.
-    For the variable \textbf{anonymous\_enable}, change the \textbf{NO} to \textbf{YES}.
-    Then, append the following lines:
-    \begin{lstlisting}
-        allow_writeable_chroot=YES
-        anon_root=/var/ftp
-    \end{lstlisting}
-    The content of the file should resemble the output given below.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo nano /etc/vsftpd.conf
-    \end{lstlisting}
-    \begin{lstlisting}
-        anonymous_enable=YES
-        write_enable=YES
-        anon_upload_enable=YES
-        anon_mkdir_write_enable=YES
-        allow_writeable_chroot=YES
-        anon_root=/var/ftp
-    \end{lstlisting}
+    \begin{labstep}
+        Use \textbf{nano} to edit the \textbf{/etc/vsftpd.conf} configuration file and uncomment the variables \textbf{anonymous\_enable}, \textbf{write\_enable}, \textbf{anon\_upload\_enable}, and \textbf{anon\_mkdir\_write\_enable} by deleting the ``\textbf{\#}'' character that comes before them.
+        For the variable \textbf{anonymous\_enable}, change the \textbf{NO} to \textbf{YES}.
+        Then, append the following lines:
+        \begin{lstlisting}
+            allow_writeable_chroot=YES
+            anon_root=/var/ftp
+        \end{lstlisting}
+        The content of the file should resemble the output given below.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo nano /etc/vsftpd.conf
+        \end{lstlisting}
+        \begin{lstlisting}
+            anonymous_enable=YES
+            write_enable=YES
+            anon_upload_enable=YES
+            anon_mkdir_write_enable=YES
+            allow_writeable_chroot=YES
+            anon_root=/var/ftp
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step10.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step10.png}
+        \end{center}
+    \end{labstep}
 
-    \item Create a folder for anonymous FTP users.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo mkdir -p /var/ftp/pub
-    \end{lstlisting}
+    \begin{labstep}
+        Create a folder for anonymous FTP users.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo mkdir -p /var/ftp/pub
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step11.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step11.png}
+        \end{center}
+    \end{labstep}
 
-    \item Remove all ownership from the root FTP folder and remove all write permissions from this folder.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo chown nobody:nogroup /var/ftp
-        ubuntu@ftp-server:~$ sudo chmod a-w /var/ftp
-    \end{lstlisting}
+    \begin{labstep}
+        Remove all ownership from the root FTP folder and remove all write permissions from this folder.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo chown nobody:nogroup /var/ftp
+            ubuntu@ftp-server:~$ sudo chmod a-w /var/ftp
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step12.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step12.png}
+        \end{center}
+    \end{labstep}
 
-    \item Change the ownership of the \textbf{/var/ftp/pub} directory so that the \textbf{ftp} user and group owns everything within this directory.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo chown -R ftp. /var/ftp/pub
-    \end{lstlisting}
+    \begin{labstep}
+        Change the ownership of the \textbf{/var/ftp/pub} directory so that the \textbf{ftp} user and group owns everything within this directory.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo chown -R ftp. /var/ftp/pub
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step13.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step13.png}
+        \end{center}
+    \end{labstep}
 
-    \item View the permissions of the \textbf{/var/ftp} folder.
-    Ensure that no users or groups have ownership or write privileges for the \textbf{/var/ftp} folder and that the \textbf{ftp} user and group owns the \textbf{/var/ftp/pub} directory and its contents.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ ls -al /var/ftp
-    \end{lstlisting}
+    \begin{labstep}
+        View the permissions of the \textbf{/var/ftp} folder.
+        Ensure that no users or groups have ownership or write privileges for the \textbf{/var/ftp} folder and that the \textbf{ftp} user and group owns the \textbf{/var/ftp/pub} directory and its contents.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ ls -al /var/ftp
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step14.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step14.png}
+        \end{center}
+    \end{labstep}
 
-    \item Restart the \textbf{vsftpd} service so that the changes will take effect.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo systemctl restart vsftpd
-    \end{lstlisting}
+    \begin{labstep}
+        Restart the \textbf{vsftpd} service so that the changes will take effect.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo systemctl restart vsftpd
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step15.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step15.png}
+        \end{center}
+    \end{labstep}
 
-    \item View the status of the \textbf{vsftpd} service.
-    If all changes were made correctly, it should report that the service is active.
-    If it reports that the service has failed, there is mostly likely a mistake in the \textbf{/var/vsftpd.conf} file.
-    Press \textbf{Q} to regain the command prompt.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo systemctl status vsftpd
-    \end{lstlisting}
+    \begin{labstep}
+        View the status of the \textbf{vsftpd} service.
+        If all changes were made correctly, it should report that the service is active.
+        If it reports that the service has failed, there is mostly likely a mistake in the \textbf{/var/vsftpd.conf} file.
+        Press \textbf{Q} to regain the command prompt.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo systemctl status vsftpd
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step16.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step16.png}
+        \end{center}
+    \end{labstep}
 
-    \item Exit from the \textbf{ftp-server} instance.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ exit
-    \end{lstlisting}
+    \begin{labstep}
+        Exit from the \textbf{ftp-server} instance.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ exit
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step17.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step17.png}
+        \end{center}
+    \end{labstep}
 
-    \item From \textbf{workstation}, create a text file named \textbf{test\_file.txt} containing the string ``This is my file''.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ echo "This is my file" > ~/test_file.txt
-    \end{lstlisting}
+    \begin{labstep}
+        From \textbf{workstation}, create a text file named \textbf{test\_file.txt} containing the string ``This is my file''.
+        \begin{lstlisting}
+            ubuntu@devstack:~$ echo "This is my file" > ~/test_file.txt
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step18.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step18.png}
+        \end{center}
+    \end{labstep}
 
-    \item Open an FTP session to the FTP server and upload the \textbf{test\_file.txt} file; then, log out.
-    Use \textbf{anonymous} as the user and when prompted for the password, press the \textbf{Enter} key for no password input.
-    Follow the instructions from the example and summary below.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ ftp 172.25.250.27
-        ftp> passive
-        ftp> dir
-        ftp> cd pub
-        ftp> put ~/test_file.txt test_file.txt
-        ftp> bye
-    \end{lstlisting}
+    \begin{labstep}
+        Open an FTP session to the FTP server and upload the \textbf{test\_file.txt} file; then, log out.
+        Use \textbf{anonymous} as the user and when prompted for the password, press the \textbf{Enter} key for no password input.
+        Follow the instructions from the example and summary below.
+        \begin{lstlisting}
+            ubuntu@devstack:~$ ftp 172.25.250.27
+            ftp> passive
+            ftp> dir
+            ftp> cd pub
+            ftp> put ~/test_file.txt test_file.txt
+            ftp> bye
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step19.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step19.png}
+        \end{center}
+    \end{labstep}
 
     \begin{notebox}
         The IP address may differ slightly from this example.
         Make sure to use the floating IP address that you created.
     \end{notebox}
 
-    \item SSH into the \textbf{ftp-server} instance.
-    \begin{lstlisting}
-        ubuntu@devstack:~$ ssh -i ~/key1.pem ubuntu@172.25.250.27
-    \end{lstlisting}
+    \begin{labstep}
+        SSH into the \textbf{ftp-server} instance.
+        \begin{lstlisting}
+            ubuntu@devstack:~$ ssh -i ~/key1.pem ubuntu@172.25.250.27
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step20.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step20.png}
+        \end{center}
+    \end{labstep}
 
-    \item Verify the file uploaded successfully.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ sudo cat /var/ftp/pub/test_file.txt
-    \end{lstlisting}
+    \begin{labstep}
+        Verify the file uploaded successfully.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ sudo cat /var/ftp/pub/test_file.txt
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step21.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step21.png}
+        \end{center}
+    \end{labstep}
 
-    \item Exit from the \textbf{ftp-server} instance.
-    \begin{lstlisting}
-        ubuntu@ftp-server:~$ exit
-    \end{lstlisting}
+    \begin{labstep}
+        Exit from the \textbf{ftp-server} instance.
+        \begin{lstlisting}
+            ubuntu@ftp-server:~$ exit
+        \end{lstlisting}
 
-    \begin{center}
-        \includegraphics[width=\linewidth]{images/part2/step22.png}
-    \end{center}
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step22.png}
+        \end{center}
+    \end{labstep}
 
-    \item The lab is now complete.
+    \begin{labstep}
+        The lab is now complete.
+    \end{labstep}
 
 \end{enumerate}
 \end{document}
