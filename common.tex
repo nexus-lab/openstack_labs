@@ -3,6 +3,9 @@
 
 \AddToHook{cmd/section/before}{\clearpage}
 
+\usepackage{siunitx}
+\sisetup{detect-all, mode=text} % Match current font instead of using math mode.
+
 \usepackage[table]{xcolor}
 \colorlet{listingback}{gray!20}
 \definecolor{headingcolor}{RGB}{110,34,54}
@@ -181,13 +184,13 @@
     colback=gray!20
 }
 
-% Hacky solution for now, would like to have just one environment and make several tcolorboxes by passing different
+% TODO(lucas): Hacky solution for now, would like to have just one environment and make several tcolorboxes by passing different
 % colors as parameters, but that is giving errors
 \makeatletter
 \tcbset{
   note/.style={%
         enhanced,
-        breakable,
+        breakable=false,
         colback=blue!10!white,
         colframe=blue!80!white,
         attach boxed title to top left={yshift*=-\tcboxedtitleheight},
@@ -214,7 +217,7 @@
 \tcbset{
     stop/.style={%
         enhanced,
-        breakable,
+        breakable=false,
         colback=white,
         colback=red!10!white,
         colframe=red!80!white,
@@ -242,7 +245,7 @@
 \tcbset{
     tip/.style={%
         enhanced,
-        breakable,
+        breakable=false,
         colback=white,
         colback=green!10,
         colframe=green!70!black,

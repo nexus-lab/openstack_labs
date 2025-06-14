@@ -8,7 +8,10 @@
 
 \section*{Introduction}\label{sec:introduction}
 \addcontentsline{toc}{section}{\nameref{sec:introduction}}
-In this lab, you will manage images with the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI}, develop flavors, manage private networks, launch an internal instance, and verify the functionality of an internal instance.
+In this lab, you will use the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI} to manage images, define flavors, manage private networks, launch an internal instance, and verify the instance's functionality.
+Images define the \textit{software} configuration of an instance such as the operating system and installed packages, while flavors specify the \textit{hardware} specifications such as the number of processors and the amount of memory and disk.
+Private networks are isolated networks within the OpenStack cloud and are not connected to external networks by default.
+Internal instances are connected only to private networks and are not directly accessible from external networks by default.
 
 \section*{Objectives}\label{sec:objectives}
 \addcontentsline{toc}{section}{\nameref{sec:objectives}}
@@ -64,7 +67,8 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{labstep}
 
     \begin{labstep}
-        Click \textbf{Create Image} to create a new image.
+        Click \textbf{Create Image} to create a new image through an image file upload.
+        As you will see in the next steps, premade image files are provided in the lab environment.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step5.png}
@@ -81,8 +85,8 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{labstep}
 
     \begin{labstep}
-        In the file browser, click \textbf{Downloads}, then select the \textbf{ubuntu.img} file.
-        Click the \textbf{Open} button.
+        In the file browser, navigate to \textbf{Downloads}, then select the \textbf{ubuntu.img} file.
+        Click \textbf{Open}.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step7.png}
@@ -90,8 +94,8 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{labstep}
 
     \begin{labstep}
-        In the format dropdown, select \textbf{QCOW2 - QEMU Emulator}, and under \textit{Image Sharing}, set \textit{Visibility} to \textbf{Private}. % chktex 8
-        Make sure \textbf{No} is selected for \textit{Protected}, and click on \textbf{Create Image}.
+        In the \textit{Format} dropdown, select \textbf{QCOW2 - QEMU Emulator}, and under \textit{Image Sharing}, set \textit{Visibility} to \textbf{Private}. % chktex 8
+        Click \textbf{Create Image}.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step8.png}
@@ -104,7 +108,7 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{stopbox}
 
     \begin{labstep}
-        To edit the image after it has been created, open the dropdown menu next to the \textbf{Launch} button in the row of \textbf{ubuntu1}, and click on \textbf{Edit Image}.
+        To edit the image after it has been created, open the dropdown menu next to the \textbf{Launch} button in the row of \textbf{ubuntu1}, and click \textbf{Edit Image}.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step9.png}
@@ -113,8 +117,8 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
 
     \begin{labstep}
         Enter \textbf{10} in the \textit{Minimum Disk (GB)} field, and select \textbf{Yes} for \textit{Protected}.
-        Click the \textbf{Update Image} button.
-        Adding a minimum disk amount will require any new instance created with this image to allocate at least 10 GB of disk space.
+        Click \textbf{Update Image}.
+        Adding a minimum disk amount will require any new instance created with this image to allocate at least \qty{10}{\giga\byte} of disk space.
         When an image or other OpenStack resource is protected, it cannot be deleted without first making it unprotected again.
 
         \begin{center}
@@ -159,7 +163,7 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
 
     \begin{labstep}
         Try to delete the \textbf{ubuntu1} image while it is protected.
-        It should return an error.
+        The command should return an HTTP 403 (Forbidden) error.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack image delete ubuntu1
         \end{lstlisting}
@@ -170,7 +174,7 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{labstep}
 
     \begin{labstep}
-        Set the \textbf{ubuntu1} image to unprotected.
+        Set the \textbf{ubuntu1} image to unprotected so that it can be deleted.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack image set \
             > --unprotected ubuntu1
@@ -204,7 +208,8 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{labstep}
 
     \begin{labstep}
-        Create the \textbf{ubuntu1} image with the \textbf{\texttildemid/Downloads/ubuntu.img} file and the QCOW2 format.
+        Now, we will recreate and modify the image from the command line.
+        Create the \textbf{ubuntu2} image with the \textbf{\texttildemid/Downloads/ubuntu.img} file and the QCOW2 format.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack image create \
             > --disk-format qcow2 \
@@ -229,7 +234,7 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
     \end{labstep}
 
     \begin{labstep}
-        Set the \textbf{ubuntu2} image status to \textbf{protected}, and set the minimum disk size to \textbf{10 GB}.
+        Set the \textbf{ubuntu2} image status to \textbf{protected}, and set the minimum disk size to \textbf{\qty{10}{\giga\byte}}.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack image set \
             > --protected \
@@ -276,7 +281,7 @@ In this task, you will create, modify, and delete images with the \textit{Horizo
 %%%%%%%%%%%
 % Section 2
 %%%%%%%%%%%
-\section{Developing Flavors}\label{sec:developing-flavors}
+\section{Defining Flavors}\label{sec:defining-flavors}
 In this task, you will create and delete flavors with the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI}.
 
 \begin{enumerate}
@@ -287,7 +292,7 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
 
     \begin{labstep}
         Switch to the \textbf{demo} project.
-        We will not need any of the existing flavors in this lab, and they can be safely deleted.
+        We will not need any of the existing flavors in this lab, so any of them can be safely deleted.
         For demonstration, navigate to \textbf{Admin $>$ Compute $>$ Flavors}, select the \textbf{ds1G} flavor, and click \textbf{Delete Flavors}.
 
         \begin{center}
@@ -310,7 +315,7 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
 
     \begin{labstep}
         Enter \textbf{flavor1} in the \textit{Name} field, \textbf{2} in the \textit{VCPUs} field, \textbf{1024} in the \textit{RAM (MB)} field, and \textbf{10} in the \textit{Root Disk (GB)} field.
-        Click on \textbf{Create Flavor}.
+        Click \textbf{Create Flavor}.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part2/step4.png}
@@ -318,7 +323,7 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
     \end{labstep}
 
     \begin{notebox}
-        There is currently no way to update flavors (apart from their metadata) from the Horizon Dashboard after a flavor has been created.
+        At the time of writing, there is no way to update flavors (apart from their metadata) from the Horizon Dashboard after a flavor has been created.
         Any changes will require deleting the flavor and remaking it.
     \end{notebox}
 
@@ -327,6 +332,7 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
     \end{labstep}
 
     \begin{labstep}
+        Now, we will create a similar flavor from the command line.
         If a terminal is not already open, open one and source the \textbf{\texttildemid/keystonerc-admin} file.
         \begin{lstlisting}
             ubuntu@workstation:~$ source ~/keystonerc-admin
@@ -349,8 +355,7 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
     \end{labstep}
 
     \begin{labstep}
-        Create a flavor named \textbf{flavor2}.
-        Configure the flavor with \textbf{1} VCPU, \textbf{1024 MB} of RAM, a \textbf{10 GB} root disk, a \textbf{2 GB} ephemeral disk, and a \textbf{1024 MB} swap disk.
+        Create a flavor named \textbf{flavor2} with \textbf{1} VCPU, \textbf{\qty{1024}{\mega\byte}} of RAM, a \textbf{\qty{10}{\giga\byte}} root disk, a \textbf{\qty{2}{\giga\byte}} ephemeral disk, and a \textbf{\qty{1024}{\mega\byte}} swap disk.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack flavor create \
             > --vcpus 1 \
@@ -367,7 +372,7 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
     \end{labstep}
 
     \begin{notebox}
-        Ephemeral storage is storage that, from the user's point of view, disappears when an instance is terminated.
+        Ephemeral storage is disk space that persists only until the instance is terminated.
         Swap space allows the operating system to use a portion of hard disk space as additional RAM if the physical memory becomes full.
     \end{notebox}
 
@@ -406,8 +411,8 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
     \end{labstep}
 
     \begin{labstep}
-        Verify that the \textbf{flavor1} has been deleted by listing all the available flavors and noting that
-        \textbf{flavor1} does not appear in the list.
+        Verify that \textbf{flavor1} has been deleted by listing all the available flavors and noting that
+        \textbf{flavor1} does not appear on the list.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack flavor list
         \end{lstlisting}
@@ -418,11 +423,11 @@ In this task, you will create and delete flavors with the \textit{Horizon Dashbo
     \end{labstep}
 
     \begin{tipbox}
-        An alternative method is appending \textbf{| grep flavor1} to this command and noting that the output is empty.
+        An alternative method is appending \textbf{$\vert$ grep flavor1} to this command and noting that the output is empty.
     \end{tipbox}
 
     \begin{notebox}
-        There are currently no standard OpenStack commands to update a flavor after creation.
+        At the time of writing, there are no standard OpenStack commands to update a flavor after creation.
         Any changes will require deleting the flavor and remaking it.
     \end{notebox}
 
@@ -446,51 +451,24 @@ You will create and delete networks and subnetworks, update their settings, and 
     \end{labstep}
 
     \begin{labstep}
-        Switch to the \textbf{demo} project.
-        We will create and manage our own networks in this lab, so any existing network can be safely deleted.
-        To delete a network, all of its ports must first be deleted.
-        Navigate to \textbf{Project $>$ Network $>$ Networks} and click on the \textbf{shared} network.
+        In this lab, we will create and manage our own networks, so any existing network can be safely deleted.
+        First, switch to the \textbf{demo} project.
+        Then, navigate to \textbf{Project $>$ Network $>$ Networks}, select the \textbf{shared} network, and click \textbf{Delete Networks}.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part3/step2.png}
         \end{center}
     \end{labstep}
 
-    \begin{labstep}
-        Navigate to the \textbf{Ports} tab.
-        Select all ports and click \textbf{Delete Ports}.
-
-        \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step3.png}
-        \end{center}
-    \end{labstep}
-
     \begin{tipbox}
-        We will see in the next lab that if a network is attached to a router, the interfaces connecting the network to the router must be deleted from the router side, or the entire router could be deleted.
-        Then, once all ports of the network have been deleted, the network itself can be deleted.
+        A network can also be deleted by selecting the dropdown next to the \textbf{Edit Network} button in the same row as the network, then clicking \textbf{Delete Network}.
     \end{tipbox}
-
-    \begin{labstep}
-        Click \textbf{Delete Ports} in the \textbf{Confirm Delete Ports} dialog to confirm deletion.
-
-        \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step4.png}
-        \end{center}
-    \end{labstep}
-
-    \begin{labstep}
-        Finally, to delete the \textbf{shared} network, navigate back to \textbf{Project $>$ Network $>$ Networks}, select the \textbf{shared} network, and click \textbf{Delete Networks}.
-
-        \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step5.png}
-        \end{center}
-    \end{labstep}
 
     \begin{labstep}
         Click \textbf{Delete Networks} in the \textbf{Confirm Delete Networks} dialog box to confirm deletion.
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step6.png}
+            \includegraphics[width=\linewidth]{images/part3/step3.png}
         \end{center}
     \end{labstep}
 
@@ -499,26 +477,29 @@ You will create and delete networks and subnetworks, update their settings, and 
         Navigate back to \textbf{Project $>$ Network $>$ Networks} and click \textbf{Create Network}.
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step7.png}
+            \includegraphics[width=\linewidth]{images/part3/step4.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         Enter \textbf{net1} in the \textit{Network Name} field.
-        Verify that the \textbf{Create Subnet} check box is selected.
         Click \textbf{Next}.
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step8.png}
+            \includegraphics[width=\linewidth]{images/part3/step5.png}
         \end{center}
     \end{labstep}
+
+    \begin{stopbox}
+        Verify that the \textit{Create Subnet} checkbox is checked.
+    \end{stopbox}
 
     \begin{labstep}
         Enter \textbf{subnet1} in the \textit{Subnet Name} field, and enter \textbf{10.0.0.0/24} in the \textit{Network Address} field.
         Click \textbf{Next}.
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step9.png}
+            \includegraphics[width=\linewidth]{images/part3/step6.png}
         \end{center}
     \end{labstep}
 
@@ -526,7 +507,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         Leave the defaults in the \textit{Subnet Details} tab and click \textbf{Create}.
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step10.png}
+            \includegraphics[width=\linewidth]{images/part3/step7.png}
         \end{center}
     \end{labstep}
 
@@ -541,7 +522,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step12.png}
+            \includegraphics[width=\linewidth]{images/part3/step9.png}
         \end{center}
     \end{labstep}
 
@@ -552,7 +533,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step13.png}
+            \includegraphics[width=\linewidth]{images/part3/step10.png}
         \end{center}
     \end{labstep}
 
@@ -563,7 +544,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step14.png}
+            \includegraphics[width=\linewidth]{images/part3/step11.png}
         \end{center}
     \end{labstep}
 
@@ -574,13 +555,13 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step15.png}
+            \includegraphics[width=\linewidth]{images/part3/step12.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         Create a subnet named \textbf{subnet2} for the \textbf{net2} network.
-        Configure this subnet to use the \textbf{192.168.1.0./24} range and \textbf{172.25.250.254} as the DNS name server.
+        Configure this subnet to use the \textbf{192.168.1.0/24} range and \textbf{172.25.250.254} as the DNS name server.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack subnet create \
             > --subnet-range 192.168.1.0/24 \
@@ -590,7 +571,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step16.png}
+            \includegraphics[width=\linewidth]{images/part3/step13.png}
         \end{center}
     \end{labstep}
 
@@ -603,12 +584,17 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step17.png}
+            \includegraphics[width=\linewidth]{images/part3/step14.png}
         \end{center}
     \end{labstep}
 
     \begin{notebox}
-        The desired name for the network follows the \textbf{--name} option, while the current network name is the final argument of the command.
+        % The desired name for the network follows the \textbf{--name} option, while the current network name is the final argument of the command.
+        The format of this instruction is
+        \begin{lstlisting}
+        openstack network set --name <new_name> <old_name>
+        \end{lstlisting}
+        This follows the convention that the object being operated on is always the final argument of the command.
     \end{notebox}
 
     \begin{labstep}
@@ -618,7 +604,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step18.png}
+            \includegraphics[width=\linewidth]{images/part3/step15.png}
         \end{center}
     \end{labstep}
 
@@ -630,7 +616,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step19.png}
+            \includegraphics[width=\linewidth]{images/part3/step16.png}
         \end{center}
     \end{labstep}
 
@@ -642,18 +628,25 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step21.png}
+            \includegraphics[width=\linewidth]{images/part3/step17.png}
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        DHCP (Dynamic Host Configuration Protocol) is a network protocol that automatically assigns IP addresses to devices on a network.
+        If this protocol is disabled for a subnet, instances will not automatically receive an IP address or a default gateway.
+        This option can be useful when you want to set a static IP address or set these values yourself.
+    \end{notebox}
+
     \begin{labstep}
         Verify that the \textbf{subnet3} subnetwork has been correctly updated.
+        The \textbf{enable\_dhcp} property should be listed as \textbf{False}.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack subnet show subnet3
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step22.png}
+            \includegraphics[width=\linewidth]{images/part3/step18.png}
         \end{center}
     \end{labstep}
 
@@ -665,7 +658,7 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step23.png}
+            \includegraphics[width=\linewidth]{images/part3/step19.png}
         \end{center}
     \end{labstep}
 
@@ -676,29 +669,29 @@ You will create and delete networks and subnetworks, update their settings, and 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step24.png}
+            \includegraphics[width=\linewidth]{images/part3/step20.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
-        Verify that the \textbf{net3} network has been deleted by listing all available networks and noting that \textbf{net3} is not present in the list.
+        Verify that the \textbf{net3} network has been deleted by listing all available networks and noting that \textbf{net3} is not present on the list.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack network list
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step25.png}
+            \includegraphics[width=\linewidth]{images/part3/step21.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
-        Verify that the subnet attached to the \textbf{net3} network was deleted along with the network.
+        Verify that \textbf{subnet3}, the subnet that was attached to the \textbf{net3} network, was deleted along with the network.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack subnet list
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step26.png}
+            \includegraphics[width=\linewidth]{images/part3/step22.png}
         \end{center}
     \end{labstep}
 
@@ -713,7 +706,7 @@ You will create and delete networks and subnetworks, update their settings, and 
 %%%%%%%%%%%
 \section{Launching an Internal Instance}\label{sec:launching-an-internal-instance}
 In this task, you will launch an internal instance with the \textit{Horizon Dashboard}.
-You will then delete that instance and launch a new instance by with the \textit{Horizon Unified CLI}.
+You will then delete that instance and launch a new instance with the \textit{OpenStack Unified CLI}.
 
 \begin{enumerate}
     \begin{labstep}
@@ -731,7 +724,7 @@ You will then delete that instance and launch a new instance by with the \textit
     \end{labstep}
 
     \begin{labstep}
-        Ensure that \textbf{demo} is entered in the \textit{Project Name} field, and enter \textbf{instance1} in the \textit{Instance Name} field.
+        Enter \textbf{instance1} in the \textit{Instance Name} field.
         Click \textbf{Next}.
 
         \begin{center}
@@ -759,6 +752,9 @@ You will then delete that instance and launch a new instance by with the \textit
         \end{center}
     \end{labstep}
 
+    \begin{stopbox}
+        Verify that \textbf{flavor2} appears in the \textit{Allocated} section before moving on to the next step.
+    \end{stopbox}
     \begin{notebox}
         The warning signs in the \textit{Root Disk} column indicate that the flavor in that row has a disk size less than the minimum size specified for the selected image.
     \end{notebox}
@@ -804,7 +800,7 @@ You will then delete that instance and launch a new instance by with the \textit
 
     \begin{labstep}
         Now, we will recreate the instance from the CLI.
-        First, the \textbf{instance1} instance.
+        First, delete the \textbf{instance1} instance.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack server delete instance1
         \end{lstlisting}
@@ -862,8 +858,8 @@ You will then delete that instance and launch a new instance by with the \textit
 % Section 5
 %%%%%%%%%%%
 \section{Verifying the Functionality of an Internal Instance}\label{sec:verifying-the-functionality-of-an-internal-instance}
-In this task, you will connect to the instance and verify the flavor settings.
-You will also pause and stop an instance with the \textit{OpenStack Unified CLI}.
+In this task, you will connect to the console of the instance you created previously and verify its flavor settings.
+You will also pause and stop the instance with the \textit{OpenStack Unified CLI}.
 
 \begin{enumerate}
     \begin{labstep}
@@ -923,7 +919,7 @@ You will also pause and stop an instance with the \textit{OpenStack Unified CLI}
     \end{labstep}
 
     \begin{labstep}
-        Log in to the \textbf{instance2} instance as \textbf{root} with the password \textbf{secret}.
+        Log in to \textbf{instance2} as \textbf{root} with the password \textbf{secret}.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part5/step6.png}
@@ -931,7 +927,7 @@ You will also pause and stop an instance with the \textit{OpenStack Unified CLI}
     \end{labstep}
 
     \begin{labstep}
-        Use the \textbf{free} command to ensure that the RAM and swap amount matches the one defined by the flavor, which is \textbf{1024 MB} for each.
+        Use the \textbf{free} command to ensure that the RAM and swap amounts approximately match the one defined by \textbf{flavor2}, which is \textbf{\qty{1024}{\mega\byte}} for each.
         \begin{lstlisting}
             root@instance2:~# free -m
         \end{lstlisting}
@@ -941,9 +937,14 @@ You will also pause and stop an instance with the \textit{OpenStack Unified CLI}
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        The amount of RAM on the system is given in the \textbf{Mem} row.
+        The amounts shown in the output of this command will not exactly match the amounts specified by \textbf{flavor2} because a portion of the memory is reserved by the operating system.
+    \end{notebox}
+
     \begin{labstep}
-        Use the \textbf{df} command to ensure that the instance has a disk size of \textbf{10 GB}, as defined by the flavor.
-        Notice that \textbf{/dev/vda1} and \textbf{/dev/vdb} add up to almost 10 GB.
+        Use the \textbf{df} command to ensure that the instance has disks of size \textbf{\qty{10}{\giga\byte}} and \textbf{\qty{2}{\giga\byte}}, as defined by \textbf{flavor2} for root and ephemeral disks, respectively.
+        Notice that \textbf{/dev/vda1} is reported as nearly \qty{10}{\giga\byte}, and \textbf{/dev/vdb} is exactly \qty{2}{GB}.
         \begin{lstlisting}
             root@instance2:~# df -h
         \end{lstlisting}
@@ -953,9 +954,17 @@ You will also pause and stop an instance with the \textit{OpenStack Unified CLI}
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        When the \textbf{-h} argument is passed, \textbf{df} reports sizes in a human-readable format by using units such as megabytes and gigabytes.
+    \end{notebox}
+    \begin{notebox}
+        The operating system also reserves a small portion of root disk space, which is why the root disk is reported as less than \qty{10}{\giga\byte}.
+        However, it does not reserve any space from ephemeral disk, so it is reported as exactly the right size.
+    \end{notebox}
+
     \begin{labstep}
         Determine the number of CPUs that the instance is using.
-        Ensure the number matches the number of VCPUs defined by the flavor, which is \textbf{1}.
+        Ensure the number matches the number of VCPUs defined by \textbf{flavor2}, which is \textbf{1}.
         Notice that under the \textbf{Architecture} heading at the top of the command output, there is a \textbf{CPU(s)} heading, whose value is 1. % chktex 36
         \begin{lstlisting}
             root@instance2:~# lscpu
@@ -969,6 +978,7 @@ You will also pause and stop an instance with the \textit{OpenStack Unified CLI}
     \begin{labstep}
         Use the \textbf{ping} command from the instance to reach the DHCP server defined for the network.
         Leave the \textbf{ping} command running, as it will be used in the following steps.
+        Recall that the network for this instance (\textbf{net2}) is \textit{not} the one on which you disabled DHCP (\textbf{net3}).
         \begin{lstlisting}
             root@instance2:~# ping -c3 192.168.1.2
         \end{lstlisting}
