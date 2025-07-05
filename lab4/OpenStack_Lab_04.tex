@@ -16,19 +16,22 @@ These resources will come together to allow OpenStack instances to provide servi
     \item Create and manage external networks.
     \item Create and manage OpenStack routers.
     \item Create and manage floating IP addresses.
-    \item Create and manage SSH key pairs.
     \item Create and manage security groups.
+    \item Create and manage SSH key pairs.
     \item Launch and verify an external instance.
 \end{itemize}
 \clearpage
 
 \labsettings
 
+% TODO(lucas): This lab will be split into two. The first 3 sections will stay in this lab, while the last 3 sections will go in the next lab. In the next lab, the first two sections will introduce security groups and key pairs just as this does, and the final section will be a synthesis exercise to walk through setting up an external instance using all components: network, router, security group, and key pair, integrating it all with the instance, and finally testing it.
+
 %%%%%%%%%%%
 % Section 1
 %%%%%%%%%%%
 \section{Managing External Networks}\label{sec:managing-external-networks}
 In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenStack Unified CLI} to create and configure an external network.
+Resources on this network will be accessible to users outside the OpenStack environment.
 
 \begin{enumerate}
     \begin{labstep}
@@ -58,7 +61,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
     \end{labstep}
 
     \begin{labstep}
-        Switch to the \textbf{demo} project.
+        Select the \textbf{demo} project.
         Navigate to \textbf{Admin $>$ Network $>$ Routers}.
         Check the box in the same row as \textbf{router1}, then click \textbf{Delete Routers}.
 
@@ -76,6 +79,12 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
             \includegraphics[width=\linewidth]{images/part1/step5.png}
         \end{center}
     \end{labstep}
+
+    \begin{notebox}
+        If you try to delete the \textbf{public} network before deleting the router, you will receive an error saying ``one or more ports still exist on the requested network''.
+        Therefore, it is necessary to delete any external interfaces (gateways) that exist on routers attached to a network before deleting the network.
+        When a router is deleted, all of its ports are automatically deleted.
+    \end{notebox}
 
     \begin{labstep}
         Click \textbf{Create Network}.
@@ -99,11 +108,14 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
     \end{labstep}
 
     \begin{notebox}
-        The \textbf{public} physical network is different from the \textbf{public} network we just deleted.
-        This physical network is the name assigned to the physical or provider network that OpenStack uses for external communication.
-        This resource did not get deleted with the network of the same name since they are independent.
-        The \textbf{public} network that was deleted was a virtual network implemented on top of the physical network.
+        The \textbf{public} physical network you will use in this task is not the same as the \textbf{public} network you just deleted.
+        The deleted network was a virtual network built on top of a physical network, and they just happen to have the same name.
+        The physical \textbf{public} network still exists because it is a separate resource used by OpenStack for external communication.
     \end{notebox}
+    \begin{tipbox}
+        If your \textbf{Create Network} form looks different, you likely navigated to \textbf{Project $>$ Network $>$ Networks}.
+        You can only create external networks from the \textbf{Admin $>$ Network $>$ Networks} tab.
+    \end{tipbox}
 
     \begin{labstep}
         In the \textit{Subnet} tab, enter \textbf{extern-subnet1} in the \textit{Subnet Name} field, enter \textbf{172.25.250.0/24} in the \textit{Network Address} field, and enter \textbf{172.25.250.254} in the \textit{Gateway IP} field.
@@ -116,7 +128,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
 
     \begin{labstep}
         In the \textit{Subnet Details} tab, uncheck the \textit{Enable DHCP} check box since we want to assign static IP addresses on this network.
-        Enter \textbf{172.25.250.60, 172.25.250.80} in the \textit{Allocation Pools} field so that any IP address allocated for this network will fall in this range of addresses.
+        Enter \textbf{172.25.250.60,172.25.250.80} in the \textit{Allocation Pools} field so that any IP address allocated for this network will fall in this range of addresses.
         Enter \textbf{172.25.250.254} in the \textit{DNS Name Servers} field.
         Click \textbf{Create} to create the network and subnet.
 
@@ -126,7 +138,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
     \end{labstep}
 
     \begin{labstep}
-        Log out of the \textit{Horizon Dashboard} and close the web browser.
+        Log out of the \textit{Horizon Dashboard}, and close the web browser.
     \end{labstep}
 
     \begin{labstep}
@@ -143,23 +155,13 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
     \begin{labstep}
         List the available networks.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack network list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list
         \end{lstlisting}
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step12.png}
         \end{center}
     \end{labstep}
-
-    \begin{tipbox}
-        When typing the command, make sure there is a space between \textbf{extern-net2} and the \textbf{\textbackslash} character, and press \textbf{Enter} to get the \textbf{$>$} and continue typing the rest of the command.
-    \end{tipbox}
-
-    \begin{tipbox}
-        To keep the output from overflowing while keeping the formatting intact, use the \textbf{--max-width n} option to limit the output to \textbf{n} characters per line.
-        This is especially useful for commands that output long IDs or have many columns in the output table.
-    \end{tipbox}
 
     \begin{labstep}
         The next set of steps will show how to recreate the external network from the beginning of the lab from the CLI.
@@ -177,8 +179,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
     \begin{labstep}
         List the networks again to confirm that \textbf{extern-net1} was deleted successfully.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack network list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list
         \end{lstlisting}
 
         \begin{center}
@@ -192,7 +193,8 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
         Set the network as shared and external.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack network create \
-            > --external --share \
+            > --external \
+            > --share \
             > --provider-network-type flat \
             > --provider-physical-network public \
             > extern-net2
@@ -226,8 +228,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
     \begin{labstep}
         List the networks again to see that \textbf{extern-net2} and \textbf{extern-subnet2} were created successfully.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack network list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list
         \end{lstlisting}
 
         \begin{center}
@@ -246,7 +247,7 @@ In this task, you will use the \textit{Horizon Dashboard} and the \textbf{OpenSt
 %%%%%%%%%%%
 \section{Preparing OpenStack Routers to Deploy an Instance}\label{sec:preparing-openstack-routers-to-deploy-an-instance}
 In this task, you will create and configure a router with the \textit{Horizon Dashboard} and \textit{OpenStack CLI} and use command line tools to test the connectivity of the router.
-The router will serve to connect the external instance to other networks both within OpenStack and outside the cloud.
+The router will serve to connect resources on the external network to other networks both within OpenStack and outside the cloud.
 
 \begin{enumerate}
     \begin{labstep}
@@ -255,7 +256,7 @@ The router will serve to connect the external instance to other networks both wi
     \end{labstep}
 
     \begin{labstep}
-        Switch to the \textbf{demo} project and navigate to \textbf{Project $>$ Network $>$ Routers}.
+        Select the \textbf{demo} project and navigate to \textbf{Project $>$ Network $>$ Routers}.
         Click \textbf{Create Router} to create a new router.
 
         \begin{center}
@@ -322,14 +323,12 @@ The router will serve to connect the external instance to other networks both wi
     \end{labstep}
 
     \begin{labstep}
-        Next, we will recreate this router from the CLI, so we will delete \textbf{router1}.
-        First, however, we will see how to remove subnets and gateways from the router.
-        Recall that in a previous step, we added an interface to connect \textbf{router1} to the \textbf{shared-subnet} subnet on the \textbf{shared} network.
-        Remove the connection to this subnet.
+        Next, we will recreate this router from the CLI, so we need to delete \textbf{router1}.
+        In the Horizon Dashboard, this process is straightforward: deleting a router automatically removes its interfaces.
+        However, when using the CLI, the process requires a few extra steps.
+        Try deleting \textbf{router1}; you should receive an error.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack router remove subnet \
-            > router1 \
-            > shared-subnet
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router delete router1
         \end{lstlisting}
 
         \begin{center}
@@ -338,10 +337,15 @@ The router will serve to connect the external instance to other networks both wi
     \end{labstep}
 
     \begin{labstep}
-        Unset the \textbf{extern-net2} network as the gateway for the router.
+        This error occurs because the CLI does not allow a router to be deleted while it is still connected to networks.
+        To proceed, we must first disconnect the routers by removing any attached subnets.
+        In this case, we already know the name of the subnet: \textbf{shared-subnet} on the \textbf{shared} network.
+        Later in the lab, you'll learn how to automate this process even when you don't know the names of the subnets.
+        For now, remove the connection to \textbf{shared-subnet}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack router unset \
-            > --external-gateway router1
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router remove subnet \
+            > router1 \
+            > shared-subnet
         \end{lstlisting}
 
         \begin{center}
@@ -350,9 +354,10 @@ The router will serve to connect the external instance to other networks both wi
     \end{labstep}
 
     \begin{labstep}
-        Delete the \textbf{router1} router.
+        Unset the external gateway of the router.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack router delete router1
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router unset \
+            > --external-gateway router1
         \end{lstlisting}
 
         \begin{center}
@@ -360,10 +365,23 @@ The router will serve to connect the external instance to other networks both wi
         \end{center}
     \end{labstep}
 
-    \begin{notebox}
-        Deleting a router will also delete its associated interfaces, subnets, and gateways.
-        The previous steps that performed these steps manually were only for demonstration and are not necessary for simply deleting the router.
-    \end{notebox}
+    \begin{tipbox}
+        Since we know that the external gateway goes through \textbf{extern-net2}, we could have also used this command:
+        \begin{lstlisting}
+            openstack router remove subnet router1 extern-net2
+        \end{lstlisting}
+    \end{tipbox}
+
+    \begin{labstep}
+        Delete the \textbf{router1} router.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router delete router1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step12.png}
+        \end{center}
+    \end{labstep}
 
     \begin{labstep}
         Now, we will replicate the previous router from the CLI.
@@ -373,7 +391,7 @@ The router will serve to connect the external instance to other networks both wi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step12.png}
+            \includegraphics[width=\linewidth]{images/part2/step13.png}
         \end{center}
     \end{labstep}
 
@@ -386,7 +404,7 @@ The router will serve to connect the external instance to other networks both wi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step13.png}
+            \includegraphics[width=\linewidth]{images/part2/step14.png}
         \end{center}
     \end{labstep}
 
@@ -399,7 +417,7 @@ The router will serve to connect the external instance to other networks both wi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step14.png}
+            \includegraphics[width=\linewidth]{images/part2/step15.png}
         \end{center}
     \end{labstep}
 
@@ -407,12 +425,11 @@ The router will serve to connect the external instance to other networks both wi
         Show the details of the \textbf{router2} router.
         Take note of the IP address listed in the \textit{external\_gateway\_info} row, as you will ping this address in a later step to verify that the router can be reached.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack router show \
-            > --max-width 100 router2
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router show router2
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step15.png}
+            \includegraphics[width=\linewidth]{images/part2/step16.png}
         \end{center}
     \end{labstep}
 
@@ -424,7 +441,7 @@ The router will serve to connect the external instance to other networks both wi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step16.png}
+            \includegraphics[width=\linewidth]{images/part2/step17.png}
         \end{center}
     \end{labstep}
 
@@ -432,11 +449,11 @@ The router will serve to connect the external instance to other networks both wi
         Use the \textbf{ping} command on the IP address found from the \textbf{openstack router show} command to verify that the router can be reached.
         Receiving ping replies verifies the connectivity of the router since the \textbf{devstack} machine is outside the OpenStack cloud environment.
         \begin{lstlisting}
-            ubuntu@devstack:~$ ping -c3 172.25.250.79
+            ubuntu@devstack:~$ ping -c3 172.25.250.66
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step17.png}
+            \includegraphics[width=\linewidth]{images/part2/step18.png}
         \end{center}
     \end{labstep}
 
@@ -450,11 +467,11 @@ The router will serve to connect the external instance to other networks both wi
     \begin{labstep}
         Exit the SSH session.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ exit
+            ubuntu@devstack:~$ exit
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step18.png}
+            \includegraphics[width=\linewidth]{images/part2/step19.png}
         \end{center}
     \end{labstep}
 
@@ -491,7 +508,7 @@ While the private IP address of instance is fixed until the instance is deleted,
             [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
             > --image ubuntu \
             > --flavor m1.small \
-            > --nic net-id=shared \
+            > --network shared \
             > instance1
         \end{lstlisting}
 
@@ -507,7 +524,7 @@ While the private IP address of instance is fixed until the instance is deleted,
     \end{labstep}
 
     \begin{labstep}
-        Switch to the \textbf{demo} project.
+        Select the \textbf{demo} project.
         Navigate to \textbf{Project $>$ Network $>$ Floating IPs}.
         Click \textbf{Allocate IP to Project}.
 
@@ -517,7 +534,6 @@ While the private IP address of instance is fixed until the instance is deleted,
     \end{labstep}
 
     \begin{labstep}
-
         Ensure \textbf{extern-net2} is set as the \textit{Pool}.
         Click \textbf{Allocate IP}.
 
@@ -544,7 +560,7 @@ While the private IP address of instance is fixed until the instance is deleted,
         The actual value of the floating IP address may differ.
     \end{notebox}
 
-    \begin{labstep}
+    \begin{labstep}\label{it:floating-ip}
         In the \textit{Port to be associated} dropdown, select \textbf{instance1: 192.168.233.XYZ}.
         Click \textbf{Associate}.
 
@@ -558,10 +574,17 @@ While the private IP address of instance is fixed until the instance is deleted,
     \end{notebox}
 
     \begin{labstep}
-        The \textbf{instance1} instance is now connected to the \textbf{extern-net2} network through this floating IP address.
-        To remove a floating IP address, first navigate to \textbf{Compute $>$ Instances}.
-        Click the arrow next to the \textbf{Create Snapshot} in the same as \textbf{instance1}.
-        Select \textbf{Disassociate Floating IP} to detach the floating IP from the instance.
+        The \textbf{instance1} instance is now connected to the \textbf{extern-net2} network through its floating IP address.
+        At this point, it might seem like the instance should be accessible from a network outside the OpenStack environment.
+        This is a reasonable assumption because the router is accessible, the instance is connected to it, and a floating IP address has been assigned.
+        However, OpenStack applies a ``Deny by Default'' security model, which means inbound (ingress) traffic to the instance is blocked unless explicitly allowed by security group rules.
+        We'll configure those rules in the next lab.
+        For now, let's verify that \textbf{instance1} is \textit{not} reachable.
+        Open a terminal window (if you haven't already), and SSH into the \textbf{devstack} virtual machine.
+        Log in with the password \textbf{ubuntu}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ ssh 192.168.1.20
+        \end{lstlisting}
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part3/step8.png}
@@ -569,10 +592,50 @@ While the private IP address of instance is fixed until the instance is deleted,
     \end{labstep}
 
     \begin{labstep}
-        Check the \textit{Release Floating IP} box and click \textbf{Disassociate}.
+        Use the \textbf{ping} command on the floating IP address that was associated with \textbf{instance1} in step~\ref{it:floating-ip}.
+        \begin{lstlisting}
+            ubuntu@devstack:~$ ping -c3 172.25.250.62
+        \end{lstlisting}
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part3/step9.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        You should not receive any ping replies.
+        Instead, the output of the command should inform you that there was 100\% packet loss.
+        This confirms that while the network is configured correctly, the instance is still protected by default security group rules that block incoming traffic.
+    \end{notebox}
+
+    \begin{labstep}
+        Exit the SSH session.
+        \begin{lstlisting}
+            ubuntu@devstack:~$ exit
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We are now finished with this floating IP address.
+        Return to the web browser.
+        To remove a floating IP address, first navigate to \textbf{Compute $>$ Instances}.
+        Click the arrow next to the \textbf{Create Snapshot} in the same as \textbf{instance1}.
+        Select \textbf{Disassociate Floating IP} to detach the floating IP from the instance.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step11.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Check the \textit{Release Floating IP} box and click \textbf{Disassociate}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step12.png}
         \end{center}
     \end{labstep}
 
@@ -594,43 +657,187 @@ While the private IP address of instance is fixed until the instance is deleted,
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step11.png}
+            \includegraphics[width=\linewidth]{images/part3/step14.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Notice that the previous command generated a random floating IP address within the allocation pool.
+        You can use the \textbf{--floating-ip-address} argument to allocate a specific IP address.
+        However, make sure to list the available addresses before attempting to allocate it.
+        If that particular floating IP address already exists, the command will throw an HTTP exception.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step15.png}
         \end{center}
     \end{labstep}
 
     \begin{tipbox}
-        You can use the \textbf{--floating-ip-address IP\_ADDRESS} argument to allocate a specific IP address.
-        However, make sure to list the available addresses before attempting to allocate it.
-        If that particular floating IP address already exists, the command will throw an \textit{HttpException: Conflict} error.
+        This command does not properly fit the width of its output until you expand or maximize your terminal window.
     \end{tipbox}
     \begin{tipbox}
-        A floating IP address can be disassociated from and instance with the command \textbf{openstack floating ip remove INSTANCE FLOATING\_IP\_ADDRESS} and deleted with the command \textbf{openstack floating ip delete IP\_ADDRESS}.
+        Because this command outputs several IDs, appending arguments such as \textbf{-c "Floating IP Address" -c "Fixed IP Address"} to output only the columns you need can make the output easier to read. % chktex 18
     \end{tipbox}
 
     \begin{labstep}
-        Associate the floating IP with \textbf{instance1}.
+        Create the floating IP address \textbf{172.25.250.80}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack server add \
-            > floating ip instance1 172.25.250.75
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip create \
+            > --floating-ip-address 172.25.250.80 \
+            > extern-net2
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step12.png}
+            \includegraphics[width=\linewidth]{images/part3/step16.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Try creating the same floating IP address again.
+        This time, it should return an HTTP exception.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip create \
+            > --floating-ip-address 172.25.250.80 \
+            > extern-net2
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step17.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Associate this floating IP address with \textbf{instance1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server add floating ip \
+            > instance1 \
+            > 172.25.250.80
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step18.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the details of \textbf{instance1} to verify that the floating IP address was attached.
+        The \textbf{Networks} column should list both the internal and floating IP address of the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step19.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We are now finished with this floating IP address, so it can be removed from the instance and deleted.
+        Remove the floating IP address from \textbf{instance1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip remove \
+            > instance1 \
+            > 172.25.250.80
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step20.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        This command is equivalent to clicking \textbf{Disassociate} in the Horizon Dashboard, and it is useful when you want to reuse the IP address for something else.
+        However, a floating IP address can be deleted without first removing it from the instance.
+    \end{tipbox}
+
+    \begin{labstep}
+        When a floating IP address is removed from an instance, it still exists and is available to add to another instance.
+        List the available floating IP addresses to confirm this.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step21.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Delete the floating IP address \textbf{172.25.250.80}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip delete \
+            > 172.25.250.80
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step22.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        One floating IP address we originally created at the beginning of this section still exists.
+        Associate this address with \textbf{instance1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server add floating ip \
+            > instance1 \
+            > 172.25.250.75
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step23.png}
         \end{center}
     \end{labstep}
 
     \begin{notebox}
         The actual floating IP may differ.
-        Use the floating IP address generated from your output from the previous step.
     \end{notebox}
 
     \begin{labstep}
-        We will recreate this instance at the end of the lab once the rest of the necessary resources have been created.
+        Verify that the floating IP address was added to the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step24.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
         We will not need this instance anymore, so delete it.
         This will also disassociate the floating IP address, but it will still be available.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack server delete instance1
         \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step25.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Verify that the instance was deleted.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step26.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Verify that the floating IP address still exists and that it has no fixed IP address (it is not associated with an instance).
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part3/step27.png}
+        \end{center}
     \end{labstep}
 
     \begin{labstep}
@@ -642,13 +849,33 @@ While the private IP address of instance is fixed until the instance is deleted,
 %%%%%%%%%%%
 % Section 4
 %%%%%%%%%%%
-\section{Managing SSH Key Pairs}\label{sec:managing-ssh-key-pairs}
-In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI} to manage SSH key pairs that will be used later in the lab to connect to OpenStack instances from outside the OpenStack environment.
+\section{Deleting Routers and External Networks from the CLI}\label{sec:deleting_routers_and_external_networks_from_the_cli}
+Earlier in the lab, you deleted a router by manually removing its connected subnets, since you already knew their names.
+While that approach works in simple cases, it doesn't scale well to routers with many interfaces or when subnet names aren't known in advance.
+In this task, you will use the \textit{OpenStack Unified CLI} to clean up the environment by deleting the router and external network you previously created.
+This time, you'll use a more flexible and automated approach that works even when subnet names are unknown.
+You will also learn a few useful tricks for working with commands that require resource IDs as arguments, which will be helpful when writing cleanup scripts or handling more complex environments.
 
 \begin{enumerate}
     \begin{labstep}
-        Switch to the \textbf{demo} project and navigate to \textbf{Project $>$ Compute $>$ Key Pairs}.
-        Click \textbf{Create Key Pair} to create a new key pair.
+        If a terminal window is not already open, open one and source the \textbf{admin} credentials from the
+        \textbf{\texttildemid/keystonerc-admin} file.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/keystonerc-admin
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part4/step1.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        When working from the Horizon Dashboard, a network cannot be deleted if it is connected to a router.
+        Although the command line allows them to be deleted in either order, we will still delete the router first.
+        Begin by viewing the details of \textbf{router2}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router show router2
+        \end{lstlisting}
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part4/step2.png}
@@ -656,28 +883,29 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
     \end{labstep}
 
     \begin{labstep}
-        Enter \textbf{keypair1} in the \textit{Key Pair Name} field, and select \textbf{SSH Key} in the \textit{Key Type} dropdown.
-        Click \textbf{Create Key Pair}.
-        This will create the key pair and download it to the \textbf{\texttildemid/Downloads} directory.
+        From the CLI, a router's subnets and interfaces, including its external gateway, must first be cleared before deleting the router.
+        Unset the external gateway of \textbf{router2}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router unset \
+            > --external-gateway \
+            > router2
+        \end{lstlisting}
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part4/step3.png}
         \end{center}
     \end{labstep}
 
-    \begin{tipbox}
-        Key pairs can be deleted from the Horizon Dashboard the same way as other objects.
-        Simply select the checkbox next to the key pair you wish to delete, then click \textbf{Delete Key Pairs}.
-    \end{tipbox}
-
     \begin{labstep}
-        Sign out of the Horizon Dashboard and close the web browser.
-    \end{labstep}
-
-    \begin{labstep}
-        If a terminal window is not already open, open one and source the \textbf{admin} credentials from the \textbf{\texttildemid/keystonerc-admin} file.
+        Next, each of the router's interfaces must be deleted.
+        This time, we will specify the interfaces by their IDs.
+        To avoid copying and pasting the ID values, we will store them in a variable and delete them at the same time.
+        First, list the router's interface IDs.
         \begin{lstlisting}
-            ubuntu@workstation:~$ source ~/keystonerc-admin
+            [ubuntu@workstation (keystone-admin)]:~$ openstack port list \
+            > -c ID \
+            > -f value \
+            > --router router2
         \end{lstlisting}
 
         \begin{center}
@@ -685,11 +913,15 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        The \textbf{-f value} argument specifies that rather than outputting the result in a table format, we want just the value.
+        There are a few other output options, such as \textbf{-f json}, but we will not need any other options in these labs.
+    \end{notebox}
+
     \begin{labstep}
-        We only need one key pair to connect to the external instance, so the key pair created from the Horizon Dashboard can safely be deleted in order to demonstrate creating a key pair from the command line.
-        Delete the \textbf{keypair1} key pair.
+        Now, assign the output of the previous step to a variable called \textbf{ports}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair delete keypair1
+            [ubuntu@workstation (keystone-admin)]:~$ ports=$(!!)
         \end{lstlisting}
 
         \begin{center}
@@ -697,16 +929,23 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
         \end{center}
     \end{labstep}
 
+    \begin{tipbox}
+        Make sure there are no spaces around the equal sign when assigning a value to a variable.
+    \end{tipbox}
     \begin{notebox}
-        Note that a key pair in the context of OpenStack is actually a misnomer.
-        The key pair object really only refers to the public key, while the private key only exists in the file in which it is saved.
-        Therefore, the private key file will still exist after deleting the key pair.
+        The \textbf{\$(...)} syntax captures the output of a command, and \textbf{!!} re-executes the immediately preceding command. % chktex 11
+        In this case, we could have also used
+        \begin{lstlisting}
+            ports=$(openstack router port list --router router2 -c ID -f value)
+        \end{lstlisting}
+        However, this consumes the output of the command and does not print it unless you use the \textbf{echo} command as well.
     \end{notebox}
 
     \begin{labstep}
-        Delete the private key located at \textbf{\texttildemid/Downloads/keypair1.pem}.
+        Print the value of the \textbf{ports} variable to make sure it is storing the ID values.
+        The \textbf{\$} symbol is used to access the value of a variable.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ rm -f ~/Downloads/keypair1.pem
+            [ubuntu@workstation (keystone-admin)]:~$ echo $ports
         \end{lstlisting}
 
         \begin{center}
@@ -714,12 +953,19 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        Notice that the IDs are separated by a space.
+        This is exactly what we want, since that is what the \textbf{for} loop we use in the next step expects.
+    \end{notebox}
+
     \begin{labstep}
-        Create the key pair \textbf{keypair2} and save the private key to the file
-        \textbf{\texttildemid/Downloads/keypair2.pem}.
+        Unfortunately, because most OpenStack commands cannot accept a list of arguments, removing multiple ports at once requires a \textbf{for} loop.
+        With this loop, we will access each of the port IDs stored in the \textbf{ports} variable, and we will run the command for each ID value.
+        Delete the interfaces of \textbf{router2} by using the \textbf{ports} variable.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair create \
-            > keypair2 > ~/Downloads/keypair2.pem
+            [ubuntu@workstation (keystone-admin)]:~$ for port in $ports; do \
+            > openstack router remove port router2 $port; \
+            > done
         \end{lstlisting}
 
         \begin{center}
@@ -727,10 +973,35 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
         \end{center}
     \end{labstep}
 
-    \begin{labstep}
-        To better protect the private key, use the \textbf{chmod} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu} user has read/write permissions on the private key file, and groups and other users have no permissions to the file.
+    \begin{notebox}
+        The syntax of a \textbf{for} loop is
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ chmod 600 ~/Downloads/keypair2.pem
+            for item in $list; do <command> $item; done
+        \end{lstlisting}
+        In this syntax, \textbf{list} is a variable containing multiple values.
+        The \textbf{for} loop runs the command once for each item.
+        In our case, it will go through each port ID stored in the \textbf{ports} variable, then delete it from the router.
+        If \textbf{ports} contains three IDs, the loop runs this command three times---once per ID:
+        \begin{lstlisting}
+            openstack router remove port router2 <ID1>
+            openstack router remove port router2 <ID2>
+            openstack router remove port router2 <ID3>
+        \end{lstlisting}
+    \end{notebox}
+    \begin{tipbox}
+        If you know the names of a router's subnets, they can also be used to delete a router's interfaces with the command
+        \begin{lstlisting}
+            openstack router remove subnet <subnet-name-or-id>
+        \end{lstlisting}
+        In this case, we could have used \textbf{shared-subnet} and \textbf{extern-subnet2} since we knew the names.
+        However, the method outlined above is more general, and it could even be made into a script to automate router deletion if it becomes a common task.
+    \end{tipbox}
+
+    \begin{labstep}
+        Verify that the interfaces of \textbf{router2} were deleted.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack port list \
+            > --router router2
         \end{lstlisting}
 
         \begin{center}
@@ -739,7 +1010,34 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
     \end{labstep}
 
     \begin{labstep}
-        Leave the terminal window open and continue to the next task.
+        \textbf{router2} can now be deleted.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router delete router2
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part4/step9.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        The \textbf{external} network can also be deleted.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network delete extern-net2
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part4/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        You've now used the CLI to fully delete a router and its associated external network---even without knowing subnet names.
+        This approach can be adapted into scripts and is essential for managing more complex OpenStack environments.
+    \end{notebox}
+
+    \begin{labstep}
+        Leave the terminal window open, and continue to the next step.
     \end{labstep}
 
 \end{enumerate}
@@ -747,9 +1045,11 @@ In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack 
 %%%%%%%%%%%
 % Section 5
 %%%%%%%%%%%
-\section{Implementing Security}\label{sec:implementing-security}
+\section{Defining Security Groups}\label{sec:defining-security-groups}
 In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI} to manage security groups for OpenStack instances.
-This is similar to constructing firewall rules and will be used to allow certain types of network traffic while disallowing others.
+Security groups function like virtual firewalls, allowing you to define rules that allow or deny specific types of network traffic.
+Modifying the default security group settings is essential to enable communication with external instances from outside the OpenStack environment.
+In this lab, we are concerned with two types of traffic in particular: ICMP to allow the use of the \textbf{ping} command, and SSH to enable remote login from an external network.
 
 \begin{enumerate}
     \begin{labstep}
@@ -758,7 +1058,7 @@ This is similar to constructing firewall rules and will be used to allow certain
     \end{labstep}
 
     \begin{labstep}
-        Switch to the \textbf{demo} project.
+        Select the \textbf{demo} project.
         Navigate to \textbf{Network $>$ Security Groups} and click \textbf{Create Security Group}.
 
         \begin{center}
@@ -775,9 +1075,10 @@ This is similar to constructing firewall rules and will be used to allow certain
     \end{labstep}
 
     \begin{labstep}
-        After creating the security group, you should land on the page containing the rules for the security group.
+        After creating the security group, you should be redirected to its rules page.
         If not, click \textbf{Manage Rules} in the same column as \textbf{secgroup1} on the \textbf{Security Groups} page to get there.
-        From here, you can see that by default, the security group allows any egress (outgoing) traffic and does not allow any ingress (incoming) traffic.
+        From here, you can see that by default, the security group allows all egress (outgoing) traffic.
+        No ingress rules are defined, so all incoming traffic is denied by default.
         Click \textbf{Add Rule} to add a new rule in the security group.
 
         \begin{center}
@@ -787,7 +1088,7 @@ This is similar to constructing firewall rules and will be used to allow certain
 
     \begin{labstep}
         Select \textbf{All ICMP} from the \textit{Rule} dropdown and click \textbf{Add}.
-        This allows ICMP traffic, namely the \textbf{ping} command, to reach instances in this security group.
+        This allows ICMP traffic, including the \textbf{ping} command, to reach instances in this security group.
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part5/step5.png}
@@ -798,6 +1099,25 @@ This is similar to constructing firewall rules and will be used to allow certain
         By default, \textit{Direction} is set to \textbf{Ingress} and \textit{CIDR} is set to \textbf{0.0.0.0/0}.
         \textbf{Ingress} specifies incoming traffic, and \textbf{0.0.0.0/0} specifies that the traffic is accepted from any IP address.
     \end{notebox}
+
+    \begin{labstep}
+        Click \textbf{Add Rule} again.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part5/step6.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Now, we will create a rule to allow SSH ingress traffic.
+        Since SSH works over TCP, leave \textit{Rule} as \textbf{Custom TCP Rule}.
+        Under \textit{Port}, enter \textbf{22}, which is the default SSH port.
+        Click \textbf{Add} to add the rule.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part5/step7.png}
+        \end{center}
+    \end{labstep}
 
     \begin{labstep}
         Log out of the \textit{Horizon Dashboard} and close the web browser.
@@ -811,12 +1131,23 @@ This is similar to constructing firewall rules and will be used to allow certain
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step7.png}
+            \includegraphics[width=\linewidth]{images/part5/step9.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
-        Next, we will recreate this security group through the command line and add some additional rules necessary for connecting to an external instance.
+        Before creating or modifying any security groups or rules, list the existing security groups to see what is already configured.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part5/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Now, we will recreate the \textbf{secgroup1} security group through the command line and add some additional rules necessary for connecting to an external instance.
         First, to demonstrate how to remove a rule from a security group, list the rules in the \textbf{secgroup1} security group and copy the ID of the ICMP rule.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
@@ -824,23 +1155,28 @@ This is similar to constructing firewall rules and will be used to allow certain
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step8.png}
+            \includegraphics[width=\linewidth]{images/part5/step11.png}
         \end{center}
     \end{labstep}
 
+    \begin{tipbox}
+        Since we want to copy the ID value, we do not want the output to fit the width of the terminal window, which would wrap the ID across multiple lines and prevent copying.
+        To prevent this, maximize the terminal window before running this command.
+    \end{tipbox}
     \begin{tipbox}
         To copy a value from the terminal, select the desired string with the mouse, then either right-click and click \textbf{Copy} or press \textbf{Ctrl+Shift+C}.
     \end{tipbox}
 
     \begin{labstep}
-        Use the \textit{ID} for the ICMP rule to delete that rule.
+        Use the ID for the ICMP rule to delete that rule.
+        Note that you do not have to list \textbf{secgroup1} in this command because IDs in OpenStack are \textit{globally unique} within a deployment.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule delete \
-            > ceeea025d-60f2-440a-a471-ea876e6857bd
+            > fb6707a2-ee35-417f-a3c1-947da634b206
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step9.png}
+            \includegraphics[width=\linewidth]{images/part5/step12.png}
         \end{center}
     \end{labstep}
 
@@ -857,6 +1193,10 @@ This is similar to constructing firewall rules and will be used to allow certain
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
             > secgroup1
         \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part5/step13.png}
+        \end{center}
     \end{labstep}
 
     \begin{labstep}
@@ -867,7 +1207,7 @@ This is similar to constructing firewall rules and will be used to allow certain
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step11.png}
+            \includegraphics[width=\linewidth]{images/part5/step14.png}
         \end{center}
     \end{labstep}
 
@@ -875,11 +1215,11 @@ This is similar to constructing firewall rules and will be used to allow certain
         Create the \textbf{secgroup2} security group.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group create \
-            > --max-width 80 secgroup2
+            > secgroup2
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step12.png}
+            \includegraphics[width=\linewidth]{images/part5/step15.png}
         \end{center}
     \end{labstep}
 
@@ -892,12 +1232,16 @@ This is similar to constructing firewall rules and will be used to allow certain
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step13.png}
+            \includegraphics[width=\linewidth]{images/part5/step16.png}
         \end{center}
     \end{labstep}
 
     \begin{tipbox}
-        You can use the command \textbf{openstack security group rule show RULE\_ID} to show the details of each rule and confirm that they are the same default rules you get when creating a security group through the Horizon Dashboard.
+        You can use the command
+        \begin{lstlisting}
+            openstack security group rule show <rule_id>
+        \end{lstlisting}
+        to show the details of each rule and confirm that they are the same default rules you get when creating a security group through the Horizon Dashboard.
         The rules allow all outgoing traffic over IPv4 and IPv6.
     \end{tipbox}
 
@@ -910,12 +1254,12 @@ This is similar to constructing firewall rules and will be used to allow certain
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step14.png}
+            \includegraphics[width=\linewidth]{images/part5/step17.png}
         \end{center}
     \end{labstep}
 
     \begin{notebox}
-        If no arguments are given, the direction defaults to \textbf{ingress} and the remote IP defaults to \textbf{0.0.0.0/0}.
+        If no additional arguments are given, the direction defaults to \textbf{ingress} and the remote IP defaults to \textbf{0.0.0.0/0}.
         In other words, it allows all incoming traffic over the given protocol.
     \end{notebox}
 
@@ -925,6 +1269,10 @@ This is similar to constructing firewall rules and will be used to allow certain
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
             > secgroup2
         \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part5/step18.png}
+        \end{center}
     \end{labstep}
 
     \begin{labstep}
@@ -937,7 +1285,7 @@ This is similar to constructing firewall rules and will be used to allow certain
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part5/step16.png}
+            \includegraphics[width=\linewidth]{images/part5/step19.png}
         \end{center}
     \end{labstep}
 
@@ -947,6 +1295,10 @@ This is similar to constructing firewall rules and will be used to allow certain
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
             > secgroup2
         \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part5/step20.png}
+        \end{center}
     \end{labstep}
 
     \begin{labstep}
@@ -958,10 +1310,12 @@ This is similar to constructing firewall rules and will be used to allow certain
 %%%%%%%%%%%
 % Section 6
 %%%%%%%%%%%
-\section{Launching and Verifying an External Instance}\label{sec:launching-an-external-instance}
-Up to this point, we have created an external network, a router, a floating IP address, an SSH key pair, and a security group.
-These are all the resources necessary to create and interact with an external instance from outside the OpenStack cloud.
-In this task, you will launch an external instance and verify its connectivity and functionality with the \textbf{ssh} and \textbf{ping} commands.
+\section{Applying Security Groups to Instances}\label{sec:applying-security-groups-to-instances}
+In order for a security group's rules to apply to instance, the security group must be applied to one of the instance's interfaces.
+In these labs, instances will only have one interface, so a security group can be thought of as applying to the whole instance.
+Additionally, an interface may have more than one security group applied.
+Security groups can be added to an instance when the instance is created, and they can be added, removed, or modified at any time.
+This section will walk through adding and removing an instance's security groups with both the \textit{OpenStack Unified CLI} and the \textit{Horizon Dashboard}.
 
 \begin{enumerate}
     \begin{labstep}
@@ -976,14 +1330,1056 @@ In this task, you will launch an external instance and verify its connectivity a
     \end{labstep}
 
     \begin{labstep}
+        A security group can be applied to an instance at creation from the command line.
+        Create an instance with the security group \textbf{secgroup2} applied to it.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
+            > --image ubuntu \
+            > --flavor m1.small \
+            > --network shared \
+            > --security-group secgroup2 \
+            > instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step2.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        The output of the previous step should have shown the ID of \textbf{secgroup2} in the \textbf{security\_groups} row.
+        To get a result that easier to understand and verify that \textbf{secgroup2} is attached to the instance, we can show the details of the instance with a couple extra arguments.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server show \
+            > -c security_groups \
+            > instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step3.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        The \textbf{-c security\_groups} argument specifies that we want only the \textbf{security\_groups} row in the output.
+    \end{tipbox}
+
+    \begin{labstep}
+        Remove \textbf{secgroup2} from the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server remove security group \
+            > instance1 secgroup2
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step4.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        This command may echo the string \textbf{keys: ['name']}.
+        Ignore this output; the command still works as intended.
+    \end{notebox}
+
+    \begin{labstep}
+        Verify that the security group is no longer applied to the instance.
+        You should receive an error message saying the column name is not recognized.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server show \
+            > -c security_groups \
+            > instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step5.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        A security group can also be added to an instance after the instance is created.
+        Add \textbf{secgroup2} back to the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server add security group \
+            > instance1 secgroup2
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step6.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        This command may echo the string \textbf{keys: ['name']}.
+        Ignore this output; the command still works as intended.
+    \end{notebox}
+
+    \begin{labstep}
+        Verify that the security group is once again applied to the instance.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server show \
+            > -c security_groups \
+            > instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step7.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Delete \textbf{instance1}.
+        We will recreate it from the Horizon Dashboard to demonstrate adding a security group to an instance at creation time from the dashboard.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server delete instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step8.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Leave the terminal window open, and open the web browser.
+        Navigate to \textbf{192.168.1.20} and log in to the dashboard as \textbf{admin} with the password \textbf{secret}.
+    \end{labstep}
+
+    \begin{labstep}
+        Select the \textbf{demo} project.
+        Navigate to \textbf{Project $>$ Compute $>$ Instances}, and click \textbf{Launch Instance}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        In the \textit{Details} tab, type \textbf{instance1} in the \textit{Instance Name} field.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step11.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        In the \textit{Source} tab, set \textit{Create New Volume} to \textbf{No}, and scroll down (if needed) to select the \textbf{ubuntu} image.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step12.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{ubuntu} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        In the \textit{Flavor} tab, scroll down (if needed) to select the \textbf{m1.small} flavor.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step13.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{m1.small} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        In the \textit{Networks} tab, select the \textbf{shared} network.
+        Navigate to the \textbf{Security Groups} tab.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step14.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{shared} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        In the \textit{Security Groups} tab, deselect the \textbf{default} security group since we have our own to apply.
+        Scroll down (if needed) to select the \textbf{secgroup2} security group.
+        This will apply the security group to all interfaces on the instance.
+        Click \textbf{Launch Instance}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step15.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{secgroup2} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        You should be redirected to the \textbf{Project $>$ Compute $>$ Instances} page.
+        The security groups and rules applied to an instance can be found by clicking the instance's name.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step16.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        On the \textit{Overview} tab of the \textit{instance1} page, scroll down to view the \textit{Security Groups} section.
+        In this case, you should see that \textbf{secgroup2} allows all IPv4 and IPv6 egress traffic by default, and you should see the two rules we added for ICMP and SSH (TCP port 22).
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step17.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        If no security group is applied to an instance, the \textit{Security Groups} section will simply say ``Not available''.
+    \end{notebox}
+
+    \begin{labstep}\label{it:secgroup}
+        Navigate back to \textbf{Project $>$ Compute $>$ Instances}.
+        To view and edit the security groups of an instance from the dashboard, click the dropdown next to \textbf{Create Snapshot}, and click \textbf{Edit Security Groups}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step18.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        This option will edit security groups for all interfaces on the instance.
+        Notice that there is also an option to \textbf{Edit Port Security Groups}, which allows you to edit security groups for individual interfaces on the instance.
+    \end{notebox}
+
+    \begin{labstep}
+        In the \textbf{Edit Instance} popup, the \textbf{Instance Security Groups} list contains the security groups that are currently applied to the instance.
+        Remove \textbf{secgroup2} from this instance by clicking the \textbf{-} button next to that group, and click \textbf{Save} to finalize the change.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step19.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Re-open the popup by clicking the dropdown next to \textbf{Create Snapshot} and clicking \textbf{Edit Security Groups}.
+        The \textbf{All Security Groups} list contains the security groups that are available but are not currently applied to the instance.
+        Add the \textbf{default} security group to the interface by clicking the \textbf{+} button next to that group, and click \textbf{Update} to finalize the change.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step20.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        You can assign and unassign multiple security groups before saving the changes.
+    \end{tipbox}
+
+    \begin{labstep}
+        To verify that the security group has been applied again, click \textbf{instance1}.
+        On the \textit{Overview} tab of the \textit{instance1} page, scroll down to view the \textit{Security Groups} section.
+        This time, you should see the \textbf{default} security group and its rules listed.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step21.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We no longer need this instance, so navigate back to \textbf{Project $>$ Compute $>$ Instances}, select \textbf{instance1}, and click \textbf{Delete Instances}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step22.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We will also recreate the security group in the final section of the lab in order to show a complete example, so we can safely delete \textbf{secgroup2}.
+        To delete the security group from the dashboard, navigate to \textbf{Project $>$ Network $>$ Security Groups}.
+        Click the dropdown next to the \textbf{Manage Rules} button in the same row as \textbf{secgroup2}, and then click \textbf{Delete Security Group}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part6/step23.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Leave the web browser open, and continue to the next task.
+    \end{labstep}
+
+\end{enumerate}
+
+%%%%%%%%%%%
+% Section 7
+%%%%%%%%%%%
+\section{Creating SSH Key Pairs}\label{sec:creating-ssh-key-pairs}
+In this task, you will use the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI} to create and manage SSH key pairs.
+These keys will later be used to securely connect to external instances from outside the OpenStack environment.
+
+\begin{enumerate}
+    \begin{labstep}
+        If the web browser is not already open, open it.
+        Navigate to \textbf{192.168.1.20}, and log in to the dashboard as \textbf{admin} with the password \textbf{secret}.
+    \end{labstep}
+
+    \begin{labstep}
+        Select the \textbf{demo} project, and navigate to \textbf{Project $>$ Compute $>$ Key Pairs}.
+        Click \textbf{Create Key Pair} to create a new key pair.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step2.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Enter \textbf{keypair1} in the \textit{Key Pair Name} field, and select \textbf{SSH Key} in the \textit{Key Type} dropdown.
+        Click \textbf{Create Key Pair}.
+        This will create the key pair and download it to the \textbf{\texttildemid/Downloads} directory.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step3.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        When creating key pairs from the Horizon Dashboard, the private key file permissions are \textit{not} set strictly, so it is recommended to still set them through the command line.
+        We will do this in the following steps.
+    \end{tipbox}
+
+    \begin{labstep}
+        Sign out of the Horizon Dashboard and close the web browser.
+    \end{labstep}
+
+    \begin{labstep}
+        If a terminal window is not already open, open one and source the \textbf{admin} credentials from the \textbf{\texttildemid/keystonerc-admin} file.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/keystonerc-admin
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step5.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        To better protect the private key, use the \textbf{chmod} command with a mode of \textbf{600} to make it so that the \textbf{ubuntu} user has read/write permissions on the private key file, and groups and other users have no permissions to the file.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ chmod 600 ~/Downloads/keypair1.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step6.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We only need one key pair to connect to the external instance, so the key pair created from the Horizon Dashboard can safely be deleted in order to demonstrate creating a key pair from the command line.
+        Delete the \textbf{keypair1} key pair.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair delete keypair1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step7.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        Note that a key pair in the context of OpenStack is actually a misnomer.
+        The key pair object really only refers to the public key, while the private key only exists in the file in which it is saved.
+        Therefore, the private key file will still exist after deleting the key pair.
+    \end{notebox}
+
+    \begin{labstep}
+        Delete the private key located at \textbf{\texttildemid/Downloads/keypair1.pem}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ rm -f ~/Downloads/keypair1.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step8.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the available key pairs to verify that \textbf{keypair1} was deleted.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step9.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create the key pair \textbf{keypair2}, and save the private key to the file
+        \textbf{\texttildemid/Downloads/keypair2.pem}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair create \
+            > keypair2 > ~/Downloads/keypair2.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Set the file permissions of the private key so that only the \textbf{ubuntu} user has read/write permissions.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ chmod 600 ~/Downloads/keypair2.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step11.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the available key pairs to verify the creation of \textbf{keypair2}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part7/step12.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Leave the terminal window open and continue to the next task.
+    \end{labstep}
+
+\end{enumerate}
+
+%%%%%%%%%%%
+% Section 8
+%%%%%%%%%%%
+\section{Applying SSH Keys to Instances}\label{sec:applying-ssh-keys-to-instances}
+In this task, you will use both the \textit{Horizon Dashboard} and \textit{OpenStack Unified CLI} to apply SSH key pairs to instances.
+This is the final piece necessary to have an instance that can be reached and logged in to from an external network, which the next task will explore.
+
+\begin{enumerate}
+    \begin{labstep}
+        If a terminal window is not already open, open one and source the admin credentials from the \textbf{\texttildemid/keystonerc-admin} file.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/keystonerc-admin
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step1.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        An SSH key can be applied to an instance at creation from the command line.
+        Create an instance with the \textbf{keypair2} key pair.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
+            > --image ubuntu \
+            > --flavor m1.small \
+            > --network shared \
+            > --key-name keypair2 \
+            > instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step2.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        OpenStack does not provide a way to directly change the key pair associated with an existing instance.
+        We will not need to in these labs, but if you need to use a different SSH key, one option is to manually add your new key to the \textbf{~/.ssh/authorized\_keys} file inside the instance.
+        However, this change will not be tracked by OpenStack.
+        Another option is to rebuild the instance with a new key pair.
+        If the instance contains important data, it's important to back it up---for example, with a snapshot (covered later).
+    \end{tipbox}
+
+    \begin{labstep}
+        Verify that \textbf{keypair2} is attached to \textbf{instance1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server show \
+            > -c key_name \
+            > instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step3.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Delete \textbf{instance1}.
+        We will recreate it from the Horizon Dashboard to demonstrate adding a security group to an instance at creation time from the dashboard.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server delete instance1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step4.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Leave the terminal window open, and open the web browser.
+        Navigate to \textbf{192.168.1.20}, and log in to the dashboard as \textbf{admin} with the password \textbf{secret}.
+    \end{labstep}
+
+    \begin{labstep}
+        Select the \textbf{demo} project.
+        Navigate to \textbf{Project $>$ Compute $>$ Instances}, and click \textbf{Launch Instance}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step6.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        In the \textit{Details} tab, type \textbf{instance1} in the \textit{Instance Name} field.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step7.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        In the \textit{Source} tab, set \textit{Create New Volume} to \textbf{No}, and scroll down (if needed) to select the \textbf{ubuntu} image.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step8.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{ubuntu} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        In the \textit{Flavor} tab, scroll down (if needed) to select the \textbf{m1.small} flavor.
+        Click \textbf{Next}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step9.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{m1.small} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        In the \textit{Networks} tab, select the \textbf{shared} network.
+        Navigate to the \textit{Key Pair} tab.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{shared} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        In the \textit{Key Pair} tab, select \textbf{keypair2} if it is not already in the \textit{Allocated} section, and click \textbf{Launch Instance}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step11.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{stopbox}
+        Before proceeding to the next step, confirm that \textbf{keypair2} appears in the \textit{Allocated} section.
+    \end{stopbox}
+
+    \begin{labstep}
+        You should be redirected to the \textbf{Project $>$ Compute $>$ Instances} page.
+        To verify that the key pair was applied, first click \textbf{instance1} to go to the instance's details page.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step12.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Scroll down to the \textit{Metadata} section and verify that \textbf{keypair2} is present in the \textit{Key Name} row.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step13.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{notebox}
+        If an instance does not have a key pair, the \textit{Key Name} row will show ``None''.
+    \end{notebox}
+
+    \begin{labstep}
+        We no longer need this instance, so navigate back to \textbf{Project $>$ Compute $>$ Instances}, select \textbf{instance1}, and click \textbf{Delete Instances}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step14.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We will also recreate the key pair in the final section of the lab in order to show a complete example.
+        So, we can safely delete \textbf{keypair2}.
+        To delete the key pair from the dashboard, navigate to \textbf{Project $>$ Compute $>$ Key Pairs}, and click the \textbf{Delete Key Pair} button in the same row as \textbf{keypair2}.
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part8/step15.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Log out of the \textit{Horizon Dashboard}, and close the web browser.
+        Continue to the next task.
+    \end{labstep}
+
+\end{enumerate}
+
+%%%%%%%%%%%
+% Section 9
+%%%%%%%%%%%
+\section{Launching and Verifying an External Instance}\label{sec:launching-an-external-instance}
+Up to this point, we have learned how to create an external network, a router, a floating IP address, an SSH key pair, and a security group.
+These are all the resources necessary to create and interact with an external instance from outside the OpenStack cloud.
+In this task, you will put all these concepts together to create a functioning external instance.
+You will create the necessary resources, launch an external instance, and verify its connectivity and functionality with the \textbf{ssh} and \textbf{ping} commands.
+
+\begin{enumerate}
+    \begin{labstep}
+        If a terminal window is not already open, open one and source the admin credentials from the \textbf{\texttildemid/keystonerc-admin} file.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/keystonerc-admin
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step1.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Before creating our own router and external network, we need to delete the ones that are created by default.
+        First, unset the external gateway from \textbf{router1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router unset \
+            > --external-gateway \
+            > router1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step2.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the interfaces of \textbf{router1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack port list \
+            > -c ID \
+            > -f value \
+            > --router router1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step3.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Capture the output of the previous command in to a variable called \textbf{ports}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ ports=$(!!)
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step4.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Ensure that \textbf{ports} contains the ID values as expected.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ echo $ports
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step5.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Remove the interfaces from \textbf{router1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ for port in $ports; do \
+            > openstack router remove port router1 $port; \
+            > done
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step6.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Delete \textbf{router1}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router delete router1
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step7.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Delete the \textbf{public} network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network delete public
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step8.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        First, we will create an external network.
+        List the existing networks to ensure that one does not already exist.
+        Only the \textbf{shared} and \textbf{private} networks should be listed in the output.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step9.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create an external network named \textbf{external}.
+        Set the network type to \textbf{flat} and the physical network to \textbf{public}.
+        Set the network as shared and external.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network create \
+            > --external \
+            > --share \
+            > --provider-network-type flat \
+            > --provider-physical-network public \
+            > external
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step10.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create a subnet named \textbf{external-subnet} in the \textbf{external} network.
+        Give the subnet a range of \textbf{172.25.250.60} to \textbf{172.25.250.80}.
+        Disable DHCP services for the subnet, and use the address \textbf{172.25.250.254} as the gateway and the DNS name server.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack subnet create \
+            > --subnet-range 172.25.250.0/24 \
+            > --no-dhcp \
+            > --gateway 172.25.250.254 \
+            > --dns-nameserver 172.25.250.254 \
+            > --allocation-pool start=172.25.250.60,end=172.25.250.80 \
+            > --network external \
+            > external-subnet
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step11.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the networks again to verify the creation of the \textbf{external} network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step12.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the existing routers.
+        The output should be empty.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step13.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Next, create a router named \textbf{router-external}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router create router-external
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step14.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the routers again to verify the creation of \textbf{router-external}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step15.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        The router needs to be connected to both the \textbf{shared-subnet} and \textbf{external-subnet} networks to allow external connections to the instance.
+        First, add the \textbf{shared-subnet} to the router.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router add subnet \
+            > router-external \
+            > shared-subnet
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step16.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Set the \textbf{external} network as the gateway for the router.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router set \
+            > --external-gateway external \
+            > router-external
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step17.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Show the details of \textbf{router-external} to show that it is connected to two subnets.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router show router-external
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step18.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Now, we will create a floating IP address to associate with the instance.
+        This will be the IP address we use to connect to the instance through the \textbf{external} network.
+        First, list the available floating IP addresses.
+        The output should be empty.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step19.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create the floating IP address \textbf{172.25.250.75} in the \textbf{external} network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip create \
+            > --floating-ip-address 172.25.250.75 \
+            > external
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step20.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the floating IP addresses again to verify the creation of \textbf{172.25.250.75}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step21.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        In order for our ICMP and SSH requests to reach our external instance, we need to set up a security group and security rules that allow this traffic.
+        First, list the available security groups.
+        The output should contain two default security groups.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step22.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create a security group.
+        Because we will allow ICMP and SSH traffic, we will name the security group \textbf{sg-allow-icmp-ssh}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group create \
+            > sg-allow-icmp-ssh
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step23.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        Real-world OpenStack environments may have a variety of instances with different security group needs.
+        Therefore, it pays to be descriptive in your naming conventions so that you can more easily identify the appropriate security group later.
+        It is much easier to tell what \textbf{sg-allow-icmp-ssh} does than it is to guess the purpose of \textbf{secgroup1}.
+        However, giving strong names alone is not enough---it is always best to check a security group's actual rules before adding it to an instance.
+    \end{tipbox}
+
+    \begin{labstep}
+        List the security groups to verify the creation of \textbf{sg-allow-icmp-ssh}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step24.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the rules in the \textbf{sg-allow-icmp-ssh} security group.
+        There should be two rules created by default.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
+            > sg-allow-icmp-ssh
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step25.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{tipbox}
+        Try to use the \textbf{for} loop trick to verify that the default security rules allow IPv4 and IPv6 egress traffic.
+        You can use this command to show the details of a rule:
+        \begin{lstlisting}
+            openstack security group rule show <ID>
+        \end{lstlisting}
+    \end{tipbox}
+
+    \begin{labstep}
+        Add a security rule in the \textbf{sg-allow-icmp-ssh} security group to allow all incoming ICMP traffic.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule create \
+            > --protocol icmp \
+            > sg-allow-icmp-ssh
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step26.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Add another security rule to allow remote connection using SSH on the default port 22.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule create \
+            > --protocol tcp \
+            > --dst-port 22 \
+            > sg-allow-icmp-ssh
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step27.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the rules of the \textbf{sg-allow-icmp-ssh} security group again to verify that there are now four rules: the two default rules plus the two rules you just added.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
+            > sg-allow-icmp-ssh
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step28.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Finally, we need an SSH key pair to remotely log in to the external instance.
+        List the available key pairs.
+        The output should be empty.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step29.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create a key pair called \textbf{keypair}, and save the private key to \textbf{~/Downloads/keypair.pem}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair create \
+            > keypair > ~/Downloads/keypair.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step30.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Set the file permissions of the private key so that only the \textbf{ubuntu} user has read/write permissions.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ chmod 600 ~/Downloads/keypair.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step31.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        List the available key pairs again to verify the creation of \textbf{keypair}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack keypair list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part9/step32.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        We now have all the resources we need to create an external instance.
         List all instances in the project.
-        The list should be empty.
+        The output should be empty.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack server list
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step2.png}
+            \includegraphics[width=\linewidth]{images/part9/step33.png}
         \end{center}
     \end{labstep}
 
@@ -993,44 +2389,40 @@ In this task, you will launch an external instance and verify its connectivity a
             [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
             > --image ubuntu \
             > --flavor m1.small \
-            > --key-name keypair2 \
-            > --nic net-id=shared \
-            > --security-group secgroup2 \
+            > --network shared \
+            > --security-group sg-allow-icmp-ssh \
+            > --key-name keypair \
             > instance-external
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step3.png}
+            \includegraphics[width=\linewidth]{images/part9/step34.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         List the floating IPs.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list \
-            > --max-width 90
+            [ubuntu@workstation (keystone-admin)]:~$ openstack floating ip list
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step4.png}
+            \includegraphics[width=\linewidth]{images/part9/step35.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         Associate the floating IP address with the \textbf{instance-external} instance.
         \begin{lstlisting}
-            ubuntu@workstation;~$ openstack server add floating ip \
-            > instance-external 172.25.250.75
+            [ubuntu@workstation (keystone-admin)]:~$ openstack server add floating ip \
+            > instance-external \
+            > 172.25.250.75
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step5.png}
+            \includegraphics[width=\linewidth]{images/part9/step36.png}
         \end{center}
     \end{labstep}
-
-    \begin{notebox}
-        Be sure to use the floating IP address that matches your output as they may differ slightly from this example.
-    \end{notebox}
 
     \begin{labstep}
         Verify that the instance was assigned the floating IP address.
@@ -1041,27 +2433,28 @@ In this task, you will launch an external instance and verify its connectivity a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step6.png}
+            \includegraphics[width=\linewidth]{images/part9/step37.png}
         \end{center}
     \end{labstep}
-
-    \begin{tipbox}
-        For commands that output tables, you can pull out only the columns you want with the \textbf{-c} option followed by the column name.
-        This option can be chained as in the command above to list multiple columns.
-    \end{tipbox}
 
     \begin{labstep}
         Use the \textbf{scp} command to send the \textbf{keypair2} key pair to the \textbf{devstack} machine over SSH.
         Use the password \textbf{ubuntu} for authentication.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ scp ~/Downloads/keypair2.pem \
-            > ubuntu@192.168.1.20:~/keypair2.pem
+            [ubuntu@workstation (keystone-admin)]:~$ scp ~/Downloads/keypair.pem \
+            > 192.168.1.20:~/keypair.pem
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step7.png}
+            \includegraphics[width=\linewidth]{images/part9/step38.png}
         \end{center}
     \end{labstep}
+
+    \begin{notebox}
+        Because your username is \textbf{ubuntu} on both machines, you don't need to specify the username in the \textbf{scp} command.
+        By default, \textbf{scp} uses your current local username for the remote connection.
+        If you wanted to send the file to a different user, such as \textbf{user2} on the \textbf{devstack} machine, you would write: \textbf{user2@192.168.1.20:\texttildemid/keypair.pem}.
+    \end{notebox}
 
     \begin{labstep}
         SSH into the \textbf{devstack} machine.
@@ -1071,18 +2464,19 @@ In this task, you will launch an external instance and verify its connectivity a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step8.png}
+            \includegraphics[width=\linewidth]{images/part9/step39.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         Ping the \textbf{instance-external} instance with the floating IP that was assigned to it in the previous task.
+        This will verify that the instance can be reached and that its security group allows ICMP ingress traffic.
         \begin{lstlisting}
             ubuntu@devstack:~$ ping -c3 172.25.250.75
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step9.png}
+            \includegraphics[width=\linewidth]{images/part9/step40.png}
         \end{center}
     \end{labstep}
 
@@ -1099,7 +2493,7 @@ In this task, you will launch an external instance and verify its connectivity a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step10.png}
+            \includegraphics[width=\linewidth]{images/part9/step41.png}
         \end{center}
     \end{labstep}
 
@@ -1118,7 +2512,7 @@ In this task, you will launch an external instance and verify its connectivity a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part6/step11.png}
+            \includegraphics[width=\linewidth]{images/part9/step42.png}
         \end{center}
     \end{labstep}
 
@@ -1131,4 +2525,67 @@ In this task, you will launch an external instance and verify its connectivity a
     \end{labstep}
 
 \end{enumerate}
+
+%%%%%%%%%%%%
+% Appendix A
+%%%%%%%%%%%%
+\appendix
+\section{Fine-Grained Security Group Control}
+In Section~\ref{sec:applying-security-groups-to-instances}, we discussed applying security groups to instances.
+However, in reality, security groups are applied to the individual ports on an instance.
+For simplicity, we could mostly ignore this distinction and treat them as if they applied directly to the instance.
+More fine-grained control over security groups is available from both the CLI and web interface, which is especially useful when working with instances that have multiple interfaces that each have different requirements.
+
+From the dashboard, managing security groups for individual ports only requires navigating a new menu.
+In Section~\ref{sec:applying-security-groups-to-instances}, Step~\ref{it:secgroup}, we clicked \textbf{Edit Security Groups} in the instance's dropdown menu.
+To manage security groups for a specific interface instead, click \textbf{Edit Port Security Groups}.
+The interface is nearly identical.
+
+From the CLI, working with individual ports requires slightly different commands.
+The following commands apply to the \textit{entire} instance---that is, to all its ports (with some exceptions):
+\begin{lstlisting}
+    openstack server add security group <instance> <security_group>
+    openstack server remove security group <instance> <security_group>
+\end{lstlisting}
+
+Security groups can also be managed for each port from the CLI; however, the process can be slightly more cumbersome because unnamed ports must be specified by ID.
+
+First, it is recommended to maximize your terminal window to prevent ID values from being split across lines.
+This will make it easier to copy the IDs to the clipboard.
+View the ports of an instance to get their IDs.
+\begin{lstlisting}
+    openstack port list --server <instance_name_or_id>
+\end{lstlisting}
+\noindent
+For each port you want to modify, first copy its ID to the clipboard.
+Alternatively, use the ID to name the port with
+\begin{lstlisting}
+    openstack port set --name <new_port_name> <port_name_or_id>
+\end{lstlisting}
+\noindent
+or name a port upon creation with
+\begin{lstlisting}
+    openstack port create --name <port_name> --network <network_name_or_id>
+\end{lstlisting}
+\noindent
+Next, find the security groups applied to the port.
+\begin{lstlisting}
+    openstack port show <port_name_or_id> -c security_group_ids
+\end{lstlisting}
+\noindent
+Optionally, find the name of each security group.
+\begin{lstlisting}
+    openstack security group show <security_group_id> -c name
+\end{lstlisting}
+\noindent
+Finally, remove a security group from an interface individually with
+\begin{lstlisting}
+    openstack port unset --security-group <security_group_name_or_id> <port_name_or_id>
+\end{lstlisting}
+\noindent
+or remove all security groups from an interface with
+\begin{lstlisting}
+    openstack port set --no-security-group <port_name_or_id>
+\end{lstlisting}
+
 \end{document}
