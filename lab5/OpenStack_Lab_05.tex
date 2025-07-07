@@ -27,8 +27,7 @@ For example, it can be used to install a list of packages or change the message 
 In this task, you will set up the OpenStack environment to support the customized external instances you will create in the following sections.
 
 \begin{enumerate}
-    % TODO: Viewing the default Apache web page will require being able to access the instance
-    % from the workstation, which is currently not working
+    % TODO: Viewing the default Apache web page will require being able to access the instance from the workstation, which is currently not working
     \begin{labstep}
         Log into the \textbf{workstation} machine as the \textbf{ubuntu} user with password \textbf{ubuntu}.
 
@@ -64,8 +63,7 @@ In this task, you will set up the OpenStack environment to support the customize
         First, the default router and external network need to be deleted.
         List the routers to find the default router's name so it can be deleted.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack router list \
-            > --max-width 80
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router list
         \end{lstlisting}
 
         \begin{center}
@@ -79,10 +77,11 @@ In this task, you will set up the OpenStack environment to support the customize
 
     \begin{labstep}
         Before the router can be deleted, it must be disconnected from all subnets.
-        Show more details about \textbf{router1} to see the subnets to which it is connected.
+        First, remove its external gateway.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack router show router1 \
-            > --max-width 80
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router unset \
+            > --external-gateway \
+            > router1
         \end{lstlisting}
 
         \begin{center}
@@ -91,12 +90,11 @@ In this task, you will set up the OpenStack environment to support the customize
     \end{labstep}
 
     \begin{labstep}
-        The previous command only outputs IDs, which can be used to remove the subnets from the router.
-        However, to avoid having to type long ID strings, find the names of the subnets and remove them that way.
-        List the subnets to see the which names are mapped to the IDs from the previous step.
+        In previous labs, you disconnected routers from their subnets by using a \textbf{for} loop to iterate over interface IDs.
+        In this lab, you will instead identify the connected subnets by name before disconnecting them.
+        To begin, list the details of \textbf{router1} to see which subnets it is connected to.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack subnet list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router show router1
         \end{lstlisting}
 
         \begin{center}
@@ -105,12 +103,9 @@ In this task, you will set up the OpenStack environment to support the customize
     \end{labstep}
 
     \begin{labstep}
-        By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and \textbf{ipv6-private-subnet} subnets.
-        Remove \textbf{private-subnet} subnet from \textbf{router1}.
+        List the subnets to see the which names are mapped to the IDs from the previous step.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack router remove subnet \
-            > router1 \
-            > private-subnet
+            [ubuntu@workstation (keystone-admin)]:~$ openstack subnet list
         \end{lstlisting}
 
         \begin{center}
@@ -119,11 +114,12 @@ In this task, you will set up the OpenStack environment to support the customize
     \end{labstep}
 
     \begin{labstep}
-        Now, remove \textbf{ipv6-private-subnet} from \textbf{router1}.
+        By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and \textbf{ipv6-private-subnet} subnets.
+        Remove \textbf{private-subnet} subnet from \textbf{router1}.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack router remove subnet \
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router remove subnet \
             > router1 \
-            > ipv6-private-subnet
+            > private-subnet
         \end{lstlisting}
 
         \begin{center}
@@ -132,10 +128,11 @@ In this task, you will set up the OpenStack environment to support the customize
     \end{labstep}
 
     \begin{labstep}
-        Now, the router can be deleted.
-        Delete \textbf{router1}.
+        Now, remove \textbf{ipv6-private-subnet} from \textbf{router1}.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack router delete router1
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router remove subnet \
+            > router1 \
+            > ipv6-private-subnet
         \end{lstlisting}
 
         \begin{center}
@@ -143,15 +140,11 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{center}
     \end{labstep}
 
-    \begin{tipbox}
-        While you cannot delete a router that still has connections to subnets through the OpenStack Unified CLI, deleting a router through the Horizon Dashboard will automatically remove its connections.
-    \end{tipbox}
-
     \begin{labstep}
-        List the available networks to find the name of the default external network.
+        Now, the router can be deleted.
+        Delete \textbf{router1}.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack network list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-admin)]:~$ openstack router delete router1
         \end{lstlisting}
 
         \begin{center}
@@ -160,10 +153,14 @@ In this task, you will set up the OpenStack environment to support the customize
     \end{labstep}
 
     \begin{labstep}
-        From the output of the previous step, you can see that the \textbf{public} network should be the default external network.
-        Delete the \textbf{public} network.
+        List the details of the available networks and find which one is external.
+        The \textbf{--long} option adds several columns to the tabular output of the command, including the \textbf{Router Type} column, which shows whether the router is internal or external.
+        We will limit the output to just the \textbf{Name} and \textbf{Route Type} columns.
         \begin{lstlisting}
-            ubuntu@workstation:~$ openstack network delete public
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network list \
+            > --long \
+            > -c Name \
+            > -c "Router Type"
         \end{lstlisting}
 
         \begin{center}
@@ -172,8 +169,21 @@ In this task, you will set up the OpenStack environment to support the customize
     \end{labstep}
 
     \begin{tipbox}
-        You can confirm that \textbf{public} is an external network by viewing its details with the command \textbf{openstack network show public}.
+        In most terminal commands, arguments that contain spaces must be enclosed in quotation marks so that the shell treats them as a single value.
+        In this case, \textbf{``Router~Type''} must be quoted to be interpreted correctly.
     \end{tipbox}
+
+    \begin{labstep}
+        The output of the previous step shows that \textbf{public} is the external network.
+        Delete the \textbf{public} network.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ openstack network delete public
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step12.png}
+        \end{center}
+    \end{labstep}
 
     \begin{labstep}
         Now, we will create our own resources.
@@ -182,14 +192,15 @@ In this task, you will set up the OpenStack environment to support the customize
         Set the network as shared and external.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack network create \
-            > --external --share \
+            > --external \
+            > --share \
             > --provider-network-type flat \
             > --provider-physical-network public \
             > extern-net
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step12.png}
+            \includegraphics[width=\linewidth]{images/part1/step13.png}
         \end{center}
     \end{labstep}
 
@@ -209,7 +220,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step13.png}
+            \includegraphics[width=\linewidth]{images/part1/step14.png}
         \end{center}
     \end{labstep}
 
@@ -221,7 +232,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step14.png}
+            \includegraphics[width=\linewidth]{images/part1/step15.png}
         \end{center}
     \end{labstep}
 
@@ -232,7 +243,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step15.png}
+            \includegraphics[width=\linewidth]{images/part1/step16.png}
         \end{center}
     \end{labstep}
 
@@ -243,7 +254,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step16.png}
+            \includegraphics[width=\linewidth]{images/part1/step17.png}
         \end{center}
     \end{labstep}
 
@@ -254,7 +265,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step17.png}
+            \includegraphics[width=\linewidth]{images/part1/step18.png}
         \end{center}
     \end{labstep}
 
@@ -266,7 +277,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step18.png}
+            \includegraphics[width=\linewidth]{images/part1/step19.png}
         \end{center}
     \end{labstep}
 
@@ -279,7 +290,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step19.png}
+            \includegraphics[width=\linewidth]{images/part1/step20.png}
         \end{center}
     \end{labstep}
 
@@ -291,7 +302,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step20.png}
+            \includegraphics[width=\linewidth]{images/part1/step21.png}
         \end{center}
     \end{labstep}
 
@@ -304,7 +315,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step21.png}
+            \includegraphics[width=\linewidth]{images/part1/step22.png}
         \end{center}
     \end{labstep}
 
@@ -317,7 +328,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step22.png}
+            \includegraphics[width=\linewidth]{images/part1/step23.png}
         \end{center}
     \end{labstep}
 
@@ -328,7 +339,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step23.png}
+            \includegraphics[width=\linewidth]{images/part1/step24.png}
         \end{center}
     \end{labstep}
 
@@ -339,7 +350,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step24.png}
+            \includegraphics[width=\linewidth]{images/part1/step25.png}
         \end{center}
     \end{labstep}
 
@@ -351,7 +362,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step25.png}
+            \includegraphics[width=\linewidth]{images/part1/step26.png}
         \end{center}
     \end{labstep}
 
@@ -359,17 +370,20 @@ In this task, you will set up the OpenStack environment to support the customize
         List the default security group rules.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
-            > --fit-width dev-secgroup
+            > dev-secgroup
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step26.png}
+            \includegraphics[width=\linewidth]{images/part1/step27.png}
         \end{center}
     \end{labstep}
 
-    \begin{notebox}
-        You can verify with the command \textbf{openstack security group rule show RULE\_ID} that the default rules allow any outgoing traffic over IPv4 or IPv6.
-    \end{notebox}
+    \begin{tipbox}
+        You can verify that the default rules allow any outgoing traffic over IPv4 or IPv6 with this command:
+        \begin{lstlisting}
+            openstack security group rule show <rule-id>
+        \end{lstlisting}
+    \end{tipbox}
 
     \begin{labstep}
         Add a security rule in the \textbf{dev-secgroup} security group to allow remote ICMP traffic.
@@ -380,7 +394,7 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step27.png}
+            \includegraphics[width=\linewidth]{images/part1/step28.png}
         \end{center}
     \end{labstep}
 
@@ -394,23 +408,24 @@ In this task, you will set up the OpenStack environment to support the customize
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step28.png}
+            \includegraphics[width=\linewidth]{images/part1/step29.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         List the security group rules again to see that the new rules have taken effect.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list
+            [ubuntu@workstation (keystone-admin)]:~$ openstack security group rule list \
+            > dev-secgroup
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step29.png}
+            \includegraphics[width=\linewidth]{images/part1/step30.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
-        Close the terminal window and continue to the next task.
+        Close the terminal window, and continue to the next task.
     \end{labstep}
 \end{enumerate}
 
@@ -639,7 +654,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         \begin{lstlisting}
             #!/bin/bash
             echo 'Hello, world!' > /root/hello.txt
-            echo '127.0.1.1' hostname >> /etc/hosts
+            echo '127.0.1.1 instance2' >> /etc/hosts
         \end{lstlisting}
 
         \begin{center}
@@ -654,7 +669,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
             [ubuntu@workstation (keystone-admin)]:~$ openstack server create \
             > --image ubuntu \
             > --flavor m1.small \
-            > --nic net-id=shared \
+            > --network shared \
             > --security-group dev-secgroup \
             > --key-name dev-keypair \
             > --user-data ~/hello \
@@ -662,7 +677,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part3/step3.png}
+            \includegraphics[scale=0.7]{images/part3/step3.png}
         \end{center}
     \end{labstep}
 
@@ -692,7 +707,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         Assign the floating IP to \textbf{instance2}.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack server add floating ip \
-            instance2 172.25.250.76
+            > instance2 172.25.250.76
         \end{lstlisting}
 
         \begin{center}
@@ -718,7 +733,7 @@ In this task, you will verify that \textbf{cloud-init} has correctly customized 
         When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter \textbf{ubuntu}.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ scp ~/Downloads/dev-keypair.pem \
-            > ubuntu@192.168.1.20:~/dev-keypair.pem
+            > 192.168.1.20:~/dev-keypair.pem
         \end{lstlisting}
 
         \begin{center}
