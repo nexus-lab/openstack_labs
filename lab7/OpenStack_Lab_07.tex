@@ -22,7 +22,7 @@ In this lab, you will practice and demonstrate the knowledge and skills you acqu
 %%%%%%%%%%%
 \section{Creating an Environment}\label{sec:creating-an-environment}
 In this task, you will create all the resources necessary to create an external instance running an FTP server.
-The architecture will be composed of an external network and an internal network, a new privileged user and a non-privileged user, and a set of new security rules to allow SSH and FTP access to the instance.
+The architecture will be composed of an external network and an internal network, a new project that includes a privileged user and a non-privileged user, and a set of new security rules to allow ICMP, SSH, and FTP access to the instance.
 A floating IP will be associated with the instance to permit external connectivity.
 
 \begin{enumerate}
@@ -60,8 +60,9 @@ A floating IP will be associated with the instance to permit external connectivi
         In this lab, we will create our own project and set of users to simulate a more realistic working environment.
         First, create the \textbf{prod} project.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack project create prod \
-            > --domain default
+            [ubuntu@workstation (keystone-admin)]:~$ openstack project create \
+            > --domain default \
+            > prod
         \end{lstlisting}
 
         \begin{center}
@@ -195,11 +196,14 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Before making an external network for the project, the default router and external network need to be deleted.
-        List the routers to find the default router's name.
+        Before making an external network for the project, the existing router and external network need to be deleted.
+        List the details of the available networks and find which one is external.
+        From the output, it is clear that \textbf{public} is the external network.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack router list \
-            --max-width 80
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack network list \
+            > --long \
+            > -c Name \
+            > -c "Router Type"
         \end{lstlisting}
 
         \begin{center}
@@ -208,12 +212,9 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Before the router can be deleted, it must be disconnected from all subnets.
-        Show the details of \textbf{router1} to find the subnets to remove from it.
-
+        List the routers to find the existing router's name.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack router show router1 \
-            > --max-width 100
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router list
         \end{lstlisting}
 
         \begin{center}
@@ -222,11 +223,11 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        The previous command only outputs IDs, which can be used to remove the subnets from the router.
-        To use the subnet names, list the subnets to see which names are mapped to the IDs from the previous step.
+        First, unset the external gateway from \textbf{router1}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router unset \
+            > --external-gateway \
+            > router1
         \end{lstlisting}
 
         \begin{center}
@@ -235,15 +236,12 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        By matching the names and IDs, you can see that the router is connected to the \textbf{private-subnet} and \textbf{ipv6-private-subnet} subnets.
-        Remove both subnets from \textbf{router1}.
+        List the interface IDs of \textbf{router1}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
-            > router1 \
-            > private-subnet
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack router remove subnet \
-            > router1 \
-            > ipv6-private-subnet
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack port list \
+            > -c ID \
+            > -f value \
+            > --router router1
         \end{lstlisting}
 
         \begin{center}
@@ -252,10 +250,9 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Now, \textbf{router1} can be deleted.
-        Delete \textbf{router1}.
+        Capture the output of the previous command in to a variable called \textbf{ports}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack router delete router1
+            [ubuntu@workstation (keystone-superuser)]:~$ ports=$(!!)
         \end{lstlisting}
 
         \begin{center}
@@ -264,10 +261,9 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        List the available networks to find the name of the default external network.
+        Ensure that \textbf{ports} contains the ID values as expected.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack network list \
-            > --max-width 100
+            [ubuntu@workstation (keystone-superuser)]:~$ echo $ports
         \end{lstlisting}
 
         \begin{center}
@@ -276,10 +272,11 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        From the output of the previous step, you can see that the \textbf{public} network should be the default external network.
-        Delete the \textbf{public} network.
+        Use a \textbf{for} loop to delete the interfaces from \textbf{router1}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack network delete public
+            [ubuntu@workstation (keystone-superuser)]:~$ for port in $ports; do \
+            > openstack router remove port router1 $port; \
+            > done
         \end{lstlisting}
 
         \begin{center}
@@ -287,18 +284,10 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{center}
     \end{labstep}
 
-    \begin{tipbox}
-        You can confirm that \textbf{public} is an external network by viewing its details with the command \textbf{openstack network show public}.
-    \end{tipbox}
-
     \begin{labstep}
-        Create an external, shared network called \textbf{extern-net}.
+        Delete \textbf{router1} now that its interfaces have been disconnected.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack network create \
-            > --external --share \
-            > --provider-network-type flat \
-            > --provider-physical-network public \
-            > extern-net
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack router delete router1
         \end{lstlisting}
 
         \begin{center}
@@ -307,21 +296,50 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Create the \textbf{extern-subnet} subnet in the \textbf{172.25.250.0/24} range.
-        Make the floating IP allocation pool range from \textbf{172.25.250.25} to \textbf{172.250.250.30}, and allow DHCP.
-        Set both the gateway and DNS nameserver addresses to \textbf{172.25.250.254}.
+        Delete the \textbf{public} network.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet create \
-            > --subnet-range 172.25.250.0/24 \
-            > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
-            > --dhcp --network extern-net \
-            > --gateway 172.25.250.254 \
-            > --dns-nameserver 172.25.250.254 \
-            > extern-subnet
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack network delete public
         \end{lstlisting}
 
         \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step22.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create an external, shared network called \textbf{external}.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack network create \
+            > --external \
+            > --share \
+            > --provider-network-type flat \
+            > --provider-physical-network public \
+            > external
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step23.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Create the \textbf{external-subnet} subnet in the \textbf{172.25.250.0/24} range.
+        Make the floating IP allocation pool range from \textbf{172.25.250.25} to \textbf{172.25.250.30}.
+        Set both the gateway and DNS nameserver addresses to \textbf{172.25.250.254}.
+        Since we will statically allocate any IPs on this subnet, it does not need DHCP.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack subnet create \
+            > --subnet-range 172.25.250.0/24 \
+            > --no-dhcp \
+            > --gateway 172.25.250.254 \
+            > --dns-nameserver 172.25.250.254 \
+            > --allocation-pool start=172.25.250.25,end=172.25.250.30 \
+            > --network external \
+            > external-subnet
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step24.png}
         \end{center}
     \end{labstep}
 
@@ -332,41 +350,14 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step23.png}
-        \end{center}
-    \end{labstep}
-
-    \begin{labstep}
-        Create an internal network called \textbf{intern-net}.
-        \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack network create intern-net
-        \end{lstlisting}
-
-        \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step24.png}
-        \end{center}
-    \end{labstep}
-
-    \begin{labstep}
-        Create a subnet for \textbf{intern-net} called \textbf{intern-subnet} in the \textbf{192.168.0.0/24} range.
-        Allow DHCP on the subnet.
-        \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack subnet create \
-            > --dhcp \
-            > --subnet-range 192.168.0.0/24 \
-            > --network intern-net \
-            > intern-subnet
-        \end{lstlisting}
-
-        \begin{center}
             \includegraphics[width=\linewidth]{images/part1/step25.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
-        Create a router named \textbf{router1} so that the internal and external networks can be connected.
+        Create an internal network called \textbf{internal}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router create router1
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack network create internal
         \end{lstlisting}
 
         \begin{center}
@@ -375,11 +366,15 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Add a port to the router for the internal network.
+        Create a subnet for the \textbf{internal} network called \textbf{internal-subnet} in the \textbf{192.168.0.0/24} range.
+        Unlike the \textbf{external-subnet}, the \textbf{internal-subnet} does need DHCP services.
+        Without them, the instance will be unreachable without additional configuration because it may not receive a valid IP address, subnet mask, default gateway, or DNS nameserver.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router add subnet \
-            > router1 \
-            > intern-subnet
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack subnet create \
+            > --subnet-range 192.168.0.0/24 \
+            > --dhcp \
+            > --network internal \
+            > internal-subnet
         \end{lstlisting}
 
         \begin{center}
@@ -387,12 +382,15 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        The \textbf{--dhcp} option is default and is specified here for clarity.
+    \end{notebox}
+
     \begin{labstep}
-        Set the \textbf{extern-net} network as the gateway for the router.
+        Create a router named \textbf{router-external} so that the internal and external networks can be connected.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router set \
-            > --external-gateway extern-net \
-            > router1
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router create \
+            > router-external
         \end{lstlisting}
 
         \begin{center}
@@ -401,10 +399,11 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Allocate a floating IP address from the \textbf{extern-net} network for the \textbf{prod} project.
+        Add a port to the router for the internal network.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip create \
-            > extern-net
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router add subnet \
+            > router-external \
+            > internal-subnet
         \end{lstlisting}
 
         \begin{center}
@@ -413,10 +412,11 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Generate a key pair for the \textbf{cloud-dev} user named \textbf{key1}.
+        Set the \textbf{external} network as the router's external gateway.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack keypair create \
-            > key1 > ~/Downloads/key1.pem
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack router set \
+            > --external-gateway external \
+            > router-external
         \end{lstlisting}
 
         \begin{center}
@@ -425,9 +425,15 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write permissions.
+        We want to assign a specific floating IP address to the instance we will create.
+        However, while a user with the \textbf{member} role can allocate a random floating IP address on a network, allocating a specific IP requires an \textbf{admin} role.
+        Therefore, first source the credentials for the \textbf{superuser} user.
+        Then, allocate the \textbf{127.25.250.25} floating IP address from the \textbf{external} network for the \textbf{prod} project.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ chmod 600 ~/Downloads/key1.pem
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ source ~/keystonerc-superuser
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack floating ip create \
+            > --floating-ip-address 172.25.250.25 \
+            > external
         \end{lstlisting}
 
         \begin{center}
@@ -435,7 +441,31 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{center}
     \end{labstep}
 
-    % TODO(lucas): Needs a fit-width
+    \begin{labstep}
+        We no longer need \textbf{admin} privileges, so switch back to the \textbf{cloud-dev} user.
+        Generate a key pair named \textbf{ftp-key} for the \textbf{cloud-dev} user.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-superuser)]:~$ source ~/keystonerc-cloud-dev
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack keypair create \
+            > ftp-key > ~/Downloads/ftp-key.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step32.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Change the permissions of the key pair file so that only the \textbf{ubuntu} user has read and write permissions.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ chmod 600 ~/Downloads/ftp-key.pem
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step33.png}
+        \end{center}
+    \end{labstep}
+
     \begin{labstep}
         Create a security group named \textbf{ftp-secgroup} for the \textbf{prod} project.
         \begin{lstlisting}
@@ -445,7 +475,7 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step32.png}
+            \includegraphics[width=\linewidth]{images/part1/step34.png}
         \end{center}
     \end{labstep}
 
@@ -459,23 +489,22 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step33.png}
+            \includegraphics[width=\linewidth]{images/part1/step35.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
-        Create a security group rule to allow \textbf{SSH} traffic from any IP address.
-        SSH uses the TCP protocol on port 22 by default.
+        Create a security group rule to allow \textbf{SSH} traffic from any IP address on the default port 22.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack security group \
             > rule create \
             > --proto tcp \
-            > --dst-port 22:22 \
+            > --dst-port 22 \
             > ftp-secgroup
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step34.png}
+            \includegraphics[width=\linewidth]{images/part1/step36.png}
         \end{center}
     \end{labstep}
 
@@ -491,43 +520,85 @@ A floating IP will be associated with the instance to permit external connectivi
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step35.png}
+            \includegraphics[width=\linewidth]{images/part1/step37.png}
         \end{center}
     \end{labstep}
 
-    % TODO(lucas): Mention that this file already exists on the file system
     \begin{labstep}
         Create an image named \textbf{ftp} with the file \textbf{\texttildemid/Downloads/ftp.img}.
+        This file comes preloaded on the \textbf{workstation} machine for the purpose of this lab.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack image create \
             > --disk-format qcow2 \
             > --file ~/Downloads/ftp.img \
-            > --max-width 100 \
             > ftp
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step36.png}
+            \includegraphics[width=\linewidth]{images/part1/step38.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Finally, we will create a custom flavor for the instance based on one of the existing flavors.
+        The \textbf{ftp} image requires at least \qty{20}{\giga\byte} of disk.
+        If we list the available flavors, we can see that \textbf{m1.small} is close to what we need, so we will create a similar flavor with a small amount of ephemeral and swap disk.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack flavor list
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step39.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Creating a flavor is another action that requires \textbf{admin} privileges, so first switch to the \textbf{superuser} user.
+        Then, define a flavor called \textbf{ftp} with \textbf{\qty{1}{\vcpu}}, \textbf{\qty{2048}{\mega\byte}} of RAM, a \textbf{\qty{10}{\giga\byte}} root disk, a \textbf{\qty{2}{\giga\byte}} ephemeral disk, and a \textbf{\qty{1024}{\mega\byte}} swap disk.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ source ~/keystonerc-superuser
+            [ubuntu@workstation (keystone-superuser)]:~$ openstack flavor create \
+            > --vcpus 1 \
+            > --ram 2048 \
+            > --disk 20 \
+            > --ephemeral 2 \
+            > --swap 1024 \
+            > ftp
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step40.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Switch back to the \textbf{cloud-dev} user.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-supuser)]:~$ source ~/keystonerc-cloud-dev
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part1/step41.png}
         \end{center}
     \end{labstep}
 
     \begin{labstep}
         The FTP server instance is almost ready to be launched.
-        First, use \textbf{nano} to create a file named \textbf{script} in the home directory.
+        First, use \textbf{nano} to create a file named \textbf{ftp-init} in the home directory.
         Be sure it has the correct indentation and matches the contents shown below.
         Press \textbf{Ctrl+X} to exit the file, then press \textbf{Y} and then \textbf{Enter} to save the changes to the file.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ nano ~/script
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ nano ~/ftp-init
         \end{lstlisting}
         \begin{lstlisting}
             #cloud-config
             runcmd:
-            - echo "This instance has been customized by cloud-init" > /etc/motd
-            - echo "127.0.1.1" ftp-server >> /etc/hosts
+             - echo "This instance has been customized by cloud-init" > /etc/motd
+             - echo "127.0.1.1 ftp-server" >> /etc/hosts
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part1/step37.png}
+            \includegraphics[width=\linewidth]{images/part1/step42.png}
         \end{center}
     \end{labstep}
 
@@ -549,21 +620,20 @@ In this task, you will deploy an FTP server in your environment and verify its e
 
 \begin{enumerate}
     \begin{labstep}
-        Create an instance named \textbf{ftp-server} using \textbf{intern-net} for the internal network,
-        \textbf{m1.small} as the flavor, and \textbf{ubuntu} as the image.
+        Create an instance named \textbf{ftp-server} using all our custom resources.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server create \
             > --image ftp \
-            > --flavor m1.small \
+            > --flavor ftp \
+            > --network internal \
             > --security-group ftp-secgroup \
-            > --user-data ~/script \
-            > --key-name key1 \
-            > --nic net-id=intern-net \
+            > --key-name ftp-key \
+            > --user-data ~/ftp-init \
             > ftp-server
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step1.png}
+            \includegraphics[scale=0.55]{images/part2/step1.png}
         \end{center}
     \end{labstep}
 
@@ -579,10 +649,9 @@ In this task, you will deploy an FTP server in your environment and verify its e
     \end{labstep}
 
     \begin{labstep}
-        When the instance state is \textbf{ACTIVE}, list the floating IP addresses available.
+        List the available floating IP addresses.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip list \
-            > --max-width 80
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack floating ip list
         \end{lstlisting}
 
         \begin{center}
@@ -594,7 +663,7 @@ In this task, you will deploy an FTP server in your environment and verify its e
         Associate an open floating IP address to the instance.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-cloud-dev)]:~$ openstack server add floating ip \
-            > ftp-server 172.25.250.27
+            > ftp-server 172.25.250.25
         \end{lstlisting}
 
         \begin{center}
@@ -602,17 +671,13 @@ In this task, you will deploy an FTP server in your environment and verify its e
         \end{center}
     \end{labstep}
 
-    \begin{notebox}
-        When associating the floating IP, make sure to use the IP address that appears for you in the previous step as it may differ from this example.
-    \end{notebox}
-
     \begin{labstep}
-        Use the \textbf{scp} command to copy the \textbf{\texttildemid/Downloads/key1.pem} file to the \textbf{devstack} machine.
+        Use the \textbf{scp} command to copy the \textbf{\texttildemid/Downloads/ftp-key.pem} file to the \textbf{devstack} machine.
         When prompted to enter the password for \textbf{ubuntu@192.168.1.20}, enter
         \textbf{ubuntu}.
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-cloud-dev)]:~$ scp ~/Downloads/key1.pem \
-            > ubuntu@192.168.1.20:~/key1.pem
+            [ubuntu@workstation (keystone-cloud-dev)]:~$ scp ~/Downloads/ftp-key.pem \
+            > 192.168.1.20:~/ftp-key.pem
         \end{lstlisting}
 
         \begin{center}
@@ -632,12 +697,12 @@ In this task, you will deploy an FTP server in your environment and verify its e
         \end{center}
     \end{labstep}
 
-    % TODO(lucas): Add another note box reminding to use the IP you generated
     \begin{labstep}
-        SSH into the \textbf{ftp-server} instance with the \textbf{key1} private key.
+        SSH into the \textbf{ftp-server} instance with the \textbf{ftp-key} private key.
+        Enter \textbf{yes} when asked if you want to continue connecting.
         Notice that the message of the day uploaded with the \textbf{cloud-init} script appears near the bottom of the output.
         \begin{lstlisting}
-            ubuntu@devstack:~$ ssh -i ~/key1.pem 172.25.250.27
+            ubuntu@devstack:~$ ssh -i ~/ftp-key.pem 172.25.250.25
         \end{lstlisting}
 
         \begin{center}
@@ -699,7 +764,7 @@ In this task, you will deploy an FTP server in your environment and verify its e
     \end{labstep}
 
     \begin{labstep}
-        Create a folder for anonymous FTP users.
+        Create a directory for anonymous FTP users.
         \begin{lstlisting}
             ubuntu@ftp-server:~$ sudo mkdir -p /var/ftp/pub
         \end{lstlisting}
@@ -709,8 +774,12 @@ In this task, you will deploy an FTP server in your environment and verify its e
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        The \textbf{-p} option creates parent directories as necessary.
+    \end{notebox}
+
     \begin{labstep}
-        Remove all ownership from the root FTP folder and remove all write permissions from this folder.
+        Remove all ownership and write permissions from the root FTP directory.
         \begin{lstlisting}
             ubuntu@ftp-server:~$ sudo chown nobody:nogroup /var/ftp
             ubuntu@ftp-server:~$ sudo chmod a-w /var/ftp
@@ -733,8 +802,8 @@ In this task, you will deploy an FTP server in your environment and verify its e
     \end{labstep}
 
     \begin{labstep}
-        View the permissions of the \textbf{/var/ftp} folder.
-        Ensure that no users or groups have ownership or write privileges for the \textbf{/var/ftp} folder and that the \textbf{ftp} user and group owns the \textbf{/var/ftp/pub} directory and its contents.
+        View the permissions of the \textbf{/var/ftp} directory.
+        Ensure that no users or groups have ownership or write privileges for the \textbf{/var/ftp} directory and that the \textbf{ftp} user and group owns the \textbf{/var/ftp/pub} directory and its contents.
         \begin{lstlisting}
             ubuntu@ftp-server:~$ ls -al /var/ftp
         \end{lstlisting}
@@ -759,7 +828,7 @@ In this task, you will deploy an FTP server in your environment and verify its e
         View the status of the \textbf{vsftpd} service.
         If all changes were made correctly, it should report that the service is active.
         If it reports that the service has failed, there is mostly likely a mistake in the \textbf{/var/vsftpd.conf} file.
-        Press \textbf{Q} to regain the command prompt.
+        Press \textbf{Q} to regain control of the command prompt.
         \begin{lstlisting}
             ubuntu@ftp-server:~$ sudo systemctl status vsftpd
         \end{lstlisting}
@@ -796,7 +865,9 @@ In this task, you will deploy an FTP server in your environment and verify its e
         Use \textbf{anonymous} as the user and when prompted for the password, press the \textbf{Enter} key for no password input.
         Follow the instructions from the example and summary below.
         \begin{lstlisting}
-            ubuntu@devstack:~$ ftp 172.25.250.27
+            ubuntu@devstack:~$ ftp 172.25.250.25
+            Name (172.25.250.25:ubuntu): anonymous
+            Password:
             ftp> passive
             ftp> dir
             ftp> cd pub
@@ -809,15 +880,10 @@ In this task, you will deploy an FTP server in your environment and verify its e
         \end{center}
     \end{labstep}
 
-    \begin{notebox}
-        The IP address may differ slightly from this example.
-        Make sure to use the floating IP address that you created.
-    \end{notebox}
-
     \begin{labstep}
         SSH into the \textbf{ftp-server} instance.
         \begin{lstlisting}
-            ubuntu@devstack:~$ ssh -i ~/key1.pem ubuntu@172.25.250.27
+            ubuntu@devstack:~$ ssh -i ~/ftp-key.pem 172.25.250.25
         \end{lstlisting}
 
         \begin{center}
