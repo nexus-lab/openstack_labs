@@ -55,7 +55,7 @@ In this task, you will create and delete a project with the \textit{Horizon Dash
         Open the web browser.
 
         \begin{center}
-            \includegraphics[scale=0.7]{images/part1/step3.png}
+            \includegraphics[scale=0.8]{images/part1/step3.png}
         \end{center}
     \end{labstep}
 
@@ -142,9 +142,14 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
     \end{labstep}
 
     \begin{labstep}
-        Use the \textbf{source} command with the \textbf{keystonerc-admin} argument to access OpenStack as the admin.
+        Before sourcing any credentials, let us take a closer look at the keystone credentials file we have been using up to this point.
+        We have not yet looked at the details of this file, but they will become relevant in this section.
+        The \textbf{keystonerc-admin} file in the home directory defines several \textbf{OS\_*} environment variables that allow you to use the OpenStack platform on the \textbf{devstack} server through the OpenStack Unified CLI.
+        You can run \textbf{cat} on the file to view its contents.
+        The file lists the username as \textbf{admin}, the password as \textbf{secret}, and the project as \textbf{demo}.
+        The address for \textbf{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server, \textbf{192.168.1.20}.
         \begin{lstlisting}
-            ubuntu@workstation:~$ source ~/keystonerc-admin
+            ubuntu@workstation:~$ cat ~/keystonerc-admin
         \end{lstlisting}
 
         \begin{center}
@@ -152,14 +157,57 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \end{center}
     \end{labstep}
 
+    \begin{notebox}
+        When the \textbf{source} command is used on a keystone credentials file, it enables all the \textbf{OS\_*} environment variables included in the file.
+    \end{notebox}
+    \begin{notebox}
+        The \textbf{export PS1=…} line at the end of the keystone credentials file modifies the shell prompt to show the OpenStack user whose credentials are keyed in.
+    \end{notebox}
+    \begin{notebox}
+        The same prompt without color can be achieved with the line \textbf{export PS1='[\textbackslash u@\textbackslash h (keystone-admin)]:\textbackslash w\$ '}.
+        Here, \textbf{\textbackslash u} stands for the current username, \textbf{\textbackslash h} is the hostname, and \textbf{\textbackslash w} is the current working directory.
+        The other escape sequences specify the colors of the prompt.
+        For example, \textbf{\textbackslash[\textbackslash 033[01;32m\textbackslash]} sets the color to a light green, and \textbf{\textbackslash[\textbackslash 033[00m\textbackslash]} resets the color to the default (white in this case).
+    \end{notebox}
+    \begin{notebox}
+        The \textbf{CLIFF\_FIT\_WIDTH=1} line near the end of the file makes it so that the tabular output of OpenStack commands fits with the width of the terminal by wrapping long lines of output.
+        This is especially useful for commands that output long IDs or have many columns in the output table.
+        To achieve this without exporting this environment variable, you would need to use the \textbf{--fit-width} option for several commands.
+        Although this environment variable is useful, throughout the labs you will still need to expand or maximize the terminal window in some cases to properly see the output.
+    \end{notebox}
+
+
     \begin{labstep}
+        Use the \textbf{source} command with the \textbf{keystonerc-admin} argument to access OpenStack as the admin.
+        \begin{lstlisting}
+            ubuntu@workstation:~$ source ~/keystonerc-admin
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step3.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        Verify that the \textbf{OS\_*} environment variables have been exported to the shell environment.
+        \begin{lstlisting}
+            [ubuntu@workstation (keystone-admin)]:~$ env | grep OS_
+        \end{lstlisting}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{images/part2/step4.png}
+        \end{center}
+    \end{labstep}
+
+    \begin{labstep}
+        With a better grasp of the keystone credentials file, we can proceed to managing projects.
         List the existing OpenStack projects.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack project list
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step3.png}
+            \includegraphics[width=\linewidth]{images/part2/step5.png}
         \end{center}
     \end{labstep}
 
@@ -172,7 +220,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step4.png}
+            \includegraphics[width=\linewidth]{images/part2/step6.png}
         \end{center}
     \end{labstep}
 
@@ -187,7 +235,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step5.png}
+            \includegraphics[width=\linewidth]{images/part2/step7.png}
         \end{center}
     \end{labstep}
 
@@ -198,12 +246,16 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step6.png}
+            \includegraphics[width=\linewidth]{images/part2/step8.png}
         \end{center}
     \end{labstep}
 
     \begin{tipbox}
-        The \textbf{openstack $<$object$>$ show} command prints the same information shown when the object was first created.
+        The
+        \begin{lstlisting}
+            openstack <object> show
+        \end{lstlisting}
+        command prints the same information shown when the object was first created.
     \end{tipbox}
 
     \begin{labstep}
@@ -215,7 +267,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step7.png}
+            \includegraphics[width=\linewidth]{images/part2/step9.png}
         \end{center}
     \end{labstep}
 
@@ -227,7 +279,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to create and dele
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part2/step8.png}
+            \includegraphics[width=\linewidth]{images/part2/step10.png}
         \end{center}
     \end{labstep}
 
@@ -445,14 +497,9 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
     \end{labstep}
 
     \begin{labstep}
-        Before sourcing any credentials, let us take a closer look at the keystone credentials file we have been using up to this point.
-        We have not yet looked at the details of this file, but they will become relevant in this section.
-        The \textbf{keystonerc-admin} file in the home directory defines several \textbf{OS\_*} environment variables that allow you to use the OpenStack platform on the \textbf{devstack} server through the OpenStack Unified CLI.
-        You can run \textbf{cat} on the file to view its contents.
-        The file lists the username as \textbf{admin}, the password as \textbf{secret}, and the project as \textbf{demo}.
-        The address for \textbf{OS\_AUTH\_URL} is the IP address of the \textbf{devstack} server, \textbf{192.168.1.20}.
+        Source the credentials for \textbf{admin} from the \textbf{keystonerc-admin} file.
         \begin{lstlisting}
-            ubuntu@workstation:~$ cat ~/keystonerc-admin
+            ubuntu@workstation:~$ source ~/keystonerc-admin
         \end{lstlisting}
 
         \begin{center}
@@ -460,52 +507,14 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{center}
     \end{labstep}
 
-    \begin{notebox}
-        When the \textbf{source} command is used on a keystone credentials file, it enables all the \textbf{OS\_*} environment variables included in the file.
-    \end{notebox}
-
-    \begin{notebox}
-        The \textbf{export PS1=…} line at the end of the keystone credentials file modifies the shell prompt to show the OpenStack user whose credentials are keyed in.
-    \end{notebox}
-
-    \begin{notebox}
-        The same prompt without color can be achieved with the line \textbf{export PS1='[\textbackslash u@\textbackslash h (keystone-admin)]:\textbackslash w\$ '}.
-        Here, \textbf{\textbackslash u} stands for the current username, \textbf{\textbackslash h} is the hostname, and \textbf{\textbackslash w} is the current working directory.
-        The other escape sequences specify the colors of the prompt.
-        For example, \textbf{\textbackslash[\textbackslash 033[01;32m\textbackslash]} sets the color to a light green, and \textbf{\textbackslash[\textbackslash 033[00m\textbackslash]} resets the color to the default (white in this case).
-    \end{notebox}
-
     \begin{labstep}
-        Source the credentials for \textbf{admin} from the \textbf{keystonerc-admin} file.
-        \begin{lstlisting}
-            ubuntu@workstation:~$ source ~/keystonerc-admin
-        \end{lstlisting}
-
-        \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step3.png}
-        \end{center}
-    \end{labstep}
-
-    \begin{labstep}
-        Verify that the \textbf{OS\_*} environment variables have been exported to the shell environment.
-        \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ env | grep OS_
-        \end{lstlisting}
-
-        \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step4.png}
-        \end{center}
-    \end{labstep}
-
-    \begin{labstep}
-        With a better grasp of the keystone credentials file, we can proceed to managing users.
         First, list the existing OpenStack users.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-admin)]:~$ openstack user list
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step5.png}
+            \includegraphics[width=\linewidth]{images/part4/step3.png}
         \end{center}
     \end{labstep}
 
@@ -521,7 +530,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step6.png}
+            \includegraphics[width=\linewidth]{images/part4/step4.png}
         \end{center}
     \end{labstep}
 
@@ -532,7 +541,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step7.png}
+            \includegraphics[width=\linewidth]{images/part4/step5.png}
         \end{center}
     \end{labstep}
 
@@ -540,7 +549,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         When searching for a particular value in a long list, it is often helpful to pipe the command's output to \textbf{grep} or another string searching tool.
         For example, this command would show only the line containing \textbf{cloud-test3}:
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack user list | \
+            openstack user list | \
             > grep cloud-test3
         \end{lstlisting}
         However, these labs will almost always show the full output of the \textbf{list} commands to show a snapshot of what the current state should be as you follow the instructions.
@@ -557,14 +566,14 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step8.png}
+            \includegraphics[width=\linewidth]{images/part4/step6.png}
         \end{center}
     \end{labstep}
 
     \begin{tipbox}
         To verify that a user is not assigned a role by default, you can run the following command and note the empty output:
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack role list assignment list \
+            openstack role list assignment list \
             > --user cloud-test3
         \end{lstlisting}
     \end{tipbox}
@@ -579,7 +588,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step9.png}
+            \includegraphics[width=\linewidth]{images/part4/step7.png}
         \end{center}
     \end{labstep}
 
@@ -593,7 +602,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step10.png}
+            \includegraphics[width=\linewidth]{images/part4/step8.png}
         \end{center}
     \end{labstep}
 
@@ -605,7 +614,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step11.png}
+            \includegraphics[width=\linewidth]{images/part4/step9.png}
         \end{center}
     \end{labstep}
 
@@ -620,7 +629,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step12.png}
+            \includegraphics[width=\linewidth]{images/part4/step10.png}
         \end{center}
     \end{labstep}
 
@@ -634,7 +643,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step13.png}
+            \includegraphics[width=\linewidth]{images/part4/step11.png}
         \end{center}
     \end{labstep}
 
@@ -646,7 +655,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step14.png}
+            \includegraphics[width=\linewidth]{images/part4/step12.png}
         \end{center}
     \end{labstep}
 
@@ -660,7 +669,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step15.png}
+            \includegraphics[width=\linewidth]{images/part4/step13.png}
         \end{center}
     \end{labstep}
 
@@ -675,7 +684,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step16.png}
+            \includegraphics[width=\linewidth]{images/part4/step14.png}
         \end{center}
     \end{labstep}
 
@@ -690,7 +699,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step17.png}
+            \includegraphics[width=\linewidth]{images/part4/step15.png}
         \end{center}
     \end{labstep}
 
@@ -703,7 +712,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step18.png}
+            \includegraphics[width=\linewidth]{images/part4/step16.png}
         \end{center}
     \end{labstep}
 
@@ -711,7 +720,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         Multiple user settings can be changed with one command.
         For example, this command sets the password and enables the user:
         \begin{lstlisting}
-            [ubuntu@workstation (keystone-admin)]:~$ openstack user set \
+            openstack user set \
             > --password password \
             > --enable \
             > cloud-test3
@@ -728,7 +737,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step19.png}
+            \includegraphics[width=\linewidth]{images/part4/step17.png}
         \end{center}
     \end{labstep}
 
@@ -740,7 +749,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step20.png}
+            \includegraphics[width=\linewidth]{images/part4/step18.png}
         \end{center}
     \end{labstep}
 
@@ -751,7 +760,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step21.png}
+            \includegraphics[width=\linewidth]{images/part4/step19.png}
         \end{center}
     \end{labstep}
 
@@ -762,7 +771,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step22.png}
+            \includegraphics[width=\linewidth]{images/part4/step20.png}
         \end{center}
     \end{labstep}
 
@@ -774,7 +783,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step23.png}
+            \includegraphics[width=\linewidth]{images/part4/step21.png}
         \end{center}
     \end{labstep}
 
@@ -785,7 +794,7 @@ In this task, you will use the \textit{OpenStack Unified CLI} to manage users, a
         \end{lstlisting}
 
         \begin{center}
-            \includegraphics[width=\linewidth]{images/part4/step24.png}
+            \includegraphics[width=\linewidth]{images/part4/step22.png}
         \end{center}
     \end{labstep}
 
