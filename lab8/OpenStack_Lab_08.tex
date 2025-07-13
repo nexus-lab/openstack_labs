@@ -553,7 +553,7 @@ A floating IP will be associated with the instance to permit external connectivi
     \end{labstep}
 
     \begin{labstep}
-        Creating a flavor is another action that requires \textbf{admin} privileges, so first switch to the \textbf{superuser} user.
+        Creating a flavor is another action that requires \textbf{admin} privileges, so first source the credentials of the \textbf{superuser} user.
         Then, define a flavor called \textbf{ftp} with \textbf{\qty{1}{\vcpu}}, \textbf{\qty{2048}{\mega\byte}} of RAM, a \textbf{\qty{10}{\giga\byte}} root disk, a \textbf{\qty{2}{\giga\byte}} ephemeral disk, and a \textbf{\qty{1024}{\mega\byte}} swap disk.
         \begin{lstlisting}
             [ubuntu@workstation (keystone-cloud-dev)]:~$ source ~/keystonerc-superuser
